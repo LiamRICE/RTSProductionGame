@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=9 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="MeshLibrary" uid="uid://g7mr2ry7sjrh" path="res://assets/mesh_libraries/terrain.meshlib" id="2_h2yge"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
@@ -29,6 +30,7 @@ detail_sample_max_error = 0.1
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0xm2m"]
 
 [node name="GameManager" type="Node"]
+script = ExtResource("1_1bvp3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1bvp3")
@@ -59,3 +61,11 @@ cell_center_y = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_0xm2m")
+
+[node name="PlayerBuildings" type="Node" parent="."]
+
+[node name="PlayerUnits" type="Node" parent="."]
+
+[node name="OtherBuildings" type="Node" parent="."]
+
+[node name="OtherUnits" type="Node" parent="."]

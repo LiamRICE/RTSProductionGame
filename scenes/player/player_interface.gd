@@ -3,9 +3,10 @@ extends Control
 #signal spawn_unit(unit:UnitSpawn)
 
 # Nodes
+@onready var game_manager:GameManager = $".."
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
 @onready var player_camera :Camera3D = $Camera/Yaw/Pitch/MainCamera
-@onready var deploy_unit_button = $DeployUnitButton
+@onready var deploy_unit_button = $DeployUnitButton # DEBUG
 @onready var add_unit_button = $Button # DEBUG
 @onready var spin_box = $SpinBox # DEBUG
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
@@ -17,13 +18,15 @@ const camera_operations:GDScript = preload("res://scripts/utilities/camera_opera
 enum ClickState {
 	DEFAULT,
 	SELECTING,
-	SELECTED
+	SELECTED,
+	CONSTRUCTING
 }
 var state :ClickState
 var is_on_ui: bool = false
 
 # Variables
 var selected_units :Dictionary = {}
+var constructing_building:Building
 var num_deployments :int = 0
 
 # Internal Variables
@@ -31,6 +34,7 @@ var _mouse_left_click :bool = false
 var _dragged_rect_left :Rect2
 var _mouse_right_click :bool = false
 var _dragged_pos_right :Array[Vector3]
+var _is_constructing:bool = false
 
 # Constants
 const MIN_SELECT_SQUARED :float = 81
@@ -56,6 +60,7 @@ func initialise_state_machine():
 
 
 func _input(_event:InputEvent) -> void:
+	## SELECTION STATES ##
 	# Runs once at the start of each selection rect, if the state is DEFAULT
 	if Input.is_action_just_pressed("mouse_left_click") and (state == ClickState.DEFAULT or state == ClickState.SELECTED) and is_on_ui == false:
 		# Update state machine
@@ -105,6 +110,22 @@ func _input(_event:InputEvent) -> void:
 		#var camera :Camera3D = get_viewport().get_camera_3d()
 		#
 		#var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+	
+	### CONSTRUCTION STATES ###
+	if Input.is_action_pressed("mouse_right_click") and state == ClickState.CONSTRUCTING:
+		state = ClickState.DEFAULT
+		self._is_constructing = false
+		self.remove_child(self.constructing_building)
+		self.constructing_building = null
+	
+	if Input.is_action_pressed("mouse_left_click") and state == ClickState.CONSTRUCTING:
+		if self.constructing_building.is_placement_valid():
+			state = ClickState.DEFAULT
+			var plane:Plane = Plane.PLANE_XZ
+			var mousepos:Vector2 = self.get_local_mouse_position()
+			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
+			self.remove_child(self.constructing_building)
+			self.game_manager.add_building(self.player_team, self.constructing_building, click_position)
 
 
 func cast_selection() -> void:
@@ -135,19 +156,22 @@ func _process(_delta:float) -> void:
 		# Only show the ui_rect if it's above a certain size to avoid it always appearing
 		if _dragged_rect_left.size.length_squared() > MIN_SELECT_SQUARED:
 			ui_selection_patch.visible = true
+	
+	if state == ClickState.CONSTRUCTING:
+		var plane:Plane = Plane.PLANE_XZ
+		var mousepos:Vector2 = self.get_local_mouse_position()
+		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.5, 0)
 
-
+## Modifies the size of the selection rectangle based on current position
 func update_ui_selection_rect() -> void:
 	# Gives the UI rect the same size as the dragged rect (absoluted since a NinePatchRect can't have a negative size)
 	ui_selection_patch.size = abs(_dragged_rect_left.size)
-	
 	# Negative scaling since NinePatchRect only allows for positive sizes
 	# Scale the nine patch rect X axis by -1 to enable dragging left
 	if _dragged_rect_left.size.x < 0:
 		ui_selection_patch.scale.x = -1
 	else:
 		ui_selection_patch.scale.x = 1
-	
 	# Scale the nine patch rect Y axis by -1 to enable dragging up
 	if _dragged_rect_left.size.y < 0:
 		ui_selection_patch.scale.y = -1
@@ -157,8 +181,14 @@ func update_ui_selection_rect() -> void:
 # tracks when mouse enters a UI element
 func _on_mouse_entered():
 	is_on_ui = true
-	print(is_on_ui)
 # tracks when mouse leaves a UI element
 func _on_mouse_exited():
 	is_on_ui = false
-	print(is_on_ui)
+
+## Add building
+func _on_deploy_unit_button_pressed():
+	self._is_constructing = true
+	self.state = ClickState.CONSTRUCTING
+	self.constructing_building = preload("res://scenes/buildings/turret_gun.tscn").instantiate()
+	self.constructing_building.initialise_placement()
+	self.add_child(self.constructing_building)

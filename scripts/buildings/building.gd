@@ -1,6 +1,7 @@
 class_name Building extends Entity
 
 ## Mandatory Nodes
+@export var mesh_container:Node3D
 @export var navigation_obstacle:NavigationObstacle3D
 @export var placement_collision_shape:CollisionShape3D
 
@@ -15,8 +16,18 @@ var is_preview:bool = false
 
 ## Building Methods ##
 
+## Called when the player wants to place down a new building
+func initialise_placement() -> void:
+	_set_preview_state(true)
+	_set_preview_material()
+
+func place(location:Vector3) -> void:
+	_set_preview_state(false)
+	_set_preview_material()
+	self.global_position = location
+
 ## Checks if the placement of the building doesn't encroach on any other buildings
-func _is_placement_valid() -> bool:
+func is_placement_valid() -> bool:
 	return placement_collisions.size() == 0
 
 ## If the node is being previewed (needs to be built), disable the collider and enable the placement collision area
@@ -31,7 +42,15 @@ func _set_preview_state(is_preview:bool) -> void:
 		self._free_placement_collision()
 
 ## Changes the materials of the object to preview materials
-func _set_preview_material() -> void: pass
+func _set_preview_material() -> void:
+	if self.is_preview:
+		for child in self.mesh_container.get_children():
+			for surface in child.get_surface_override_material_count():
+				child.set_surface_override_material(surface, self.preview_material)
+	else:
+		for child in self.mesh_container.get_children():
+			for surface in child.get_surface_override_material_count():
+				child.set_surface_override_material(surface, null)
 
 ## Fires when a body enters the placement area
 func _body_entered(body:Node3D) -> void:

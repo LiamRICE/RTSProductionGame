@@ -1,9 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1tdkpg420s70"]
+[gd_scene load_steps=8 format=3 uid="uid://b1tdkpg420s70"]
 
 [ext_resource type="Script" uid="uid://bom4ai7i4d455" path="res://scripts/buildings/turret_gun.gd" id="1_a5qkp"]
 [ext_resource type="ArrayMesh" uid="uid://co0stnihivdcm" path="res://assets/kenney_space/turret_single.obj" id="2_i41cj"]
 [ext_resource type="ArrayMesh" uid="uid://ca4owjrduuf5y" path="res://assets/kenney_space/platform_small.obj" id="3_grxsd"]
 [ext_resource type="ArrayMesh" uid="uid://dlgs1mk5wo37g" path="res://assets/kenney_space/structure_closed.obj" id="4_wophf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a5qkp"]
+transparency = 4
+blend_mode = 3
+cull_mode = 2
+albedo_color = Color(0, 0.882353, 1, 0.247059)
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+disable_receive_shadows = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a5qkp"]
 size = Vector3(1, 1.1, 1)
@@ -12,15 +21,21 @@ size = Vector3(1, 1.1, 1)
 height = 0.7
 radius = 0.3
 
-[node name="TurretGun" type="Node3D" node_paths=PackedStringArray("rotating_mesh", "navigation_obstacle", "body")]
+[node name="TurretGun" type="Node3D" node_paths=PackedStringArray("rotating_mesh", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body")]
 script = ExtResource("1_a5qkp")
 rotating_mesh = NodePath("Meshes/Turret")
 damage = 2.0
 attack_speed = 10.0
 range = 10.0
+mesh_container = NodePath("Meshes")
 navigation_obstacle = NodePath("NavigationObstacle3D")
+placement_collision_shape = NodePath("Body/BaseShape")
+preview_material = SubResource("StandardMaterial3D_a5qkp")
 body = NodePath("Body")
 health = 100.0
+allegiance = 1
+is_damageable = true
+is_selectable = true
 
 [node name="Meshes" type="Node3D" parent="."]
 
