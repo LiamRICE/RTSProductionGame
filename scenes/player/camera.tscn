@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsh0v2nxk318h"]
+
+[ext_resource type="Script" uid="uid://b7531a6ukqrq5" path="res://scenes/player/camera_controller.gd" id="1_56qkh"]
+
+[node name="Camera" type="Node3D"]
+
+[node name="Yaw" type="Node3D" parent="."]
+
+[node name="Pitch" type="Node3D" parent="Yaw"]
+
+[node name="MainCamera" type="Camera3D" parent="Yaw/Pitch"]
+near = 1.0
+far = 50000.0
+script = ExtResource("1_56qkh")
+ZOOM_SPEED = 3.0

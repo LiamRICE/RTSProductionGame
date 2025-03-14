@@ -1,0 +1,222 @@
+[gd_scene load_steps=26 format=3 uid="uid://txebsr3f81mp"]
+
+[ext_resource type="ArrayMesh" uid="uid://gdhnm5ui4qy4" path="res://assets/kenney_space/structure.obj" id="1_8hk6l"]
+[ext_resource type="ArrayMesh" uid="uid://dlgs1mk5wo37g" path="res://assets/kenney_space/structure_closed.obj" id="2_2aqyn"]
+[ext_resource type="ArrayMesh" uid="uid://cmyots4is7jhm" path="res://assets/kenney_space/structure_detailed.obj" id="3_3y8o8"]
+[ext_resource type="ArrayMesh" uid="uid://cf6mumy6qqm8e" path="res://assets/kenney_space/structure_diagonal.obj" id="4_y0aio"]
+[ext_resource type="ArrayMesh" uid="uid://dylyg0jucghhm" path="res://assets/kenney_space/supports_high.obj" id="5_8ny1j"]
+[ext_resource type="ArrayMesh" uid="uid://dg1vluqrlo1mc" path="res://assets/kenney_space/supports_low.obj" id="6_8hd1c"]
+[ext_resource type="ArrayMesh" uid="uid://bj53vedg6womv" path="res://assets/kenney_space/corridor.obj" id="7_xk87n"]
+[ext_resource type="ArrayMesh" uid="uid://655rl13me8y7" path="res://assets/kenney_space/corridor_corner.obj" id="8_5tu18"]
+[ext_resource type="ArrayMesh" uid="uid://ds1dskj2begq2" path="res://assets/kenney_space/corridor_cornerRound.obj" id="9_r5642"]
+[ext_resource type="ArrayMesh" uid="uid://nwjosxva600j" path="res://assets/kenney_space/corridor_cornerRoundWindow.obj" id="10_fj0mv"]
+[ext_resource type="ArrayMesh" uid="uid://dfqa5w5erxaoo" path="res://assets/kenney_space/corridor_cross.obj" id="11_k1koh"]
+[ext_resource type="ArrayMesh" uid="uid://dwi4puqn6p2vo" path="res://assets/kenney_space/corridor_detailed.obj" id="12_tg13h"]
+[ext_resource type="ArrayMesh" uid="uid://bpllwk2t6fuyi" path="res://assets/kenney_space/corridor_end.obj" id="13_eerxa"]
+[ext_resource type="ArrayMesh" uid="uid://d3smb201e2spl" path="res://assets/kenney_space/corridor_open.obj" id="14_lkdh5"]
+[ext_resource type="ArrayMesh" uid="uid://djq1l2ykcrkdr" path="res://assets/kenney_space/corridor_split.obj" id="16_v00jl"]
+[ext_resource type="ArrayMesh" uid="uid://c3ycjhe5m5fti" path="res://assets/kenney_space/corridor_window.obj" id="19_1ib0v"]
+[ext_resource type="ArrayMesh" uid="uid://2y1whj3d8c3f" path="res://assets/kenney_space/corridor_windowClosed.obj" id="20_3armq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ocfe5"]
+size = Vector3(0.15, 1, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ld2f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arcnr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mdm66"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xk87n"]
+size = Vector3(0.8, 1, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_snp0q"]
+size = Vector3(0.8, 0.5, 0.8)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1ld2f"]
+points = PackedVector3Array(-0.179, 1, -0.194, 0.494, 1, 0.494, -0.5, 0.000195852, 0.5, 0.5, 0.000195856, -0.5, 0.5, 0.000195793, 0.499902, -0.2071, 0.0266551, -0.2071, -0.453, 1, 0.212, 0.212, 1, -0.453, 0.0148776, 0.0222324, -0.373344, -0.388112, 0.0224822, 0.0447966, -0.492, 1, 0.492, 0.492, 1, -0.492, -0.207, 1, -0.207, -0.346, 1, -0.03, -0.03, 1, -0.345, 0.274407, 0.0123136, -0.4725, -0.472466, 0.0124471, 0.274237, 0.35, 1, -0.488, -0.296715, 0.0253672, -0.103832, -0.103832, 0.0253672, -0.296715, 0.121, 1, -0.423)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5tu18"]
+size = Vector3(1, 1, 0.5)
+
+[node name="StructureLibrary" type="Node3D"]
+
+[node name="structure" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("1_8hk6l")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="structure"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structure/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.425, 0.5, -0.425)
+shape = SubResource("BoxShape3D_ocfe5")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="structure/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.425, 0.5, 0.425)
+shape = SubResource("BoxShape3D_ocfe5")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="structure/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.425, 0.5, -0.425)
+shape = SubResource("BoxShape3D_ocfe5")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="structure/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.425, 0.5, 0.425)
+shape = SubResource("BoxShape3D_ocfe5")
+
+[node name="structure_closed" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("2_2aqyn")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="structure_closed"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structure_closed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_1ld2f")
+
+[node name="structure_detailed" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("3_3y8o8")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="structure_detailed"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structure_detailed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_arcnr")
+
+[node name="structure_diagonal" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("4_y0aio")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="structure_diagonal"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="structure_diagonal/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="supports_high" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("5_8ny1j")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="supports_high"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="supports_high/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_xk87n")
+
+[node name="supports_low" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("6_8hd1c")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="supports_low"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="supports_low/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_snp0q")
+
+[node name="Corridor" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("7_xk87n")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Corridor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Corridor/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorCorner" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("8_5tu18")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorCorner"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorCorner/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorCornerRound" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("9_r5642")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorCornerRound"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorCornerRound/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_1ld2f")
+
+[node name="CorridorCornerRoundWindow" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("10_fj0mv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorCornerRoundWindow"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorCornerRoundWindow/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_1ld2f")
+
+[node name="CorridorCross" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("11_k1koh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorCross"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorCross/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorDetailed" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("12_tg13h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorDetailed"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorDetailed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorEnd" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("13_eerxa")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorEnd"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorEnd/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.25)
+shape = SubResource("BoxShape3D_5tu18")
+
+[node name="CorridorOpen" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("14_lkdh5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorOpen"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorOpen/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorSplit" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("16_v00jl")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorSplit"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorSplit/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorWindow" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("19_1ib0v")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorWindow"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorWindow/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")
+
+[node name="CorridorWindowClosed" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("20_3armq")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CorridorWindowClosed"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorridorWindowClosed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_mdm66")

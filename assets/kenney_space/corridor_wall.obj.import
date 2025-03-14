@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://duj1og22brbqv"
+path="res://.godot/imported/corridor_wall.obj-fd1b79764aa0f4c7282baba6e433549b.mesh"
+
+[deps]
+
+files=["res://.godot/imported/corridor_wall.obj-fd1b79764aa0f4c7282baba6e433549b.mesh"]
+
+source_file="res://assets/kenney_space/corridor_wall.obj"
+dest_files=["res://.godot/imported/corridor_wall.obj-fd1b79764aa0f4c7282baba6e433549b.mesh", "res://.godot/imported/corridor_wall.obj-fd1b79764aa0f4c7282baba6e433549b.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ds1dskj2begq2"
+path="res://.godot/imported/corridor_cornerRound.obj-e69e2ee8a2f2c2ab0c19823c2028cc34.mesh"
+
+[deps]
+
+files=["res://.godot/imported/corridor_cornerRound.obj-e69e2ee8a2f2c2ab0c19823c2028cc34.mesh"]
+
+source_file="res://assets/kenney_space/corridor_cornerRound.obj"
+dest_files=["res://.godot/imported/corridor_cornerRound.obj-e69e2ee8a2f2c2ab0c19823c2028cc34.mesh", "res://.godot/imported/corridor_cornerRound.obj-e69e2ee8a2f2c2ab0c19823c2028cc34.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0r2s5t16ff7w"]
+
+[ext_resource type="ArrayMesh" uid="uid://hn0c1olu7qxv" path="res://assets/kenney_space/terrain.obj" id="1_bm8a4"]
+[ext_resource type="ArrayMesh" uid="uid://dy03t4apgegdg" path="res://assets/kenney_space/terrain_roadStraight.obj" id="2_6oxuk"]
+[ext_resource type="ArrayMesh" uid="uid://bh20uk2gmxxia" path="res://assets/kenney_space/terrain_roadCorner.obj" id="3_x68d0"]
+[ext_resource type="ArrayMesh" uid="uid://c8uo3yplcdam1" path="res://assets/kenney_space/terrain_roadCross.obj" id="4_ole0n"]
+[ext_resource type="ArrayMesh" uid="uid://d3ye05crxbpgh" path="res://assets/kenney_space/terrain_roadSplit.obj" id="5_uy6uy"]
+[ext_resource type="ArrayMesh" uid="uid://d1rxxkg27g823" path="res://assets/kenney_space/terrain_roadEnd.obj" id="6_bsc6p"]
+
+[node name="GroundLibrary" type="Node3D"]
+
+[node name="terrain" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("1_bm8a4")
+
+[node name="terrain_road_straight" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("2_6oxuk")
+
+[node name="terrain_road_corner" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("3_x68d0")
+
+[node name="terrain_road_cross" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("4_ole0n")
+
+[node name="terrain_road_split" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("5_uy6uy")
+
+[node name="terrain_road_end" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("6_bsc6p")
