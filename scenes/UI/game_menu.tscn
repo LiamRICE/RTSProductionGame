@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://cgehoq8b0kfh3"]
+
+[ext_resource type="PackedScene" uid="uid://b0fb75hq5f7st" path="res://scenes/UI/main_menu.tscn" id="1_aeiwg"]
+[ext_resource type="Script" uid="uid://bki6xu5i3a4ro" path="res://scripts/managers/game_menu.gd" id="1_kv44u"]
+[ext_resource type="PackedScene" uid="uid://dmgmcqhtvjb7s" path="res://scenes/UI/settings_menu.tscn" id="3_25th1"]
+[ext_resource type="PackedScene" uid="uid://cg1otpufwx1dg" path="res://scenes/UI/singleplayer_menu.tscn" id="4_5ivsh"]
+[ext_resource type="PackedScene" uid="uid://bvhv83bdwl1hs" path="res://scenes/UI/multiplayer_menu.tscn" id="5_ll5ua"]
+
+[node name="GameMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kv44u")
+
+[node name="MainMenu" parent="." instance=ExtResource("1_aeiwg")]
+
+[node name="SettingsMenu" parent="." instance=ExtResource("3_25th1")]
+
+[node name="SingleplayerMenu" parent="." instance=ExtResource("4_5ivsh")]
+
+[node name="MultiplayerMenu" parent="." instance=ExtResource("5_ll5ua")]
+
+[connection signal="multiplayer_button_pressed" from="MainMenu" to="." method="_on_main_menu_multiplayer_button_pressed"]
+[connection signal="quit_button_pressed" from="MainMenu" to="." method="_on_main_menu_quit_button_pressed"]
+[connection signal="settings_button_pressed" from="MainMenu" to="." method="_on_main_menu_settings_button_pressed"]
+[connection signal="singleplayer_button_pressed" from="MainMenu" to="." method="_on_main_menu_singleplayer_button_pressed"]
