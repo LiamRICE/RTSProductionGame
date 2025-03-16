@@ -6,9 +6,11 @@ class_name Building extends Entity
 @export var placement_collision_shape:CollisionShape3D
 
 ## Building properties
-@export var preview_material:Material
+@export_group("Properties")
+@export var preview_material:StandardMaterial3D
+@export var preview_valid_colour:Color
+@export var preview_invalid_colour:Color
 var placement_collision_area:Area3D
-var placement_collisions:Array[Node3D]
 
 ## Internal state
 var is_preview:bool = false
@@ -28,7 +30,13 @@ func place(location:Vector3) -> void:
 
 ## Checks if the placement of the building doesn't encroach on any other buildings
 func is_placement_valid() -> bool:
-	return placement_collisions.size() == 0
+	var bodies:int = self.placement_collision_area.get_overlapping_bodies().size()
+	var is_valid:bool = bodies == 0
+	if is_valid:
+		self.preview_material.set_albedo(self.preview_valid_colour)
+	else:
+		self.preview_material.set_albedo(self.preview_invalid_colour)
+	return is_valid
 
 ## If the node is being previewed (needs to be built), disable the collider and enable the placement collision area
 func _set_preview_state(is_preview:bool) -> void:
@@ -52,29 +60,12 @@ func _set_preview_material() -> void:
 			for surface in child.get_surface_override_material_count():
 				child.set_surface_override_material(surface, null)
 
-## Fires when a body enters the placement area
-func _body_entered(body:Node3D) -> void:
-	if body.get_parent_node_3d() is Entity and body.get_parent_node_3d() != null:
-		var entity:Entity = body.get_parent_node_3d()
-		if entity is Building:
-			self.placement_collisions.push_back(entity)
-
-## Fires when a body exits the placement area
-func _body_exited(body:Node3D) -> void:
-	if body.get_parent_node_3d() is Entity and body.get_parent_node_3d() != null:
-		var entity:Entity = body.get_parent_node_3d()
-		self.placement_collisions.erase(entity)
-
 func _init_placement_collision():
 	# Create the placement collision area
 	self.placement_collision_area = Area3D.new()
-	self.placement_collision_area.body_entered.connect(_body_entered)
-	self.placement_collision_area.body_entered.connect(_body_exited)
 	self.placement_collision_area.add_child(self.placement_collision_shape.duplicate(8))
 	self.add_child(self.placement_collision_area)
 
 func _free_placement_collision():
 	# Disconnect signals and free the area3D node
-	self.placement_collision_area.body_entered.disconnect(_body_entered)
-	self.placement_collision_area.body_entered.disconnect(_body_exited)
 	self.placement_collision_area.queue_free()

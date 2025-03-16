@@ -126,6 +126,8 @@ func _input(_event:InputEvent) -> void:
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
 			self.remove_child(self.constructing_building)
 			self.level_manager.add_building(self.spin_box.value, self.constructing_building, click_position)
+		else:
+			print("Invalid placement ! Object intersects placement blocker.")
 
 
 func cast_selection() -> void:
@@ -143,7 +145,7 @@ func cast_selection() -> void:
 				unit.deselect()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
 	if _mouse_left_click:
 		# Update the size of the dragged rect
@@ -160,7 +162,8 @@ func _process(_delta:float) -> void:
 	if state == ClickState.CONSTRUCTING:
 		var plane:Plane = Plane.PLANE_XZ
 		var mousepos:Vector2 = self.get_local_mouse_position()
-		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.5, 0)
+		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.25, 0)
+		self.constructing_building.is_placement_valid()
 
 ## Modifies the size of the selection rectangle based on current position
 func update_ui_selection_rect() -> void:
@@ -178,10 +181,10 @@ func update_ui_selection_rect() -> void:
 	else:
 		ui_selection_patch.scale.y = 1
 
-# tracks when mouse enters a UI element
+## tracks when mouse enters a UI element
 func _on_mouse_entered():
 	is_on_ui = true
-# tracks when mouse leaves a UI element
+## tracks when mouse leaves a UI element
 func _on_mouse_exited():
 	is_on_ui = false
 
