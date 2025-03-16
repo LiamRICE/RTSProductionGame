@@ -3,12 +3,12 @@ extends Control
 #signal spawn_unit(unit:UnitSpawn)
 
 # Nodes
-@onready var game_manager:GameManager = $".."
+@onready var level_manager:LevelManager = %LevelManager
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
 @onready var player_camera :Camera3D = $Camera/Yaw/Pitch/MainCamera
-@onready var deploy_unit_button = $DeployUnitButton # DEBUG
-@onready var add_unit_button = $Button # DEBUG
-@onready var spin_box = $SpinBox # DEBUG
+@onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
+@onready var add_unit_button:Button = $Button # DEBUG
+@onready var spin_box:SpinBox = $SpinBox # DEBUG
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
 # Modules
@@ -125,7 +125,7 @@ func _input(_event:InputEvent) -> void:
 			var mousepos:Vector2 = self.get_local_mouse_position()
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
 			self.remove_child(self.constructing_building)
-			self.game_manager.add_building(self.player_team, self.constructing_building, click_position)
+			self.level_manager.add_building(self.spin_box.value, self.constructing_building, click_position)
 
 
 func cast_selection() -> void:

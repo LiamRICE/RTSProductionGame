@@ -30,20 +30,27 @@ detail_sample_max_error = 0.1
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0xm2m"]
 
 [node name="GameManager" type="Node"]
+
+[node name="LevelManager" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("1_1bvp3")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="EnvironmentManager" type="Node" parent="LevelManager"]
+unique_name_in_owner = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="LevelManager/EnvironmentManager"]
 environment = SubResource("Environment_1bvp3")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 5.3, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="LevelManager/EnvironmentManager"]
+transform = Transform3D(0.866025, 0.353553, -0.353554, 0, 0.707107, 0.707106, 0.5, -0.612372, 0.612373, 0, 5.3, 0)
 
-[node name="PlayerInterface" parent="." instance=ExtResource("1_0xm2m")]
+[node name="WorldManager" type="Node" parent="LevelManager"]
+unique_name_in_owner = true
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="LevelManager/WorldManager"]
 navigation_mesh = SubResource("NavigationMesh_0xm2m")
 
-[node name="Terrain" type="GridMap" parent="NavigationRegion3D"]
+[node name="Terrain" type="GridMap" parent="LevelManager/WorldManager/NavigationRegion3D"]
 mesh_library = ExtResource("2_h2yge")
 cell_size = Vector3(1, 0.5, 1)
 cell_center_y = false
@@ -53,19 +60,70 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="GridMap" type="GridMap" parent="NavigationRegion3D"]
+[node name="GridMap" type="GridMap" parent="LevelManager/WorldManager/NavigationRegion3D"]
 cell_size = Vector3(1, 1, 1)
 cell_center_y = false
 
-[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelManager/WorldManager/NavigationRegion3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelManager/WorldManager/NavigationRegion3D/StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_0xm2m")
 
-[node name="PlayerBuildings" type="Node" parent="."]
+[node name="PlayerManager" type="Node" parent="LevelManager"]
+unique_name_in_owner = true
 
-[node name="PlayerUnits" type="Node" parent="."]
+[node name="Player0" type="Node" parent="LevelManager/PlayerManager"]
 
-[node name="OtherBuildings" type="Node" parent="."]
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player0"]
 
-[node name="OtherUnits" type="Node" parent="."]
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player0"]
+
+[node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="PlayerInterface" parent="LevelManager/PlayerManager/Player1" instance=ExtResource("1_0xm2m")]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player1"]
+
+[node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player2"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player2"]
+
+[node name="Player3" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player3"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player3"]
+
+[node name="Player4" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player4"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player4"]
+
+[node name="Player5" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player5"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player5"]
+
+[node name="Player6" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player6"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player6"]
+
+[node name="Player7" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player7"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player7"]
+
+[node name="Player8" type="Node" parent="LevelManager/PlayerManager"]
+
+[node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player8"]
+
+[node name="Units" type="Node" parent="LevelManager/PlayerManager/Player8"]
