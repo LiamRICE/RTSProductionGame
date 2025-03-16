@@ -15,6 +15,11 @@ run/main_scene="uid://dkve5n5x16hga"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+
 [dotnet]
 
 project/assembly_name="RTSProductionGame"
