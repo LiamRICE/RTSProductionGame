@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://xejesn3s5jis"]
 
-[ext_resource type="Script" path="res://scripts/units/vehicle.gd" id="1_qm2ug"]
+[ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dq7beibq4ll4s" path="res://assets/ui/icons/units/monorail_trainFront_SW.png" id="2_4hctu"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
 [ext_resource type="ArrayMesh" uid="uid://c57wwr3fi4piq" path="res://assets/kenney_space/monorail_trainFront.obj" id="3_3bsjp"]
@@ -19,4 +19,5 @@ visible = false
 texture = ExtResource("2_6twp8")
 
 [node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 mesh = ExtResource("3_3bsjp")

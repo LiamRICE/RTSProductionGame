@@ -1,5 +1,7 @@
 class_name Unit extends Entity
 
+const unit_utils:GDScript = preload("res://scripts/utilities/unit_utils.gd")
+
 @export_group("Properties")
 @export var move_speed : float = 0.
 @export var rotation_speed : float = 0.
@@ -47,6 +49,7 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 		var map_RID:RID = get_world_3d().get_navigation_map()
 		# caluclate the path
 		path = NavigationServer3D.map_get_path(map_RID, global_transform.origin, location, true)
+		print(path)
 		# return the path
 	if is_shift:
 		current_path.append_array(path)
@@ -58,7 +61,6 @@ func update_target_location(target_location:Vector3, is_shift:bool = false):
 	# raycast target location
 	# if raycast is a unit, set that unit as the target and stop when you're in range
 	# if raycast is not a unit, set that location as a target and stop at the target
-	print("Target acquired :", target_location)
 	set_navigation_path(target_location, is_shift)
 
 
@@ -76,9 +78,14 @@ func move(delta:float):
 			path_index = 0
 			next_point = global_transform.origin
 			return
-	next_point = current_path[path_index]
+	if path_index < len(current_path):
+		next_point = current_path[path_index] # index out of bounds!
+	else:
+		current_path = PackedVector3Array()
 	# point unit towards the next path point
-	global_transform.basis = Basis.looking_at(next_point, Vector3.UP, true)
+	var target_vector = global_position.direction_to(next_point)
+	var target_basis = Basis.looking_at(target_vector)
+	basis = target_basis
 	# set unit velocity to the next path point
 	var new_velocity: Vector3 = global_transform.origin.direction_to(next_point) * movement_delta
 	global_transform.origin = global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
