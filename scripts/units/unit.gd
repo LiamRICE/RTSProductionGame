@@ -13,6 +13,11 @@ var path_index : int = 0
 
 # selection
 @onready var selection_sprite : Sprite3D = $SelectionSprite3D
+var TEAM : int
+
+
+func _ready():
+	TEAM = allegiance
 
 
 func _physics_process(delta: float) -> void:
@@ -29,7 +34,7 @@ func deselect():
 
 
 # order the unit to move to a location
-func get_navigation_path(location:Vector3, is_shift:bool = false):
+func set_navigation_path(location:Vector3, is_shift:bool = false):
 	"""
 	Function description stuff...
 	"""
@@ -45,6 +50,14 @@ func get_navigation_path(location:Vector3, is_shift:bool = false):
 		current_path.append_array(path)
 	else:
 		current_path = path
+
+
+func update_target_location(target_location:Vector3, is_shift:bool = false):
+	# raycast target location
+	# if raycast is a unit, set that unit as the target and stop when you're in range
+	# if raycast is not a unit, set that location as a target and stop at the target
+	print("Target acquired :", target_location)
+	set_navigation_path(target_location, is_shift)
 
 
 func move(delta:float):

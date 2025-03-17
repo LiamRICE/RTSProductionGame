@@ -80,8 +80,6 @@ unique_name_in_owner = true
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player0"]
 
-[node name="Vehicle" parent="LevelManager/PlayerManager/Player0/Units" instance=ExtResource("3_lquwl")]
-
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="PlayerInterface" parent="LevelManager/PlayerManager/Player1" instance=ExtResource("1_0xm2m")]
@@ -92,6 +90,9 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3768, 4.76837e-07, -3.18556)
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player1"]
+
+[node name="Vehicle" parent="LevelManager/PlayerManager/Player1/Units" instance=ExtResource("3_lquwl")]
+allegiance = 1
 
 [node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
 
