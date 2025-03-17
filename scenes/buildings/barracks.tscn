@@ -1,0 +1,80 @@
+[gd_scene load_steps=7 format=3 uid="uid://bra66m3iaqt8s"]
+
+[ext_resource type="Script" uid="uid://ffduxcvmiea4" path="res://scripts/buildings/production_building.gd" id="1_hv4qf"]
+[ext_resource type="ArrayMesh" uid="uid://bbuo1wa7ckm2n" path="res://assets/kenney_space/hangar_largeB.obj" id="2_i88yw"]
+[ext_resource type="ArrayMesh" uid="uid://bcij2eyadoo12" path="res://assets/kenney_space/barrel.obj" id="3_a241g"]
+[ext_resource type="ArrayMesh" uid="uid://cl5oh2ptxd235" path="res://assets/kenney_space/chimney_detailed.obj" id="4_s0yi0"]
+[ext_resource type="ArrayMesh" uid="uid://p8qyp3llhxmp" path="res://assets/kenney_space/machine_wireless.obj" id="5_xhwwk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i88yw"]
+size = Vector3(2, 1, 3)
+
+[node name="Barracks" type="Node3D" node_paths=PackedStringArray("building_units", "production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings"]]
+script = ExtResource("1_hv4qf")
+building_units = [null]
+production_timer = NodePath("ProductionTimer")
+unit_spawn_point = NodePath("SpawnPoint")
+rally_point = NodePath("RallyPoint")
+mesh_container = NodePath("Meshes")
+navigation_obstacle = NodePath("NavigationObstacle3D")
+placement_collision_shape = NodePath("Body/BaseShape")
+body = NodePath("Body")
+health = 250.0
+is_damageable = true
+is_selectable = true
+metadata/_custom_type_script = "uid://ffduxcvmiea4"
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="Building" type="MeshInstance3D" parent="Meshes"]
+mesh = ExtResource("2_i88yw")
+
+[node name="Barrel1" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0, -1.5)
+mesh = ExtResource("3_a241g")
+
+[node name="Barrel2" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1.6)
+mesh = ExtResource("3_a241g")
+
+[node name="Barrel3" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0, -1.7)
+mesh = ExtResource("3_a241g")
+
+[node name="Barrel4" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.25, -1.6)
+mesh = ExtResource("3_a241g")
+
+[node name="Chimney1" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.5, 1.2)
+mesh = ExtResource("4_s0yi0")
+skeleton = NodePath("../..")
+
+[node name="Chimney2" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.5, 0.8)
+mesh = ExtResource("4_s0yi0")
+skeleton = NodePath("../..")
+
+[node name="MachineWireless" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.4, 0.9, 1)
+mesh = ExtResource("5_xhwwk")
+skeleton = NodePath("../..")
+
+[node name="Body" type="StaticBody3D" parent="."]
+
+[node name="BaseShape" type="CollisionShape3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49012e-07, 0.4995, 0)
+shape = SubResource("BoxShape3D_i88yw")
+
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
+vertices = PackedVector3Array(1, 0, 1.5, -1, 0, 1.5, -1, 0, -1.5, 1, 0, -1.5)
+affect_navigation_mesh = true
+
+[node name="ProductionTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+
+[node name="RallyPoint" type="Marker3D" parent="."]
+
+[connection signal="timeout" from="ProductionTimer" to="." method="_on_production_timer_timeout"]

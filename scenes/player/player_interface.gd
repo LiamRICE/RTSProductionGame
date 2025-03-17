@@ -1,6 +1,7 @@
 extends Control
 
-#signal spawn_unit(unit:UnitSpawn)
+## Signals
+signal selection_changed(selection:Dictionary[int, Entity], is_units:bool)
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
@@ -25,7 +26,7 @@ var state :ClickState
 var is_on_ui: bool = false
 
 # Variables
-var selected_units :Dictionary = {}
+var selected_entities :Dictionary[int, Entity] = {}
 var constructing_building:Building
 var num_deployments :int = 0
 
@@ -85,21 +86,21 @@ func _input(_event:InputEvent) -> void:
 		# Update state machine
 		state = ClickState.DEFAULT
 		# Empty player's unit selection
-		selected_units.clear()
+		selected_entities.clear()
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
 	if Input.is_action_just_pressed("mouse_right_click") and state == ClickState.SELECTED and is_on_ui == false:
 		_mouse_right_click = true
-		if not selected_units.is_empty():
+		if not selected_entities.is_empty():
 			var mouse_position :Vector2 = get_viewport().get_mouse_position()
 			var camera :Camera3D = get_viewport().get_camera_3d()
 			
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			if not camera_raycast_coords.is_zero_approx():
-				for key in selected_units:
+				for key in selected_entities:
 					# TODO - spread out units
-					selected_units[key].update_target_location(camera_raycast_coords)
+					selected_entities[key].update_target_location(camera_raycast_coords)
 			print(camera_raycast_coords)
 	
 	if Input.is_action_just_released("mouse_right_click") and state == ClickState.SELECTED:
@@ -133,16 +134,17 @@ func _input(_event:InputEvent) -> void:
 func cast_selection() -> void:
 	# Clears the selection
 	# TODO Add modifier keys that either clear the selection or add to selection, etc...
-	selected_units.clear()
+	selected_entities.clear()
 	for unit in get_tree().get_nodes_in_group("units"):
 		# checks if the unit is controlled by the player
-		if unit.TEAM == player_team:
+		if unit.allegiance == player_team:
 			# Checks if each unit is contained within the dragged circle selection and selects them if so
 			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.transform.origin)):
-				selected_units[unit.get_instance_id()] = unit
+				selected_entities[unit.get_instance_id()] = unit
 				unit.select()
 			else:
 				unit.deselect()
+	self.selection_changed.emit(self.selected_entities, true)
 
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.

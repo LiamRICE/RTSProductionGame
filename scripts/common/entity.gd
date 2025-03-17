@@ -6,7 +6,8 @@ class_name Entity extends Node3D
 ## Common Entity properties
 @export_group("Properties")
 @export var health:float
-@export_flags_3d_physics() var allegiance:int = 0
+@export var production_cost:float ## Cost of production for the unit in seconds
+@export var allegiance:int = 0
 
 ## Common Entity states
 @export_group("States")
