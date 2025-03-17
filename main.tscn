@@ -83,6 +83,13 @@ unique_name_in_owner = true
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="PlayerInterface" parent="LevelManager/PlayerManager/Player1" instance=ExtResource("1_0xm2m")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
@@ -92,6 +99,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3768, 4.76837e-07, -3.1855
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
 [node name="Vehicle" parent="LevelManager/PlayerManager/Player1/Units" instance=ExtResource("3_lquwl")]
+move_speed = 2.0
+rotation_speed = 0.5
 allegiance = 1
 
 [node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
