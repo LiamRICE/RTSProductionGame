@@ -96,11 +96,13 @@ func _input(_event:InputEvent) -> void:
 			var camera :Camera3D = get_viewport().get_camera_3d()
 			
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-			if not camera_raycast_coords.is_zero_approx():
-				for key in selected_units:
-					# TODO - spread out units
-					selected_units[key].update_target_location(camera_raycast_coords)
 			print(camera_raycast_coords)
+			if not camera_raycast_coords.is_zero_approx():
+				for unit in selected_units:
+					# TODO - spread out units
+					var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
+					print("Sending coords...")
+					selected_units[unit].update_target_location(camera_raycast_coords, is_shift)
 	
 	if Input.is_action_just_released("mouse_right_click") and state == ClickState.SELECTED:
 		# TODO move units to interpolated positions in between two clicks if they are far enough appart

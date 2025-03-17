@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://6dbiff4it08h" path="res://scripts/units/infantry.gd" id="1_bwaj3"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_3e0yr"]
 
-[node name="Infantry" type="Node3D"]
+[node name="Infantry" type="Node3D" groups=["units"]]
 script = ExtResource("1_bwaj3")
 rotation_speed = 100.0
 metadata/_custom_type_script = "uid://bbw1frmdbpa4v"
