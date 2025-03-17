@@ -24,6 +24,11 @@ window/size/viewport_height=900
 
 project/assembly_name="RTSProductionGame"
 
+[global_group]
+
+units=""
+buildings=""
+
 [input]
 
 mouse_left_click={

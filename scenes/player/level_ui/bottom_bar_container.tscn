@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cujpnla0w646r"]
+
+[ext_resource type="Script" uid="uid://r3l8d5sfkbuw" path="res://scripts/ui/level_ui/bottom_bar_container.gd" id="1_ipvk4"]
+
+[node name="BottomBarContainer" type="HBoxContainer" node_paths=PackedStringArray("unit_build_container")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("1_ipvk4")
+unit_build_container = NodePath("Panel/GridContainer")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+columns = 5
