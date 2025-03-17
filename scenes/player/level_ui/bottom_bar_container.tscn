@@ -18,6 +18,5 @@ unit_build_container = NodePath("Panel/GridContainer")
 layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="Panel"]
-custom_minimum_size = Vector2(500, 300)
 layout_mode = 2
 columns = 5

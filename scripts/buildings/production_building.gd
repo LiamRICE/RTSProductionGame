@@ -4,7 +4,7 @@ class_name ProductionBuilding extends Building
 signal unit_constructed(unit:Unit, position:Vector3, move_order:Vector3)
 
 ## Production building nodes
-@export var building_units:Array[Unit]
+@export var building_units:Array[PackedScene]
 @export var production_timer:Timer
 @export var unit_spawn_point:Marker3D
 @export var rally_point:Marker3D
@@ -25,9 +25,12 @@ func place(location:Vector3) -> void:
 
 ## Starts a timer for the production of a new unit
 func queue_unit(unit:int) -> void:
-	self.production_queue.append(self.building_units[unit])
+	var new_unit:Unit = self.building_units[unit].instantiate()
+	new_unit.allegiance = self.allegiance
+	self.production_queue.append(new_unit)
 	if not self.is_producing:
 		self.start_production()
+		self.is_producing = true
 
 ## Starts the production of the unit at index 0 in the production queue
 func start_production() -> void:
@@ -37,5 +40,10 @@ func start_production() -> void:
 func _on_production_timer_timeout():
 	var unit:Unit = self.production_queue.pop_front() as Unit
 	unit.allegiance = self.allegiance
+	# If there is another unit in the queue, start the production for it
+	if self.production_queue.size() > 0:
+		start_production()
+	else:
+		self.is_producing = false
 	self.unit_constructed.emit(unit, unit_spawn_point.global_position, rally_point.global_position)
 	

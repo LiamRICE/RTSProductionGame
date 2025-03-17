@@ -25,8 +25,10 @@ func _physics_process(delta: float) -> void:
 	move(delta)
 
 
-func select():
-	selection_sprite.show()
+func select() -> bool:
+	if is_selectable:
+		selection_sprite.show()
+	return is_selectable
 
 
 func deselect():
@@ -76,7 +78,7 @@ func move(delta:float):
 			return
 	next_point = current_path[path_index]
 	# point unit towards the next path point
-	global_transform.basis.looking_at(next_point)
+	global_transform.basis = Basis.looking_at(next_point, Vector3.UP, true)
 	# set unit velocity to the next path point
 	var new_velocity: Vector3 = global_transform.origin.direction_to(next_point) * movement_delta
 	global_transform.origin = global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)

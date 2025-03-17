@@ -8,6 +8,7 @@ signal pressed_index(index:int)
 
 ## Connects itself to the signal emitting it's index on ready
 func _ready() -> void:
+	set_expand_icon(true)
 	self.pressed.connect(_on_pressed)
 
 ## Emits a signal when pressed

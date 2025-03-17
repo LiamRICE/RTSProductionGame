@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1tdkpg420s70"]
+[gd_scene load_steps=9 format=3 uid="uid://b1tdkpg420s70"]
 
 [ext_resource type="Script" uid="uid://bmbcm5f6vnvg7" path="res://scripts/buildings/turret.gd" id="1_a5qkp"]
+[ext_resource type="Texture2D" uid="uid://2f6bvkqxhkr8" path="res://assets/ui/icons/buildings/turret_single_SW.png" id="2_grxsd"]
 [ext_resource type="ArrayMesh" uid="uid://co0stnihivdcm" path="res://assets/kenney_space/turret_single.obj" id="2_i41cj"]
 [ext_resource type="ArrayMesh" uid="uid://ca4owjrduuf5y" path="res://assets/kenney_space/platform_small.obj" id="3_grxsd"]
 [ext_resource type="ArrayMesh" uid="uid://dlgs1mk5wo37g" path="res://assets/kenney_space/structure_closed.obj" id="4_wophf"]
@@ -29,6 +30,7 @@ preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
 health = 100.0
 allegiance = 1
+icon = ExtResource("2_grxsd")
 is_damageable = true
 is_selectable = true
 metadata/_custom_type_script = "uid://bmbcm5f6vnvg7"

@@ -5,7 +5,7 @@ class_name InfoBar extends HBoxContainer
 @export var unit_build_container:GridContainer
 
 ## Info bar internal variables
-var selection_list:Array[Entity] = []
+var selection_list:Dictionary[int, Entity]
 var button_list:Array[IntButton] = []
 
 ## Info bar methods
@@ -14,9 +14,26 @@ func _ready() -> void:
 		var button:IntButton = IntButton.new()
 		button.set_custom_minimum_size(Vector2(100, 100))
 		button.index = i
-		button.pressed_index.connect(_on_button_pressed)
 		self.button_list.append(button)
 		self.unit_build_container.add_child(button)
+
+## Executed when the selection changes
+func _on_selection_changed(new_selection:Dictionary[int, Entity], is_unit:bool) -> void:
+	if self.selection_list.size() > 0:
+		self.button_list[0].pressed_index.disconnect(selection_list.values()[0].queue_unit)
+	
+	if new_selection.size() == 0:
+		return
+	## Get the selection's first item
+	var item:Entity = new_selection.values()[0]
+	print("Button icon assigned")
+	if not is_unit and item is ProductionBuilding:
+		for index in range(item.building_units.size()):
+			var unit:Unit = item.building_units[index].instantiate()
+			button_list[index].icon = unit.icon
+			button_list[index].pressed_index.connect(item.queue_unit)
+			unit.free()
+	self.selection_list = new_selection
 
 ## Executed when a button is pressed
 func _on_button_pressed(index:int) -> void:

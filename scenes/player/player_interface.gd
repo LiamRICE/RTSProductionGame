@@ -10,6 +10,7 @@ signal selection_changed(selection:Dictionary[int, Entity], is_units:bool)
 @onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
 @onready var add_unit_button:Button = $Button # DEBUG
 @onready var spin_box:SpinBox = $SpinBox # DEBUG
+@export var bottom_bar_container:InfoBar
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
 # Modules
@@ -48,6 +49,8 @@ func _ready():
 	# Initialise the interface for the start of the game
 	initialise_interface()
 	initialise_state_machine()
+	
+	self.selection_changed.connect(self.bottom_bar_container._on_selection_changed)
 
 
 func initialise_interface() -> void:
@@ -137,16 +140,36 @@ func cast_selection() -> void:
 	# Clears the selection
 	# TODO Add modifier keys that either clear the selection or add to selection, etc...
 	selected_entities.clear()
+	# List all the buildings and units independantly in the selection rect
+	var buildings:Dictionary[int, Entity]
+	var units:Dictionary[int, Entity]
 	for unit in get_tree().get_nodes_in_group("units"):
 		# checks if the unit is controlled by the player
 		if unit.allegiance == player_team:
-			# Checks if each unit is contained within the dragged circle selection and selects them if so
+			# Checks if each unit is contained within the dragged selection rect
 			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.transform.origin)):
-				selected_entities[unit.get_instance_id()] = unit
+				units[unit.get_instance_id()] = unit
 				unit.select()
 			else:
 				unit.deselect()
-	self.selection_changed.emit(self.selected_entities, true)
+	for building in get_tree().get_nodes_in_group("buildings"):
+		# checks if the building is controlled by the player
+		if building.allegiance == player_team:
+			# checks if the building is contained within the dragged selection rect
+			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.transform.origin)):
+				buildings[building.get_instance_id()] = building
+				building.select()
+			else:
+				building.deselect()
+	# Add the selection with the most pbjects to the selection list
+	var is_unit:bool = false
+	if units.size() >= buildings.size():
+		self.selected_entities = units
+		is_unit = true
+	else:
+		self.selected_entities = buildings
+	print(self.selected_entities)
+	self.selection_changed.emit(self.selected_entities, is_unit)
 
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
