@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=11 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="MeshLibrary" uid="uid://g7mr2ry7sjrh" path="res://assets/mesh_libraries/terrain.meshlib" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/buildings/turret_gun.tscn" id="4_1bvp3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
@@ -78,6 +79,8 @@ unique_name_in_owner = true
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player0"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player0"]
+
+[node name="Vehicle" parent="LevelManager/PlayerManager/Player0/Units" instance=ExtResource("3_lquwl")]
 
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
 
