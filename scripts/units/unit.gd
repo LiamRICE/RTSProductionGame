@@ -47,8 +47,11 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 	if is_inside_tree():
 		# fetch the world's navigation map
 		var map_RID:RID = get_world_3d().get_navigation_map()
+		# Fetch safe coordinates
+		var safe_start:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, global_position)
+		var safe_end:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, location)
 		# caluclate the path
-		path = NavigationServer3D.map_get_path(map_RID, global_transform.origin, location, true)
+		path = NavigationServer3D.map_get_path(map_RID, safe_start, safe_end, true)
 		print(path)
 		# return the path
 	if is_shift:

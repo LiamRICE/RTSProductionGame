@@ -1,7 +1,7 @@
 extends Control
 
 ## Signals
-signal selection_changed(selection:Dictionary[int, Entity], is_units:bool)
+signal selection_changed(selection:Array[Entity], is_units:bool)
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
@@ -27,7 +27,7 @@ var state :ClickState
 var is_on_ui: bool = false
 
 # Variables
-var selected_entities :Dictionary[int, Entity] = {}
+var selected_entities :Array[Entity] = []
 var constructing_building:Building
 var num_deployments :int = 0
 
@@ -106,16 +106,7 @@ func _input(_event:InputEvent) -> void:
 					# TODO - spread out units
 					var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
 					print("Sending coords...")
-					selected_entities[unit].update_target_location(camera_raycast_coords, is_shift)
-	
-	if Input.is_action_just_released("mouse_right_click") and state == ClickState.SELECTED:
-		# TODO move units to interpolated positions in between two clicks if they are far enough appart
-		# TODO rotate units to the facing perpendicular to the line between the pressed mouse position and released
-		_mouse_right_click = false
-		#var mouse_position :Vector2 = get_viewport().get_mouse_position()
-		#var camera :Camera3D = get_viewport().get_camera_3d()
-		#
-		#var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+					unit.update_target_location(camera_raycast_coords, is_shift)
 	
 	### CONSTRUCTION STATES ###
 	if Input.is_action_pressed("mouse_right_click") and state == ClickState.CONSTRUCTING:
@@ -141,14 +132,14 @@ func cast_selection() -> void:
 	# TODO Add modifier keys that either clear the selection or add to selection, etc...
 	selected_entities.clear()
 	# List all the buildings and units independantly in the selection rect
-	var buildings:Dictionary[int, Entity]
-	var units:Dictionary[int, Entity]
+	var buildings:Array[Entity]
+	var units:Array[Entity]
 	for unit in get_tree().get_nodes_in_group("units"):
 		# checks if the unit is controlled by the player
 		if unit.allegiance == player_team:
 			# Checks if each unit is contained within the dragged selection rect
 			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.transform.origin)):
-				units[unit.get_instance_id()] = unit
+				units.push_back(unit)
 				unit.select()
 			else:
 				unit.deselect()
@@ -157,7 +148,7 @@ func cast_selection() -> void:
 		if building.allegiance == player_team:
 			# checks if the building is contained within the dragged selection rect
 			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.transform.origin)):
-				buildings[building.get_instance_id()] = building
+				buildings.push_back(building)
 				building.select()
 			else:
 				building.deselect()

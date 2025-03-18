@@ -89,8 +89,6 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
-size_flags_horizontal = 1
-size_flags_vertical = 1
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
