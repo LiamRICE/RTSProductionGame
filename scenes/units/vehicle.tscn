@@ -7,6 +7,9 @@
 
 [node name="Vehicle" type="Node3D" groups=["units"]]
 script = ExtResource("1_qm2ug")
+acceleration = 2.0
+max_speed = 5.0
+rotation_speed = 10.0
 health = 100.0
 production_cost = 10.0
 icon = ExtResource("2_4hctu")

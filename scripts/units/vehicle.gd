@@ -1,12 +1,19 @@
 class_name Vehicle extends Unit
 
+@export var acceleration : float = 0 # m/s²
+@export var max_speed : float = 0 # m/s
+@export var current_speed : float = 0 # m/s
+
+
+func _unit_specific_ready():
+	current_speed = 0
+	
 
 func move(delta:float):
 	# check if path is empty, stop moving
 	if current_path.is_empty():
+		current_speed = 0
 		return
-	# set movement speed for this frame
-	var movement_delta : float = move_speed * delta
 	# increment next path point if current point has been reached
 	if global_transform.origin.distance_to(next_point) <= path_point_margin:
 		path_index += 1
@@ -17,17 +24,25 @@ func move(delta:float):
 			return
 	if path_index < len(current_path):
 		next_point = current_path[path_index]
-	# point unit towards the next path point
-	#var rotation_quantity:float = rotation_speed * delta
-	var target_vector = global_position.direction_to(next_point)
-	var target_quaternion:Quaternion = Basis.looking_at(target_vector).get_rotation_quaternion()
-	var angle = unit_utils.get_relative_angle(quaternion, target_quaternion)
-	#print("Required rotation : ", angle)
+
 	# rotate unit
-	#if abs(angle) > rotation_quantity:
-		#basis = basis.rotated(Vector3(0, 1, 0), rotation_quantity)
-	# set unit velocity to the next path point if pointing the right direction
-	#else:
-		#basis = basis.rotated(Vector3(0, 1, 0), angle)
+	# calculate remaining angle
+	var target_vector = global_position.direction_to(next_point)
+	var target_basis = Basis.looking_at(target_vector)
+	var angle : float = quaternion.angle_to(target_basis.get_rotation_quaternion())
+	# slerp with amount increasing to 1 as angle approaches zero
+	var weight : float = (delta / rotation_speed) / (angle + (delta / rotation_speed))
+	print(weight)
+	global_basis = global_basis.slerp(target_basis, weight)
+	
+	# accelerate unit
+	# increase speed by acceleration until max_speed is achieved
+	if current_speed != max_speed:
+		if current_speed + (acceleration * delta) < max_speed:
+			current_speed += acceleration * delta
+		else:
+			current_speed = max_speed
+	# set movement speed for this frame
+	var movement_delta : float = current_speed * delta
 	var new_velocity: Vector3 = global_transform.origin.direction_to(next_point) * movement_delta
 	global_transform.origin = global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
