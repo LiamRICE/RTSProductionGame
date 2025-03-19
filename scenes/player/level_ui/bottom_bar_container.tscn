@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://r3l8d5sfkbuw" path="res://scripts/ui/level_ui/bottom_bar_container.gd" id="1_ipvk4"]
 
-[node name="BottomBarContainer" type="HBoxContainer" node_paths=PackedStringArray("unit_build_container")]
+[node name="BottomBarContainer" type="HBoxContainer" node_paths=PackedStringArray("abilities_tab_container", "abilities_build_container")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,15 +12,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 2
 script = ExtResource("1_ipvk4")
-unit_build_container = NodePath("Panel/GridContainer")
+abilities_tab_container = NodePath("TabContainer")
+abilities_build_container = NodePath("TabContainer/GridContainer")
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
+current_tab = 0
 
-[node name="GridContainer" type="GridContainer" parent="Panel"]
+[node name="GridContainer" type="GridContainer" parent="TabContainer"]
 layout_mode = 2
 columns = 5
+metadata/_tab_index = 0
 
-[node name="Button" type="Button" parent="Panel/GridContainer"]
-custom_minimum_size = Vector2(100, 100)
+[node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 2
