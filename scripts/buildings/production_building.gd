@@ -19,10 +19,6 @@ var is_producing:bool
 
 ## ProductionBuilding Methods
 
-## Overrides the building place method
-func place(location:Vector3) -> void:
-	%LevelManager.add_unit()
-
 ## Starts a timer for the production of a new unit
 func queue_unit(unit:int) -> void:
 	var new_unit:Unit = self.building_units[unit].instantiate()

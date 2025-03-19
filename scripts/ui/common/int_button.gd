@@ -9,6 +9,7 @@ signal pressed_index(index:int)
 ## Connects itself to the signal emitting it's index on ready
 func _ready() -> void:
 	set_expand_icon(true)
+	set_mouse_filter(Control.MOUSE_FILTER_PASS)
 	self.pressed.connect(_on_pressed)
 
 ## Emits a signal when pressed

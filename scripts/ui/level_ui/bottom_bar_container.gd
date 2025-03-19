@@ -15,21 +15,23 @@ func _ready() -> void:
 		var button:IntButton = IntButton.new()
 		button.set_custom_minimum_size(Vector2(100, 100))
 		button.index = i
-		button.set_disabled(false)
+		button.set_disabled(true)
 		button.pressed_index.connect(self._on_button_pressed)
 		self.button_list.append(button)
 		self.abilities_build_container.add_child(button)
 
 ## Executed when the selection changes
-func _on_selection_changed(new_selection:Array[Entity], is_unit:bool) -> void:
-	print(new_selection == self.selection_list)
-	
+func _on_selection_changed(new_selection:Array[Entity], entity_type:int) -> void:
+	print("Selection changed")
 	if new_selection.size() == 0:
+		for button in button_list:
+			button.set_disabled(true)
+			button.set_button_icon(null)
 		return
 	## Get the selection's first item
 	var item:Entity = new_selection[0]
 	print("Button icon assigned")
-	if not is_unit and item is ProductionBuilding:
+	if entity_type == 2 and item is ProductionBuilding:
 		for index in range(item.building_units.size()):
 			var unit:Unit = item.building_units[index].instantiate()
 			self.button_list[index].icon = unit.icon
@@ -41,4 +43,4 @@ func _on_selection_changed(new_selection:Array[Entity], is_unit:bool) -> void:
 func _on_button_pressed(index:int) -> void:
 	print("Pressed : ", index)
 	## TODO - execute button's effect on object
-	print(selection_list[0].get_class())
+	selection_list[0].queue_unit(index)

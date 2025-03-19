@@ -1,7 +1,7 @@
 extends Control
 
 ## Signals
-signal selection_changed(selection:Array[Entity], is_units:bool)
+signal selection_changed(selection:Array[Entity], selection_type:int)
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
@@ -14,6 +14,7 @@ signal selection_changed(selection:Array[Entity], is_units:bool)
 
 # Modules
 const camera_operations:GDScript = preload("res://scripts/utilities/camera_operations.gd")
+const CommonUtils:GDScript = preload("res://scripts/utilities/common_utils.gd")
 
 # State Machine
 enum ClickState {
@@ -22,11 +23,17 @@ enum ClickState {
 	SELECTED,
 	CONSTRUCTING
 }
+enum SelectionType {
+	NONE,
+	UNITS,
+	BUILDINGS
+}
 var state :ClickState
 var is_on_ui: bool = false
 
 # Variables
 var selected_entities :Array[Entity] = []
+var selected_type:SelectionType = 0
 var constructing_building:Building
 var num_deployments :int = 0
 
@@ -87,12 +94,13 @@ func _input(_event:InputEvent) -> void:
 		state = ClickState.DEFAULT
 		# Empty player's unit selection
 		selected_entities.clear()
+		print("Cleared Selection !")
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
 	if Input.is_action_just_pressed("mouse_right_click") and state == ClickState.SELECTED and is_on_ui == false:
 		_mouse_right_click = true
-		if not selected_entities.is_empty():
+		if not selected_entities.is_empty() and self.selected_type == SelectionType.UNITS:
 			var mouse_position :Vector2 = get_viewport().get_mouse_position()
 			var camera :Camera3D = get_viewport().get_camera_3d()
 			
@@ -120,6 +128,7 @@ func _input(_event:InputEvent) -> void:
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
 			self.remove_child(self.constructing_building)
 			self.level_manager.add_building(self.spin_box.value, self.constructing_building, click_position)
+			## TODO - Debug, make allegiance based on player interface
 		else:
 			print("Invalid placement ! Object intersects placement blocker.")
 
@@ -127,7 +136,7 @@ func _input(_event:InputEvent) -> void:
 func cast_selection() -> void:
 	# Clears the selection
 	# TODO Add modifier keys that either clear the selection or add to selection, etc...
-	selected_entities.clear()
+	#self.selected_entities.clear()
 	# List all the buildings and units independantly in the selection rect
 	var buildings:Array[Entity]
 	var units:Array[Entity]
@@ -135,7 +144,7 @@ func cast_selection() -> void:
 		# checks if the unit is controlled by the player
 		if unit.allegiance == player_team:
 			# Checks if each unit is contained within the dragged selection rect
-			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.transform.origin)):
+			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.global_transform.origin)):
 				units.push_back(unit)
 				unit.select()
 			else:
@@ -144,20 +153,23 @@ func cast_selection() -> void:
 		# checks if the building is controlled by the player
 		if building.allegiance == player_team:
 			# checks if the building is contained within the dragged selection rect
-			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.transform.origin)):
+			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.global_transform.origin)):
 				buildings.push_back(building)
 				building.select()
 			else:
 				building.deselect()
 	# Add the selection with the most pbjects to the selection list
-	var is_unit:bool = false
-	if units.size() >= buildings.size():
-		self.selected_entities = units
-		is_unit = true
-	else:
-		self.selected_entities = buildings
-	print(self.selected_entities)
-	self.selection_changed.emit(self.selected_entities, is_unit)
+	self.selected_type = SelectionType.NONE
+	var new_selection:Array[Entity]
+	if units.size() >= buildings.size() and units.size() > 0:
+		new_selection = units
+		self.selected_type = SelectionType.UNITS
+	elif buildings.size() > 0:
+		new_selection = buildings
+		self.selected_type = SelectionType.BUILDINGS
+	if not CommonUtils.is_array_equal(new_selection, self.selected_entities):
+		self.selected_entities = new_selection
+		self.selection_changed.emit(self.selected_entities, self.selected_type)
 
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -201,5 +213,13 @@ func _on_deploy_unit_button_pressed():
 	self._is_constructing = true
 	self.state = ClickState.CONSTRUCTING
 	self.constructing_building = preload("res://scenes/buildings/turret_gun.tscn").instantiate()
+	self.constructing_building.initialise_placement()
+	self.add_child(self.constructing_building)
+
+
+func _on_barracks_added():
+	self._is_constructing = true
+	self.state = ClickState.CONSTRUCTING
+	self.constructing_building = preload("res://scenes/buildings/barracks.tscn").instantiate()
 	self.constructing_building.initialise_placement()
 	self.add_child(self.constructing_building)

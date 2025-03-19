@@ -13,7 +13,7 @@ func add_building(team:int, building:Building, location:Vector3) -> void:
 	var player:Node = player_manager.get_node("Player" + str(team))
 	## Add the building to the list of player buildings
 	player.get_node("Buildings").add_child(building)
-	building.place(location) ## Place the building
+	building.place(location, team) ## Place the building
 	
 	if building is ProductionBuilding:
 		building.unit_constructed.connect(_on_unit_constructed)

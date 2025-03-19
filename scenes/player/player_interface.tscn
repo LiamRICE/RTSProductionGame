@@ -18,7 +18,7 @@ layout_mode = 2
 offset_right = 74.0
 offset_bottom = 31.0
 mouse_filter = 1
-text = "Add unit"
+text = "Add barracks"
 
 [node name="DeployUnitButton" type="Button" parent="."]
 layout_mode = 2
@@ -49,4 +49,5 @@ patch_margin_bottom = 3
 
 [node name="Camera" parent="." instance=ExtResource("3_l5ywc")]
 
+[connection signal="pressed" from="Button" to="." method="_on_barracks_added"]
 [connection signal="pressed" from="DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]

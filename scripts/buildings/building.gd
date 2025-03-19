@@ -23,10 +23,11 @@ func initialise_placement() -> void:
 	_set_preview_state(true)
 	_set_preview_material()
 
-func place(location:Vector3) -> void:
+func place(location:Vector3, allegiance:int) -> void:
 	_set_preview_state(false)
 	_set_preview_material()
 	self.global_position = location
+	self.allegiance = allegiance
 
 ## Checks if the placement of the building doesn't encroach on any other buildings
 func is_placement_valid() -> bool:

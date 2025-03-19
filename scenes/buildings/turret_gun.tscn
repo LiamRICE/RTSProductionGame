@@ -3,13 +3,9 @@
 [ext_resource type="Script" uid="uid://bmbcm5f6vnvg7" path="res://scripts/buildings/turret.gd" id="1_a5qkp"]
 [ext_resource type="Texture2D" uid="uid://2f6bvkqxhkr8" path="res://assets/ui/icons/buildings/turret_single_SW.png" id="2_grxsd"]
 [ext_resource type="ArrayMesh" uid="uid://co0stnihivdcm" path="res://assets/kenney_space/turret_single.obj" id="2_i41cj"]
+[ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="2_wophf"]
 [ext_resource type="ArrayMesh" uid="uid://ca4owjrduuf5y" path="res://assets/kenney_space/platform_small.obj" id="3_grxsd"]
 [ext_resource type="ArrayMesh" uid="uid://dlgs1mk5wo37g" path="res://assets/kenney_space/structure_closed.obj" id="4_wophf"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a5qkp"]
-transparency = 4
-cull_mode = 2
-emission = Color(1, 1, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a5qkp"]
 size = Vector3(1, 1.1, 1)
@@ -24,7 +20,7 @@ rotating_mesh = NodePath("Meshes/Turret")
 mesh_container = NodePath("Meshes")
 navigation_obstacle = NodePath("NavigationObstacle3D")
 placement_collision_shape = NodePath("Body/BaseShape")
-preview_material = SubResource("StandardMaterial3D_a5qkp")
+preview_material = ExtResource("2_wophf")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
