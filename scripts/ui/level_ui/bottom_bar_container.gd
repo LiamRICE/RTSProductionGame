@@ -1,8 +1,7 @@
-class_name InfoBar extends HBoxContainer
+extends TabContainer
 
 ## Info bar properties
 @export var abilities_build_container_size:Vector2i = Vector2i(5, 3)
-@export var abilities_tab_container:TabContainer
 @export var abilities_build_container:GridContainer
 
 ## Info bar internal variables
@@ -16,7 +15,7 @@ func _ready() -> void:
 		var button:IntButton = IntButton.new()
 		button.set_custom_minimum_size(Vector2(100, 100))
 		button.index = i
-		button.set_disabled(true)
+		button.set_disabled(false)
 		button.pressed_index.connect(self._on_button_pressed)
 		self.button_list.append(button)
 		self.abilities_build_container.add_child(button)

@@ -10,7 +10,6 @@ signal selection_changed(selection:Array[Entity], is_units:bool)
 @onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
 @onready var add_unit_button:Button = $Button # DEBUG
 @onready var spin_box:SpinBox = $SpinBox # DEBUG
-@export var bottom_bar_container:InfoBar
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
 # Modules
@@ -49,8 +48,6 @@ func _ready():
 	# Initialise the interface for the start of the game
 	initialise_interface()
 	initialise_state_machine()
-	
-	self.selection_changed.connect(self.bottom_bar_container._on_selection_changed)
 
 
 func initialise_interface() -> void:
@@ -198,15 +195,6 @@ func update_ui_selection_rect() -> void:
 		ui_selection_patch.scale.y = -1
 	else:
 		ui_selection_patch.scale.y = 1
-
-## tracks when mouse enters a UI element TODO - Doesn't work ?
-func _on_mouse_entered():
-	is_on_ui = true
-	print(is_on_ui)
-## tracks when mouse leaves a UI element TODO - Doesn't work ?
-func _on_mouse_exited():
-	is_on_ui = false
-	print(is_on_ui)
 
 ## Add building
 func _on_deploy_unit_button_pressed():

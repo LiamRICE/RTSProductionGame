@@ -1,10 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=14 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="MeshLibrary" uid="uid://g7mr2ry7sjrh" path="res://assets/mesh_libraries/terrain.meshlib" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/buildings/turret_gun.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://cujpnla0w646r" path="res://scenes/player/level_ui/bottom_bar_container.tscn" id="5_5vw27"]
 [ext_resource type="PackedScene" uid="uid://bra66m3iaqt8s" path="res://scenes/buildings/barracks.tscn" id="5_7mycd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
@@ -72,6 +74,22 @@ cell_center_y = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LevelManager/WorldManager/NavigationRegion3D/StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_0xm2m")
 
+[node name="UIManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("player_interface", "orders_interface")]
+unique_name_in_owner = true
+script = ExtResource("3_272bh")
+player_interface = NodePath("PlayerInterface")
+orders_interface = NodePath("BottomBarContainer")
+
+[node name="PlayerInterface" parent="LevelManager/UIManager" instance=ExtResource("1_0xm2m")]
+
+[node name="BottomBarContainer" parent="LevelManager/UIManager" instance=ExtResource("5_5vw27")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+
 [node name="PlayerManager" type="Node" parent="LevelManager"]
 unique_name_in_owner = true
 
@@ -82,8 +100,6 @@ unique_name_in_owner = true
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player0"]
 
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
-
-[node name="PlayerInterface" parent="LevelManager/PlayerManager/Player1" instance=ExtResource("1_0xm2m")]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
