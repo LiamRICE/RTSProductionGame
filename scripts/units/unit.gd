@@ -11,7 +11,7 @@ const unit_utils:GDScript = preload("res://scripts/utilities/unit_utils.gd")
 var current_path : PackedVector3Array
 var next_point : Vector3
 var path_index : int = 0
-@export var path_point_margin : float = 0.2
+@export var path_point_margin : float = 0.1
 
 # selection
 @onready var selection_sprite : Sprite3D = $SelectionSprite3D
@@ -49,6 +49,9 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 		var map_RID:RID = get_world_3d().get_navigation_map()
 		# Fetch safe coordinates
 		var safe_start:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, global_position)
+		if is_shift:
+			if len(current_path) > 0:
+				safe_start = current_path[len(current_path)-1]
 		var safe_end:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, location)
 		# caluclate the path
 		path = NavigationServer3D.map_get_path(map_RID, safe_start, safe_end, true)
@@ -82,9 +85,7 @@ func move(delta:float):
 			next_point = global_transform.origin
 			return
 	if path_index < len(current_path):
-		next_point = current_path[path_index] # index out of bounds!
-	else:
-		current_path = PackedVector3Array()
+		next_point = current_path[path_index]
 	# point unit towards the next path point
 	var target_vector = global_position.direction_to(next_point)
 	var target_basis = Basis.looking_at(target_vector)
