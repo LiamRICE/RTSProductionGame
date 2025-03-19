@@ -16,9 +16,7 @@ func move(delta:float):
 			next_point = global_transform.origin
 			return
 	if path_index < len(current_path):
-		next_point = current_path[path_index] # index out of bounds!
-	else:
-		path_index = 0
+		next_point = current_path[path_index]
 	# point unit towards the next path point
 	#var rotation_quantity:float = rotation_speed * delta
 	var target_vector = global_position.direction_to(next_point)
