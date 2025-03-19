@@ -20,6 +20,11 @@ var TEAM : int
 
 func _ready():
 	TEAM = allegiance
+	_unit_specific_ready()
+
+
+func _unit_specific_ready():
+	pass
 
 
 func _physics_process(delta: float) -> void:
