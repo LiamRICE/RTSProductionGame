@@ -199,12 +199,14 @@ func update_ui_selection_rect() -> void:
 	else:
 		ui_selection_patch.scale.y = 1
 
-## tracks when mouse enters a UI element
+## tracks when mouse enters a UI element TODO - Doesn't work ?
 func _on_mouse_entered():
 	is_on_ui = true
-## tracks when mouse leaves a UI element
+	print(is_on_ui)
+## tracks when mouse leaves a UI element TODO - Doesn't work ?
 func _on_mouse_exited():
 	is_on_ui = false
+	print(is_on_ui)
 
 ## Add building
 func _on_deploy_unit_button_pressed():

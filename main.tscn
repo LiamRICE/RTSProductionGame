@@ -84,11 +84,6 @@ unique_name_in_owner = true
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="PlayerInterface" parent="LevelManager/PlayerManager/Player1" instance=ExtResource("1_0xm2m")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
