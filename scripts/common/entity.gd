@@ -12,8 +12,8 @@ class_name Entity extends Node3D
 
 ## Common Entity states
 @export_group("States")
-@export var is_damageable:bool
-@export var is_selectable:bool
+@export var is_damageable:bool = true
+@export var is_selectable:bool = true
 
 
 ## Entity Methods ##

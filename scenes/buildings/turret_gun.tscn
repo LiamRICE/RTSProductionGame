@@ -27,8 +27,6 @@ body = NodePath("Body")
 health = 100.0
 allegiance = 1
 icon = ExtResource("2_grxsd")
-is_damageable = true
-is_selectable = true
 metadata/_custom_type_script = "uid://bmbcm5f6vnvg7"
 
 [node name="Meshes" type="Node3D" parent="."]

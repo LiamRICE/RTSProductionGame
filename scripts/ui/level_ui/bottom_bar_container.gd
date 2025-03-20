@@ -33,7 +33,7 @@ func _on_selection_changed(new_selection:Array[Entity], entity_type:int) -> void
 	print("Button icon assigned")
 	if entity_type == 2 and item is ProductionBuilding:
 		for index in range(item.building_units.size()):
-			var unit:Unit = item.building_units[index].instantiate()
+			var unit:Unit = item.building_units[index].entity_instance.instantiate()
 			self.button_list[index].icon = unit.icon
 			self.button_list[index].set_disabled(false)
 			unit.free()

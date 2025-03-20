@@ -16,15 +16,11 @@ func add_building(team:int, building:Building, location:Vector3) -> void:
 	building.place(location, team) ## Place the building
 	
 	if building is ProductionBuilding:
-		building.unit_constructed.connect(_on_unit_constructed)
+		building.unit_constructed.connect(add_unit)
 
 ## Adds a unit to the world
-func add_unit(team:int, unit:Unit, location:Vector3) -> void:
-	var player:Node = player_manager.get_node("Player" + str(team))
+func add_unit(unit:Unit, location:Vector3, rally_point:Vector3) -> void:
+	var player:Node = player_manager.get_node("Player" + str(unit.allegiance))
 	## Add the unit to the list of player units
 	player.get_node("Units").add_child(unit)
-	unit.spawn(location) ## Place the unit
-
-## Signal fired when a unit is constructed from a building
-func _on_unit_constructed(unit:Unit, position:Vector3, move_order:Vector3) -> void:
-	print("Unit has been built")
+	unit.spawn(location, rally_point) ## Place the unit

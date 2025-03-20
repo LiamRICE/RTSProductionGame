@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bra66m3iaqt8s"]
+[gd_scene load_steps=11 format=3 uid="uid://bra66m3iaqt8s"]
 
 [ext_resource type="Script" uid="uid://ffduxcvmiea4" path="res://scripts/buildings/production_building.gd" id="1_hv4qf"]
 [ext_resource type="ArrayMesh" uid="uid://bbuo1wa7ckm2n" path="res://assets/kenney_space/hangar_largeB.obj" id="2_i88yw"]
-[ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="2_xhwwk"]
+[ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="2_r6xbr"]
+[ext_resource type="Resource" uid="uid://cpf0cu1b3n607" path="res://data/units/vehicle.tres" id="3_0qrta"]
 [ext_resource type="ArrayMesh" uid="uid://bcij2eyadoo12" path="res://assets/kenney_space/barrel.obj" id="3_a241g"]
 [ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="3_r6xbr"]
 [ext_resource type="Texture2D" uid="uid://d1ms3ptbajxbw" path="res://assets/ui/icons/buildings/hangar_largeB_NW.png" id="3_xhwwk"]
@@ -14,7 +15,7 @@ size = Vector3(2, 1, 3)
 
 [node name="Barracks" type="Node3D" node_paths=PackedStringArray("production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings"]]
 script = ExtResource("1_hv4qf")
-building_units = Array[PackedScene]([ExtResource("2_xhwwk")])
+building_units = Array[ExtResource("2_r6xbr")]([ExtResource("3_0qrta")])
 production_timer = NodePath("ProductionTimer")
 unit_spawn_point = NodePath("SpawnPoint")
 rally_point = NodePath("RallyPoint")
@@ -28,8 +29,6 @@ body = NodePath("Body")
 health = 250.0
 production_cost = 10.0
 icon = ExtResource("3_xhwwk")
-is_damageable = true
-is_selectable = true
 metadata/_custom_type_script = "uid://ffduxcvmiea4"
 
 [node name="Meshes" type="Node3D" parent="."]

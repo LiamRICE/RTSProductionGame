@@ -22,6 +22,9 @@ func _ready():
 	TEAM = allegiance
 	_unit_specific_ready()
 
+func spawn(location:Vector3, rally_point:Vector3) -> void:
+	self.global_position = location
+	set_navigation_path(rally_point)
 
 func _unit_specific_ready():
 	pass

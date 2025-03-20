@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BuildingResource" load_steps=4 format=3 uid="uid://csmw8gjf8nih5"]
+
+[ext_resource type="PackedScene" uid="uid://bra66m3iaqt8s" path="res://scenes/buildings/barracks.tscn" id="1_5mpgk"]
+[ext_resource type="Script" uid="uid://dfvp4h7wikp0k" path="res://scripts/data_resources/building_resource.gd" id="1_y8cv6"]
+[ext_resource type="Texture2D" uid="uid://d1ms3ptbajxbw" path="res://assets/ui/icons/buildings/hangar_largeB_NW.png" id="3_x3hrc"]
+
+[resource]
+script = ExtResource("1_y8cv6")
+entity_instance = ExtResource("1_5mpgk")
+health = 250.0
+production_cost = 10.0
+name = "Barracks"
+ui_icon = ExtResource("3_x3hrc")
+ui_description = "Produces basic infantry units. This building can build :
+- Infantry"
+ui_tooltip = "Produces basic infantry units."
+metadata/_custom_type_script = "uid://dfvp4h7wikp0k"

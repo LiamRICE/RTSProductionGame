@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BuildingResource" load_steps=4 format=3 uid="uid://daa86cqomci4n"]
+
+[ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/buildings/turret_gun.tscn" id="1_kgsoq"]
+[ext_resource type="Script" uid="uid://dfvp4h7wikp0k" path="res://scripts/data_resources/building_resource.gd" id="1_teo1b"]
+[ext_resource type="Texture2D" uid="uid://2f6bvkqxhkr8" path="res://assets/ui/icons/buildings/turret_single_SW.png" id="3_gnvjy"]
+
+[resource]
+script = ExtResource("1_teo1b")
+entity_instance = ExtResource("1_kgsoq")
+health = 100.0
+production_cost = 10.0
+name = "Gun Turret"
+ui_icon = ExtResource("3_gnvjy")
+ui_description = "A defensive structure that fires on the closest enemy unit within line of sight. Targets both land and air units."
+ui_tooltip = "Defensive building that can target both air and land units."
+metadata/_custom_type_script = "uid://dfvp4h7wikp0k"
