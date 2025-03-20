@@ -45,6 +45,8 @@ mesh = ExtResource("4_wophf")
 skeleton = NodePath("../..")
 
 [node name="Body" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="BaseShape" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
@@ -56,5 +58,5 @@ shape = SubResource("CylinderShape3D_i41cj")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
 height = 2.0
-vertices = PackedVector3Array(0.5, 0, -0.5, 0.5, 0, 0.5, -0.5, 0, 0.5, -0.5, 0, -0.5)
+vertices = PackedVector3Array(-0.5, 0, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5, 0.5, 0, -0.5)
 affect_navigation_mesh = true

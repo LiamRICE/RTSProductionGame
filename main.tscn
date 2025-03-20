@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=15 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="MeshLibrary" uid="uid://g7mr2ry7sjrh" path="res://assets/mesh_libraries/terrain.meshlib" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
 [ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/buildings/turret_gun.tscn" id="4_1bvp3"]
@@ -18,9 +19,10 @@ sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
 background_mode = 2
 sky = SubResource("Sky_h2yge")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_kek77"]
+size = Vector3(100, 1, 100)
+
 [sub_resource type="NavigationMesh" id="NavigationMesh_0xm2m"]
-vertices = PackedVector3Array(-8.9, 0.2, -5.9, -8.9, 0.2, 3.9, 2.9, 0.2, 3.9, 2.9, 0.2, -5.9)
-polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 geometry_parsed_geometry_type = 0
 cell_size = 0.1
 cell_height = 0.1
@@ -31,8 +33,6 @@ agent_max_slope = 30.0
 edge_max_error = 0.1
 detail_sample_distance = 1.0
 detail_sample_max_error = 0.1
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0xm2m"]
 
 [node name="GameManager" type="Node"]
 
@@ -51,11 +51,9 @@ transform = Transform3D(0.866025, 0.353553, -0.353554, 0, 0.707107, 0.707106, 0.
 
 [node name="WorldManager" type="Node" parent="LevelManager"]
 unique_name_in_owner = true
+script = ExtResource("2_kek77")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="LevelManager/WorldManager"]
-navigation_mesh = SubResource("NavigationMesh_0xm2m")
-
-[node name="Terrain" type="GridMap" parent="LevelManager/WorldManager/NavigationRegion3D"]
+[node name="Terrain" type="GridMap" parent="LevelManager/WorldManager"]
 mesh_library = ExtResource("2_h2yge")
 cell_size = Vector3(1, 0.5, 1)
 cell_center_y = false
@@ -65,14 +63,18 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="GridMap" type="GridMap" parent="LevelManager/WorldManager/NavigationRegion3D"]
+[node name="GridMap" type="GridMap" parent="LevelManager/WorldManager"]
 cell_size = Vector3(1, 1, 1)
 cell_center_y = false
 
-[node name="StaticBody3D" type="StaticBody3D" parent="LevelManager/WorldManager/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="LevelManager/WorldManager"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelManager/WorldManager/NavigationRegion3D/StaticBody3D"]
-shape = SubResource("WorldBoundaryShape3D_0xm2m")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelManager/WorldManager/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_kek77")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="LevelManager/WorldManager"]
+navigation_mesh = SubResource("NavigationMesh_0xm2m")
 
 [node name="UIManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("player_interface", "orders_interface")]
 unique_name_in_owner = true
