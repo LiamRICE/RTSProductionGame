@@ -26,6 +26,7 @@ func _initialise_navigation() -> void:
 	navigation_mesh.set_collision_mask_value(1, true)
 	navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
 	navigation_mesh.set_agent_max_climb(0.1)
+	navigation_mesh.set_agent_max_slope(30)
 	
 	## Update navigation server
 	source_geometry_data = NavigationMeshSourceGeometryData3D.new()
