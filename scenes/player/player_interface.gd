@@ -103,7 +103,8 @@ func _input(_event:InputEvent) -> void:
 		# cast to check location
 		var raycast_result = cast_ray(camera)
 		var target:Entity
-		if not raycast_result.get("collider").get_parent().is_in_group("navigation_map"):
+		print("Navigation Map? ",raycast_result.get("collider").is_in_group("navigation_map"))
+		if not raycast_result.get("collider").is_in_group("navigation_map"):
 			target = raycast_result.get("collider").get_parent()
 		# check if is in group unit and is enemy -> assign as target
 		# check if on resource and unit has gatherer node -> assign as resource node

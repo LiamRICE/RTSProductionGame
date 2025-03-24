@@ -47,7 +47,7 @@ directional_shadow_blend_splits = true
 unique_name_in_owner = true
 script = ExtResource("2_kek77")
 
-[node name="3DTerrain" type="GridMap" parent="LevelManager/WorldManager"]
+[node name="3DTerrain" type="GridMap" parent="LevelManager/WorldManager" groups=["navigation_map"]]
 mesh_library = ExtResource("4_4c57u")
 cell_size = Vector3(1, 0.5, 1)
 cell_center_y = false
