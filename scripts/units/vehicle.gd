@@ -32,7 +32,6 @@ func move(delta:float):
 	var angle : float = quaternion.angle_to(target_basis.get_rotation_quaternion())
 	# slerp with amount increasing to 1 as angle approaches zero
 	var weight : float = (delta / rotation_speed) / (angle + (delta / rotation_speed))
-	print(weight)
 	global_basis = global_basis.slerp(target_basis, weight)
 	
 	# accelerate unit

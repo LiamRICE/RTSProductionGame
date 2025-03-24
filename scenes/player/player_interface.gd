@@ -33,7 +33,7 @@ var is_on_ui: bool = false
 
 # Variables
 var selected_entities :Array[Entity] = []
-var selected_type:SelectionType = 0
+var selected_type:SelectionType = SelectionType.NONE
 var constructing_building:Building
 var num_deployments :int = 0
 
@@ -138,7 +138,7 @@ func _input(_event:InputEvent) -> void:
 			var mousepos:Vector2 = self.get_local_mouse_position()
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
 			self.remove_child(self.constructing_building)
-			self.level_manager.add_building(self.spin_box.value, self.constructing_building, click_position)
+			self.level_manager.add_building(self.spin_box.value as int, self.constructing_building, click_position)
 			## TODO - Debug, make allegiance based on player interface
 		else:
 			print("Invalid placement ! Object intersects placement blocker.")

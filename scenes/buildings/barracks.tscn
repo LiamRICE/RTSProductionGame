@@ -74,7 +74,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49012e-07, 0.4995, 0)
 shape = SubResource("BoxShape3D_i88yw")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
-vertices = PackedVector3Array(1, 0, 1.5, -1, 0, 1.5, -1, 0, -1.5, 1, 0, -1.5)
+vertices = PackedVector3Array(1, 0, -1.5, -1, 0, -1.5, -1, 0, 1.5, 1, 0, 1.5)
 affect_navigation_mesh = true
 
 [node name="ProductionTimer" type="Timer" parent="."]

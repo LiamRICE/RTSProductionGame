@@ -1,0 +1,214 @@
+[gd_scene load_steps=27 format=3 uid="uid://c05d1g3nqtb3e"]
+
+[ext_resource type="ArrayMesh" uid="uid://hn0c1olu7qxv" path="res://assets/kenney_space/terrain.obj" id="1_t1plr"]
+[ext_resource type="ArrayMesh" uid="uid://dy03t4apgegdg" path="res://assets/kenney_space/terrain_roadStraight.obj" id="2_5kw5v"]
+[ext_resource type="ArrayMesh" uid="uid://bh20uk2gmxxia" path="res://assets/kenney_space/terrain_roadCorner.obj" id="3_6hblb"]
+[ext_resource type="ArrayMesh" uid="uid://c8uo3yplcdam1" path="res://assets/kenney_space/terrain_roadCross.obj" id="4_nmnp7"]
+[ext_resource type="ArrayMesh" uid="uid://d3ye05crxbpgh" path="res://assets/kenney_space/terrain_roadSplit.obj" id="5_s8cce"]
+[ext_resource type="ArrayMesh" uid="uid://d1rxxkg27g823" path="res://assets/kenney_space/terrain_roadEnd.obj" id="6_rlqaf"]
+[ext_resource type="ArrayMesh" uid="uid://bi4hssnmb0s3g" path="res://assets/kenney_space/terrain_ramp.obj" id="7_3b84l"]
+[ext_resource type="ArrayMesh" uid="uid://cyclanpkdmxqg" path="res://assets/kenney_space/terrain_rampLarge.obj" id="8_1itn7"]
+[ext_resource type="ArrayMesh" uid="uid://b4ddt3prwvedq" path="res://assets/kenney_space/terrain_rampLarge_detailed.obj" id="9_re7r1"]
+[ext_resource type="ArrayMesh" uid="uid://bmlhc3wlifqqw" path="res://assets/kenney_space/terrain_side.obj" id="10_u3yxi"]
+[ext_resource type="ArrayMesh" uid="uid://k3thwh5wshin" path="res://assets/kenney_space/terrain_sideCliff.obj" id="11_08sp6"]
+[ext_resource type="ArrayMesh" uid="uid://bwkdv3gls8x66" path="res://assets/kenney_space/terrain_sideCorner.obj" id="12_7i2ck"]
+[ext_resource type="ArrayMesh" uid="uid://da102xwwf48qk" path="res://assets/kenney_space/terrain_sideCornerInner.obj" id="13_o4stj"]
+[ext_resource type="ArrayMesh" uid="uid://kndimujbstaq" path="res://assets/kenney_space/terrain_sideEnd.obj" id="14_dlg4g"]
+[ext_resource type="ArrayMesh" uid="uid://b46khxsuraogt" path="res://assets/kenney_space/terrain_sideEndMirror.obj" id="15_1itn7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ygrpk"]
+size = Vector3(1, 0.5, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3b84l"]
+points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_88xeo"]
+points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0, -1.5, -0.5, 0.5, -1.5, 0.5, 0.5, -1.5, 0.5, 0, -1.5, 0.5, 0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1itn7"]
+size = Vector3(1, 0.5, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_b1ljv"]
+points = PackedVector3Array(-0.5, 0, 0, -0.5, 0, -1, -0.5, 0.5, -1, 0.5, 0.5, -1, 0.5, 0, -1, 0.5, 0, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_re7r1"]
+size = Vector3(1, 0.5, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_u3yxi"]
+points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0.5, -0.1, -0.5, 0.5, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.1, 0.5, 0, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_re7r1"]
+points = PackedVector3Array(-0.5, 0, -0.5, 0, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0.5, 0, 0.5, 0, 0.5, -0.25, 0, 0.25, 0.12, 0.5, -0.12)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_08sp6"]
+points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0.5, 0, -0.5, 0.5, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.5, 0, 0.5, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7i2ck"]
+points = PackedVector3Array(-0.5, 0, -0.5, 0, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0, 0.5, 0, 0, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_o4stj"]
+points = PackedVector3Array(0.5, 0, -0.5, 0, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0, -0.5, -0.5, 0, 0.5, 0, 0, 0.5)
+
+[node name="GroundLibrary" type="Node3D"]
+
+[node name="terrain" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("1_t1plr")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_road_straight" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("2_5kw5v")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_road_straight"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_road_straight/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_road_corner" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("3_6hblb")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_road_corner"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_road_corner/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_road_cross" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("4_nmnp7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_road_cross"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_road_cross/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_road_split" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("5_s8cce")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_road_split"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_road_split/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_road_end" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("6_rlqaf")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_road_end"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_road_end/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="terrain_ramp" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("7_3b84l")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_ramp/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_3b84l")
+
+[node name="terrain_ramp_large" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("8_1itn7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_ramp_large/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_88xeo")
+
+[node name="terrain_ramp_large_detailed" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("9_re7r1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large_detailed"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_ramp_large_detailed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_1itn7")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="terrain_ramp_large_detailed/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_b1ljv")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="terrain_ramp_large_detailed/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -1.25)
+shape = SubResource("BoxShape3D_re7r1")
+
+[node name="terrain_side" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("10_u3yxi")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_3b84l")
+
+[node name="terrain_side_cliff" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("11_08sp6")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_cliff"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_cliff/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_u3yxi")
+
+[node name="terrain_side_corner" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("12_7i2ck")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_corner"]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="terrain_side_corner/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_corner/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_re7r1")
+
+[node name="terrain_side_corner_inner" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("13_o4stj")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_corner_inner"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_corner_inner/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_08sp6")
+
+[node name="terrain_side_end" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("14_dlg4g")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_end"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_end/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="terrain_side_end/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_7i2ck")
+
+[node name="terrain_side_end_mirror" type="MeshInstance3D" parent="."]
+visible = false
+mesh = ExtResource("15_1itn7")
+skeleton = NodePath("../terrain_side_end")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_end_mirror"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_end_mirror/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_ygrpk")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="terrain_side_end_mirror/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_o4stj")

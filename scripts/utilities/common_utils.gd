@@ -3,8 +3,8 @@ extends Node
 static func is_array_equal(array1:Array, array2:Array) -> bool:
 	## Return false if arrays are not the same size
 	if array1.size() != array2.size():
-		return false
 		print("Not the same size")
+		return false
 	
 	## Check each item one to one. For both to be considered equal, they must have the same contents in the same order
 	for index in range(array1.size()):
