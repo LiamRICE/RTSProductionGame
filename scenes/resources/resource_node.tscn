@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://di2dykp7unme6"]
+
+[ext_resource type="Script" uid="uid://bw0b4ta85x5s5" path="res://scripts/common/resources/resource_node_metal.gd" id="1_o7r71"]
+[ext_resource type="ArrayMesh" uid="uid://cxyd5md3ntut8" path="res://assets/kenney_space/rock_crystals.obj" id="2_73mkm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yrqnr"]
+size = Vector3(0.884399, 0.353455, 0.795029)
+
+[node name="ResourceNodeMetal" type="Node3D" groups=["resource"]]
+script = ExtResource("1_o7r71")
+resource_type = 3
+resource_amount = 5
+metadata/_custom_type_script = "uid://djpbit5h4ps0b"
+
+[node name="RockCrystals" type="MeshInstance3D" parent="."]
+mesh = ExtResource("2_73mkm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0473145, 0.173004, 0.030098)
+shape = SubResource("BoxShape3D_yrqnr")

@@ -5,6 +5,7 @@ const unit_utils:GDScript = preload("res://scripts/utilities/unit_utils.gd")
 @export_group("Properties")
 @export var move_speed : float = 0.
 @export var rotation_speed : float = 0.
+@export var view_distance : float = 0.
 
 # path information
 @export_group("Navigation")

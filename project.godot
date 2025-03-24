@@ -28,6 +28,9 @@ project/assembly_name="RTSProductionGame"
 
 units=""
 buildings=""
+resource=""
+navigation_map=""
+depot=""
 
 [input]
 

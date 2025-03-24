@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://ditvkcv1wolek"]
+
+[ext_resource type="Script" uid="uid://b3534gvpb4lug" path="res://scripts/units/resource_collector_unit.gd" id="1_ubpkj"]
+[ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_c3eiw"]
+[ext_resource type="ArrayMesh" uid="uid://tey2nup14j4s" path="res://assets/kenney_space/astronautA.obj" id="3_xtrm0"]
+[ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
+
+[node name="ResourceCollectorUnit" type="Node3D" groups=["units"]]
+script = ExtResource("1_ubpkj")
+gather_speed = 1.0
+move_speed = 2.0
+view_distance = 10.0
+allegiance = 1
+metadata/_custom_type_script = "uid://6dbiff4it08h"
+
+[node name="SelectionSprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.1, 0)
+visible = false
+texture = ExtResource("2_c3eiw")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+mesh = ExtResource("3_xtrm0")
+
+[node name="ResourceCollectorModule" parent="." instance=ExtResource("4_du1o4")]

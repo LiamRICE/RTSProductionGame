@@ -99,19 +99,30 @@ func _input(_event:InputEvent) -> void:
 			unit.deselect()
 	
 	if Input.is_action_just_pressed("mouse_right_click") and state == ClickState.SELECTED and is_on_ui == false:
+		var camera :Camera3D = get_viewport().get_camera_3d()
+		# cast to check location
+		var raycast_result = cast_ray(camera)
+		var target:Entity
+		if not raycast_result.get("collider").get_parent().is_in_group("navigation_map"):
+			target = raycast_result.get("collider").get_parent()
+		# check if is in group unit and is enemy -> assign as target
+		# check if on resource and unit has gatherer node -> assign as resource node
 		_mouse_right_click = true
 		if not selected_entities.is_empty() and self.selected_type == SelectionType.UNITS:
 			var mouse_position :Vector2 = get_viewport().get_mouse_position()
-			var camera :Camera3D = get_viewport().get_camera_3d()
 			
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			print(camera_raycast_coords)
 			if not camera_raycast_coords.is_zero_approx():
 				for unit in selected_entities:
-					# TODO - spread out units
 					var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
-					print("Sending coords...")
-					unit.update_target_location(camera_raycast_coords, is_shift)
+					if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
+						unit.set_gathering_target(target, is_shift)
+						print("Set gathering target...")
+					else:
+					# TODO - spread out units
+						print("Sending coords...")
+						unit.update_target_location(camera_raycast_coords, is_shift)
 	
 	### CONSTRUCTION STATES ###
 	if Input.is_action_pressed("mouse_right_click") and state == ClickState.CONSTRUCTING:
@@ -223,3 +234,17 @@ func _on_barracks_added():
 	self.constructing_building = preload("res://scenes/buildings/barracks.tscn").instantiate()
 	self.constructing_building.initialise_placement()
 	self.add_child(self.constructing_building)
+
+
+func cast_ray(camera:Camera3D) -> Dictionary:
+		var mouse_pos = get_viewport().get_mouse_position()
+		var ray_length = 100
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * ray_length
+		var space = camera.get_world_3d().direct_space_state
+		var ray_query = PhysicsRayQueryParameters3D.new()
+		ray_query.from = from
+		ray_query.to = to
+		ray_query.collide_with_areas = true
+		var raycast_result = space.intersect_ray(ray_query)
+		return raycast_result
