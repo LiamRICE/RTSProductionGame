@@ -17,6 +17,20 @@ var gather_state:resource_utils.GatherState = resource_utils.GatherState.NONE
 var counter = 1
 
 
+# When resource node is depleted, but resource not full, try to find other resource node nearby.
+# When going to get resource node and node is depleted, try to find other resource node nearby.
+
+func manage_gathering(delta:float):
+	# print("Gather state = ", self.gather_state)
+	if self.gather_state == self.resource_utils.GatherState.NONE:
+		# just do the normal moving
+		self.parent.move(delta)
+	elif self.gather_state == self.resource_utils.GatherState.GATHERING:
+		self.go_gathering(delta)
+	elif self.gather_state == self.resource_utils.GatherState.DROPPING:
+		self.go_drop_off(delta)
+
+
 func set_gathering_target(target:Resources, is_shift:bool = false):
 	# set target as the navigation target
 	self.resource.set("node", target)
@@ -51,98 +65,116 @@ func drop_off():
 	# add resource to player's stockpiles
 
 
-
-func manage_gathering(delta:float):
-	if self.gather_state == self.resource_utils.GatherState.GATHERING:
-		go_gathering(delta)
-	elif self.gather_state == self.resource_utils.GatherState.DROPPING:
-		go_drop_off(delta)
+func check_node_exists() -> bool:
+	# check if resource is not null
+	if self.resource.get("node") != null:
+		# if it is not null, check if there are resources
+		if self.resource.get("node").resource_amount <= 0:
+			# if there are no resources, the node is depleted and should be set to null
+			self.resource.set("node", null)
+			return false
+		else:
+			return true
+	else:
+		return false
 
 
 func go_gathering(delta:float):
-	if self.resource.get("node") != null:
+	# check and set resource node status
+	# if resource node exists
+	if check_node_exists():
 		var node:Resources = self.resource.get("node")
 		var distance:float = node.global_transform.origin.distance_to(self.parent.global_transform.origin)
+		# if within gathering distance
 		if distance <= 1:
+			# gather
 			var done:bool = self.gather(node.resource_type, self.parent.gather_speed, self.parent.max_res, self.parent.gather_amount, delta)
-			# check if resource collection is finished
+			# if gather full -> set depot to null and drop off
 			if done:
-				var target:Vector3 = self.get_closest_depot(self.parent.allegiance)
-				# set depot as move target
-				self.parent.set_navigation_path(target)
+				self.depot = null
 				self.gather_state = self.resource_utils.GatherState.DROPPING
+		# else move to resource node
 		else:
 			self.parent.move(delta)
+	# else
 	else:
-		# node is null so resource is depleted
-		# find nearest duplicate of that resource type
-		var node:Vector3 = self.get_closest_resource_node_of_type(self.resource.get("type"))
-		self.parent.set_navigation_path(self.parent.position)
-		if self.resource.get("node") == null:
-			self.gather_state = self.resource_utils.GatherState.NONE
+		#	find nearest resource node
+		#	if node found -> continue gathering
+		if self.get_closest_resource_node_of_type(self.resource.get("type")):
+			self.parent.set_navigation_path(self.resource.get("node").global_transform.origin)
+			self.gather_state = self.resource_utils.GatherState.GATHERING
+		#	else stop gathering
+		else:
+			if resource.get("quantity") > 0:
+				self.depot = null
+				self.gather_state = self.resource_utils.GatherState.DROPPING
+			else:
+				self.gather_state = self.resource_utils.GatherState.NONE
 
 
 func go_drop_off(delta:float):
+	# if depot exists
 	if self.depot != null:
-		# if within range, drop off resources and trigger
+		# if within dropping distance
 		if self.depot.global_transform.origin.distance_to(self.parent.global_transform.origin) <= 1:
-			self.depot.drop_off(self.resource.get("quantity"))
+			# drop_off
+			self.depot.drop_off(self.resource.get("quantity"), self.resource.get("type"))
 			self.resource.set("quantity", 0)
+			# set to gathering
 			self.gather_state = self.resource_utils.GatherState.GATHERING
-			if self.resource.get("node") != null:
+			# if node still exists, set as target
+			if check_node_exists():
 				self.parent.set_navigation_path(self.resource.get("node").global_transform.origin)
-			else:
-				var position:Vector3 = self.get_closest_resource_node_of_type(self.resource.get("type"))
-				self.parent.set_navigation_path(position)
+		# else move to depot
 		else:
-			# if target is selected, move to target
 			self.parent.move(delta)
+	# else
 	else:
-		# if null, then find closest depot
-		var target:Vector3 = self.get_closest_depot(self.parent.allegiance)
-		self.parent.set_navigation_path(target)
-		if self.depot == null:
-			self.gatherer.gather_state = self.gatherer.resource_utils.GatherState.NONE
+		# find closest depot
+		if self.get_closest_depot(self.parent.allegiance):
+			# if depot exists -> continue dropping
+			self.parent.set_navigation_path(self.depot.global_transform.origin)
+		else:
+			# else stop gathering
+			self.gather_state = self.resource_utils.GatherState.NONE
 
 
-func get_closest_depot(allegiance:int) -> Vector3:
-	var parent:Node3D = self.get_parent()
+func get_closest_depot(allegiance:int) -> bool:
 	var depots:Array = get_tree().get_nodes_in_group("depot")
 	var closest:DepotBuilding = null
 	var dist:float = -1
 	# find closest depot
-	for depot in depots:
-		if depot.allegiance == allegiance:
-			var distance:float = parent.global_transform.origin.distance_to(depot.global_transform.origin)
+	for d in depots:
+		if d.allegiance == allegiance:
+			var distance:float = self.parent.global_transform.origin.distance_to(d.global_transform.origin)
 			if closest == null or distance < dist:
 				dist = distance
-				closest = depot
+				closest = d
 	if closest != null:
 		# assign it in the depot variable
+		print("Closest Depot found at ", closest.global_transform.origin)
 		self.depot = closest
 		# return the position of the depot
-		return closest.global_transform.origin
+		return true
 	else:
-		self.gather_state == resource_utils.GatherState.NONE
-		return parent.global_transform.origin
+		return false
 
 
-func get_closest_resource_node_of_type(res:resource_utils.Res) -> Vector3:
+func get_closest_resource_node_of_type(res:resource_utils.Res) -> bool:
 	var resources:Array = get_tree().get_nodes_in_group("resource")
 	var resource_type:resource_utils.Res = resource.get("type")
-	var parent:Node3D = self.get_parent()
 	# search all resources
 	var closest:Resources = null
 	var dist:float = -1
 	for r in resources:
-		var distance:float = parent.global_transform.origin.distance_to(r.global_transform.origin)
+		var distance:float = self.parent.global_transform.origin.distance_to(r.global_transform.origin)
 		if closest == null or distance < dist:
 			closest = r
 			dist = distance
 	if closest != null:
-		resource.set("node", closest)
-		return closest.global_transform.origin
+		print("Closest Resource found at ", closest.global_transform.origin)
+		self.resource.set("node", closest)
+		return true
 	else:
-		self.gather_state == resource_utils.GatherState.NONE
-		return parent.global_transform.origin
+		return false
 		

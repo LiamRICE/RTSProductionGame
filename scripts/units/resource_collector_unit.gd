@@ -12,11 +12,7 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
-	if self.gatherer.gather_state == self.gatherer.resource_utils.GatherState.NONE:
-		# just do the normal moving
-		self.move(delta)
-	else:
-		self.gatherer.manage_gathering(delta)
+	self.gatherer.manage_gathering(delta)
 
 
 func update_target_location(target_location:Vector3, is_shift:bool = false):

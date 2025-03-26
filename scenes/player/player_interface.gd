@@ -103,27 +103,28 @@ func _input(_event:InputEvent) -> void:
 		# cast to check location
 		var raycast_result = cast_ray(camera)
 		var target:Entity
-		print("Navigation Map? ",raycast_result.get("collider").is_in_group("navigation_map"))
-		if not raycast_result.get("collider").is_in_group("navigation_map"):
-			target = raycast_result.get("collider").get_parent()
-		# check if is in group unit and is enemy -> assign as target
-		# check if on resource and unit has gatherer node -> assign as resource node
-		_mouse_right_click = true
-		if not selected_entities.is_empty() and self.selected_type == SelectionType.UNITS:
-			var mouse_position :Vector2 = get_viewport().get_mouse_position()
-			
-			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-			print(camera_raycast_coords)
-			if not camera_raycast_coords.is_zero_approx():
-				for unit in selected_entities:
-					var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
-					if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
-						unit.set_gathering_target(target, is_shift)
-						print("Set gathering target...")
-					else:
-					# TODO - spread out units
-						print("Sending coords...")
-						unit.update_target_location(camera_raycast_coords, is_shift)
+		if raycast_result.get("collider") != null:
+			print("Navigation Map? ",raycast_result.get("collider").is_in_group("navigation_map"))
+			if not raycast_result.get("collider").is_in_group("navigation_map"):
+				target = raycast_result.get("collider").get_parent()
+			# check if is in group unit and is enemy -> assign as target
+			# check if on resource and unit has gatherer node -> assign as resource node
+			_mouse_right_click = true
+			if not selected_entities.is_empty() and self.selected_type == SelectionType.UNITS:
+				var mouse_position :Vector2 = get_viewport().get_mouse_position()
+				
+				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+				print(camera_raycast_coords)
+				if not camera_raycast_coords.is_zero_approx():
+					for unit in selected_entities:
+						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
+						if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
+							unit.set_gathering_target(target, is_shift)
+							print("Set gathering target...")
+						else:
+						# TODO - spread out units
+							print("Sending coords...")
+							unit.update_target_location(camera_raycast_coords, is_shift)
 	
 	### CONSTRUCTION STATES ###
 	if Input.is_action_pressed("mouse_right_click") and state == ClickState.CONSTRUCTING:

@@ -117,8 +117,12 @@ rotation_speed = 0.5
 allegiance = 1
 
 [node name="ResourceCollector" parent="LevelManager/PlayerManager/Player1/Units" instance=ExtResource("9_kek77")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.032, 0, 1.864)
 gather_speed = 5.0
-max_res = 5
+
+[node name="ResourceCollector2" parent="LevelManager/PlayerManager/Player1/Units" instance=ExtResource("9_kek77")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.864)
+gather_speed = 5.0
 
 [node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
 
