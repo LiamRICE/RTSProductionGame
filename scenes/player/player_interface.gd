@@ -8,6 +8,13 @@ const PlayerScreen := preload("res://scenes/UI/player_screen.tscn")
 const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 
+# Mouse images
+var mouse_default = load("res://assets/ui/icons/mouse/pointer_scifi_b.png")
+var mouse_enemy = load("res://assets/ui/icons/mouse/target_round_b.png")
+var mouse_resource = load("res://assets/ui/icons/mouse/tool_pickaxe.png")
+var mouse_build = load("res://assets/ui/icons/mouse/tool_hammer.png")
+var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
+
 # Child nodes
 @export var player_screen:PlayerScreen
 @export var orders_interface:OrdersInterface
@@ -35,8 +42,17 @@ enum ClickState {
 enum SelectionType {
 	NONE,
 	UNITS,
+	UNITS_ECONOMIC,
 	BUILDINGS
 }
+enum MouseState {
+	DEFAULT,
+	RESOURCE,
+	REPAIR,
+	BUILD,
+	ENEMY
+}
+
 var state :ClickState
 var is_on_ui: bool = false
 
@@ -45,6 +61,7 @@ var selected_entities :Array[Entity] = []
 var selected_type:SelectionType = SelectionType.NONE
 var constructing_building:Building
 var num_deployments :int = 0
+var mouse_state:MouseState = MouseState.DEFAULT
 
 # Internal Variables
 var _mouse_left_click :bool = false
@@ -66,9 +83,61 @@ func _ready():
 	initialise_state_machine()
 
 
+func _physics_process(delta: float) -> void:
+	mouse_update()
+
+
+func mouse_update():
+	# check underlying object type
+	var camera :Camera3D = get_viewport().get_camera_3d()
+	# cast to check location
+	var raycast_result = cast_ray(camera)
+	var target:Entity
+	if raycast_result.get("collider") != null:
+		if raycast_result.get("collider").is_in_group("navigation_map"):
+			mouse_state = MouseState.DEFAULT
+		else:
+			print(self.selected_type)
+			target = raycast_result.get("collider").get_parent()
+			# check current selection
+			if self.selected_type in [SelectionType.UNITS_ECONOMIC]:
+				# check cast result
+				if target.is_in_group("resource"):
+					self.mouse_state = MouseState.RESOURCE
+				elif target.is_in_group("buildings"):
+					if target.build_percent < 100:
+						self.mouse_state = MouseState.BUILD
+					elif target.health < target.max_health:
+						self.mouse_state = MouseState.REPAIR
+				elif (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
+					self.mouse_state = MouseState.ENEMY
+				else:
+					self.mouse_state = MouseState.DEFAULT
+			elif self.selected_type in [SelectionType.UNITS, SelectionType.UNITS_ECONOMIC]:
+				# check cast result
+				print(target.is_in_group("units"))
+				if (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
+					self.mouse_state = MouseState.ENEMY
+				else:
+					self.mouse_state = MouseState.DEFAULT
+		# calculate mouse state
+		# change mouse image by mouse state
+		if mouse_state == MouseState.DEFAULT:
+			Input.set_custom_mouse_cursor(mouse_default, Input.CURSOR_ARROW, Vector2(9, 9))
+		elif mouse_state == MouseState.RESOURCE:
+			Input.set_custom_mouse_cursor(mouse_resource, Input.CURSOR_CROSS, Vector2(15, 15))
+		elif mouse_state == MouseState.BUILD:
+			Input.set_custom_mouse_cursor(mouse_build, Input.CURSOR_CROSS, Vector2(15, 15))
+		elif mouse_state == MouseState.REPAIR:
+			Input.set_custom_mouse_cursor(mouse_repair, Input.CURSOR_CROSS, Vector2(16, 16))
+		elif mouse_state == MouseState.ENEMY:
+			Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
+
+
 func _on_mouse_entered() -> void:
 	self.is_on_ui = true
 	print(is_on_ui)
+
 
 func _on_mouse_exited() -> void:
 	self.is_on_ui = false
@@ -130,11 +199,10 @@ func _input(_event:InputEvent) -> void:
 			# check if is in group unit and is enemy -> assign as target
 			# check if on resource and unit has gatherer node -> assign as resource node
 			_mouse_right_click = true
-			if not selected_entities.is_empty() and self.selected_type == SelectionType.UNITS:
+			if not selected_entities.is_empty() and self.selected_type in [SelectionType.UNITS, SelectionType.UNITS_ECONOMIC]:
 				var mouse_position :Vector2 = get_viewport().get_mouse_position()
 				
 				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-				print(camera_raycast_coords)
 				if not camera_raycast_coords.is_zero_approx():
 					for unit in selected_entities:
 						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
@@ -196,7 +264,15 @@ func cast_selection() -> void:
 	var new_selection:Array[Entity]
 	if units.size() >= buildings.size() and units.size() > 0:
 		new_selection = units
-		self.selected_type = SelectionType.UNITS
+		# check if all economic
+		var all_eco:bool = true
+		for u in units:
+			if not u.is_in_group("resource_gatherer"):
+				all_eco = false
+		if all_eco:
+			self.selected_type = SelectionType.UNITS_ECONOMIC
+		else:
+			self.selected_type = SelectionType.UNITS
 	elif buildings.size() > 0:
 		new_selection = buildings
 		self.selected_type = SelectionType.BUILDINGS

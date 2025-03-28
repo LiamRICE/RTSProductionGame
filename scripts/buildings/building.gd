@@ -10,6 +10,8 @@ class_name Building extends Entity
 @export var preview_material:StandardMaterial3D
 @export var preview_valid_colour:Color
 @export var preview_invalid_colour:Color
+@export_group("Statistics")
+@export var build_percent:float = 100
 var placement_collision_area:Area3D
 
 ## Internal state
