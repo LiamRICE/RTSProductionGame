@@ -6,6 +6,7 @@ signal selection_changed(selection:Array[Entity], selection_type:int)
 # Loading Script Classes
 const PlayerScreen := preload("res://scenes/UI/player_screen.tscn")
 const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
+const LevelManager := preload("res://scripts/managers/level_manager.gd")
 
 # Child nodes
 @export var player_screen:PlayerScreen

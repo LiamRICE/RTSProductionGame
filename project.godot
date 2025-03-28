@@ -13,12 +13,13 @@ config_version=5
 config/name="RTSProductionGame"
 run/main_scene="uid://dkve5n5x16hga"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://bva3m1240mv2f"
 
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+mouse_cursor/custom_image="uid://dlcsne5a5asyj"
 
 [dotnet]
 
