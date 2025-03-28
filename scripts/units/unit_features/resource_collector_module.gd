@@ -2,12 +2,12 @@ class_name ResourceCollectorModule extends Node
 
 const resource_utils:GDScript = preload("res://scripts/utilities/resource_utils.gd")
 
-var resource:Dictionary = {
+@export var resource:Dictionary = {
 	"quantity":0,
 	"type":resource_utils.Res.NONE,
 	"node":null
 }
-var depot:Entity = null
+@export var depot:Entity = null
 @onready var parent:Unit = self.get_parent()
 
 var resource_amount:int = 0

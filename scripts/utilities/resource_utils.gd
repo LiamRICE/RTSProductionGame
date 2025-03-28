@@ -6,7 +6,7 @@ enum Res {
 	FOOD,
 	MATERIAL,
 	METAL,
-	RATE_METAL
+	RARE_METAL
 }
 
 enum GatherState {

@@ -5,7 +5,7 @@
 [ext_resource type="ArrayMesh" uid="uid://tey2nup14j4s" path="res://assets/kenney_space/astronautA.obj" id="3_xtrm0"]
 [ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
 
-[node name="ResourceCollectorUnit" type="Node3D" groups=["units"]]
+[node name="ResourceCollectorUnit" type="Node3D" groups=["resource_gatherer", "units"]]
 script = ExtResource("1_ubpkj")
 gather_speed = 1.0
 move_speed = 2.0
