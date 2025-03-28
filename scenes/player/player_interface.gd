@@ -3,6 +3,14 @@ extends Control
 ## Signals
 signal selection_changed(selection:Array[Entity], selection_type:int)
 
+# Loading Script Classes
+const PlayerScreen := preload("res://scenes/UI/player_screen.tscn")
+const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
+
+# Child nodes
+@export var player_screen:PlayerScreen
+@export var orders_interface:OrdersInterface
+
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
@@ -57,9 +65,20 @@ func _ready():
 	initialise_state_machine()
 
 
+func _on_mouse_entered() -> void:
+	self.is_on_ui = true
+	print(is_on_ui)
+
+func _on_mouse_exited() -> void:
+	self.is_on_ui = false
+	print(is_on_ui)
+
+
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
+	self.orders_interface.mouse_entered.connect(self._on_mouse_entered)
+	self.orders_interface.mouse_exited.connect(self._on_mouse_exited)
 
 
 func initialise_state_machine():

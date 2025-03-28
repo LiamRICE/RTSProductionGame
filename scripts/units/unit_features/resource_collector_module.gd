@@ -1,18 +1,18 @@
 class_name ResourceCollectorModule extends Node
 
-const resource_utils:GDScript = preload("res://scripts/utilities/resource_utils.gd")
+const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
 
 @export var resource:Dictionary = {
 	"quantity":0,
-	"type":resource_utils.Res.NONE,
+	"type":ResourceUtils.Res.NONE,
 	"node":null
 }
 @export var depot:Entity = null
 @onready var parent:Unit = self.get_parent()
 
 var resource_amount:int = 0
-var resource_type:resource_utils.Res = resource_utils.Res.NONE
-var gather_state:resource_utils.GatherState = resource_utils.GatherState.NONE
+var resource_type:ResourceUtils.Res = ResourceUtils.Res.NONE
+var gather_state:ResourceUtils.GatherState = ResourceUtils.GatherState.NONE
 
 var counter = 1
 
@@ -22,12 +22,12 @@ var counter = 1
 
 func manage_gathering(delta:float):
 	# print("Gather state = ", self.gather_state)
-	if self.gather_state == self.resource_utils.GatherState.NONE:
+	if self.gather_state == ResourceUtils.GatherState.NONE:
 		# just do the normal moving
 		self.parent.move(delta)
-	elif self.gather_state == self.resource_utils.GatherState.GATHERING:
+	elif self.gather_state == ResourceUtils.GatherState.GATHERING:
 		self.go_gathering(delta)
-	elif self.gather_state == self.resource_utils.GatherState.DROPPING:
+	elif self.gather_state == ResourceUtils.GatherState.DROPPING:
 		self.go_drop_off(delta)
 
 
@@ -35,11 +35,11 @@ func set_gathering_target(target:Resources, is_shift:bool = false):
 	# set target as the navigation target
 	self.resource.set("node", target)
 	self.resource.set("type", target.resource_type)
-	self.gather_state = self.resource_utils.GatherState.GATHERING
+	self.gather_state = ResourceUtils.GatherState.GATHERING
 	self.parent.set_navigation_path(target.global_transform.origin, is_shift)
 
 
-func gather(res:resource_utils.Res, gather_speed:float, max:int, amount:int, delta:float) -> bool:
+func gather(res:ResourceUtils.Res, gather_speed:float, max:int, amount:int, delta:float) -> bool:
 	counter -= gather_speed * delta
 	if resource.get("type") != res:
 		resource.set("type", res)
@@ -57,12 +57,6 @@ func gather(res:resource_utils.Res, gather_speed:float, max:int, amount:int, del
 	if not exists:
 		resource.set("node", null)
 	return ret
-
-
-func drop_off():
-	resource.set("quantity", 0)
-	resource.set("type", resource_utils.Res.NONE)
-	# add resource to player's stockpiles
 
 
 func check_node_exists() -> bool:
@@ -92,7 +86,7 @@ func go_gathering(delta:float):
 			# if gather full -> set depot to null and drop off
 			if done:
 				self.depot = null
-				self.gather_state = self.resource_utils.GatherState.DROPPING
+				self.gather_state = ResourceUtils.GatherState.DROPPING
 		# else move to resource node
 		else:
 			self.parent.move(delta)
@@ -102,14 +96,16 @@ func go_gathering(delta:float):
 		#	if node found -> continue gathering
 		if self.get_closest_resource_node_of_type(self.resource.get("type")):
 			self.parent.set_navigation_path(self.resource.get("node").global_transform.origin)
-			self.gather_state = self.resource_utils.GatherState.GATHERING
+			self.gather_state = ResourceUtils.GatherState.GATHERING
 		#	else stop gathering
 		else:
 			if resource.get("quantity") > 0:
 				self.depot = null
-				self.gather_state = self.resource_utils.GatherState.DROPPING
+				self.gather_state = ResourceUtils.GatherState.DROPPING
 			else:
-				self.gather_state = self.resource_utils.GatherState.NONE
+				self.gather_state = ResourceUtils.GatherState.NONE
+				self.resource.set("node", null)
+				self.resource.set("type", ResourceUtils.Res.NONE)
 
 
 func go_drop_off(delta:float):
@@ -119,9 +115,10 @@ func go_drop_off(delta:float):
 		if self.depot.global_transform.origin.distance_to(self.parent.global_transform.origin) <= 1:
 			# drop_off
 			self.depot.drop_off(self.resource.get("quantity"), self.resource.get("type"))
+			# empty resources from container
 			self.resource.set("quantity", 0)
 			# set to gathering
-			self.gather_state = self.resource_utils.GatherState.GATHERING
+			self.gather_state = ResourceUtils.GatherState.GATHERING
 			# if node still exists, set as target
 			if check_node_exists():
 				self.parent.set_navigation_path(self.resource.get("node").global_transform.origin)
@@ -136,7 +133,9 @@ func go_drop_off(delta:float):
 			self.parent.set_navigation_path(self.depot.global_transform.origin)
 		else:
 			# else stop gathering
-			self.gather_state = self.resource_utils.GatherState.NONE
+			self.gather_state = ResourceUtils.GatherState.NONE
+			self.resource.set("node", null)
+			self.resource.set("type", ResourceUtils.Res.NONE)
 
 
 func get_closest_depot(allegiance:int) -> bool:
@@ -160,9 +159,9 @@ func get_closest_depot(allegiance:int) -> bool:
 		return false
 
 
-func get_closest_resource_node_of_type(res:resource_utils.Res) -> bool:
+func get_closest_resource_node_of_type(res:ResourceUtils.Res) -> bool:
 	var resources:Array = get_tree().get_nodes_in_group("resource")
-	var resource_type:resource_utils.Res = resource.get("type")
+	var resource_type:ResourceUtils.Res = resource.get("type")
 	# search all resources
 	var closest:Resources = null
 	var dist:float = -1

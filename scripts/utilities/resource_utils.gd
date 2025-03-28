@@ -6,7 +6,11 @@ enum Res {
 	FOOD,
 	MATERIAL,
 	METAL,
-	RARE_METAL
+	RARE_METAL,
+	NANOTECH,
+	COMPUTER,
+	COMPOSITE,
+	FUEL
 }
 
 enum GatherState {
