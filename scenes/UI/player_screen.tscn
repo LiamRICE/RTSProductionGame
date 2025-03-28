@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://cv5njxs8al6tl"]
+
+[node name="PlayerScreen" type="CanvasLayer"]
+
+[node name="ResourceBar" type="HBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="FoodMarginContainer" type="MarginContainer" parent="ResourceBar"]
+layout_mode = 2
+
+[node name="FoodCounterHContainer" type="HBoxContainer" parent="ResourceBar/FoodMarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="ResourceAmountLabel" type="RichTextLabel" parent="ResourceBar/FoodMarginContainer/FoodCounterHContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "[b]50[/b]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ResourceNumGatherersLabel" type="RichTextLabel" parent="ResourceBar/FoodMarginContainer/FoodCounterHContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "(100)"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="ResourceTitleLabel" type="RichTextLabel" parent="ResourceBar/FoodMarginContainer/FoodCounterHContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "Materials"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="MaterialMarginContainer" type="MarginContainer" parent="ResourceBar"]
+layout_mode = 2
+
+[node name="MaterialCounterHContainer2" type="HBoxContainer" parent="ResourceBar/MaterialMarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="ResourceAmountLabel" type="RichTextLabel" parent="ResourceBar/MaterialMarginContainer/MaterialCounterHContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "[b]100000[/b]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ResourceNumGatherersLabel" type="RichTextLabel" parent="ResourceBar/MaterialMarginContainer/MaterialCounterHContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "(100)"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="ResourceTitleLabel" type="RichTextLabel" parent="ResourceBar/MaterialMarginContainer/MaterialCounterHContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+text = "Materials"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
