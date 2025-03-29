@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
-[ext_resource type="Script" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
+[ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
 [ext_resource type="PackedScene" uid="uid://di2dykp7unme6" path="res://scenes/resources/resource_node.tscn" id="3_4c57u"]
 [ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="3_lquwl"]
@@ -93,8 +93,11 @@ ui_manager = NodePath("../UIManager")
 
 [node name="TurretGun" parent="LevelManager/PlayerManager/Player1/Buildings" instance=ExtResource("4_1bvp3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3768, 4.76837e-07, -3.18556)
+damage = 10.0
+attack_speed = 5.0
 build_percent = 65.0
 max_health = 100.0
+production_cost = 25.0
 
 [node name="Barracks" parent="LevelManager/PlayerManager/Player1/Buildings" instance=ExtResource("5_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.390106, 0, -4.43581)
