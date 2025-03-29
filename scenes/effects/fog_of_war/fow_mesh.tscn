@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cov0sc830su4l"]
+
+[ext_resource type="Script" uid="uid://cwlxvuyy3e330" path="res://scripts/effects/fog_of_war/fow_mesh.gd" id="1_n4cfy"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4meol"]
+subdivide_width = 3
+subdivide_depth = 3
+
+[node name="FOWMesh" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_4meol")
+script = ExtResource("1_n4cfy")

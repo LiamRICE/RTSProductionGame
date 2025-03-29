@@ -21,15 +21,17 @@ var is_preview:bool = false
 ## Building Methods ##
 
 ## Called when the player wants to place down a new building
-func initialise_placement() -> void:
+func initialise_placement(team:int) -> void:
 	_set_preview_state(true)
 	_set_preview_material()
+	self.mesh_container.position.y += 0.5
+	self.allegiance = team
 
-func place(location:Vector3, allegiance:int) -> void:
+func place(location:Vector3) -> void:
 	_set_preview_state(false)
 	_set_preview_material()
+	self.mesh_container.position = Vector3.ZERO
 	self.global_position = location
-	self.allegiance = allegiance
 
 ## Checks if the placement of the building doesn't encroach on any other buildings
 func is_placement_valid() -> bool:

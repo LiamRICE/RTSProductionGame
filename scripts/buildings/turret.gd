@@ -8,7 +8,7 @@ var attack_zone:Area3D
 @export_group("Properties")
 @export var damage:float ## Damage inflicted for each attack. DPS is damage * attack speed
 @export var attack_speed:float ## Speed of attacks in attacks per second
-@export var range:float ## Range of attacks in grid units
+@export var attack_range:float ## Range of attacks in grid units
 
 ## Properties
 var target:Entity
@@ -28,7 +28,7 @@ func _initialise_range_detection() -> void:
 	# Create the shape
 	var shape:CylinderShape3D = CylinderShape3D.new()
 	shape.height = 5
-	shape.radius = range
+	shape.radius = self.attack_range
 	# Create the collider to hold the shape
 	var collider:CollisionShape3D = CollisionShape3D.new()
 	collider.position.y = 2.5

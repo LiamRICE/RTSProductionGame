@@ -28,6 +28,7 @@ preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
 health = 250.0
 production_cost = 10.0
+vision_radius = 10.0
 icon = ExtResource("3_xhwwk")
 metadata/_custom_type_script = "uid://ffduxcvmiea4"
 
