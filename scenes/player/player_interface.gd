@@ -259,3 +259,11 @@ func _on_unit_blob_pressed():
 			var vehicle:Vehicle = vehicle_scene.instantiate()
 			vehicle.allegiance = self.player_team
 			level_manager.add_unit(vehicle, Vector3(x, 0, z), Vector3(x + 4, 0, z))
+
+
+func _on_enemy_unit_pressed():
+	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
+	var vehicle:Vehicle = vehicle_scene.instantiate()
+	vehicle.allegiance = self.player_team - 1
+	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(4, 0, 0))
+	vehicle.update_target_location(Vector3(-12, 0, -12), true)

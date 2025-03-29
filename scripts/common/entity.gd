@@ -46,6 +46,12 @@ func initialise_fog_of_war_propagation() -> Sprite2D:
 	self.fog_of_war_sprite.texture = self.vision_texture
 	return self.fog_of_war_sprite
 
+func update_visibility(position_2d:Vector2, fow_image:Image):
+	if fow_image.get_pixel(roundi(position_2d.x), roundi(position_2d.y)).r > 0.1:
+		self.visible = true
+	else:
+		self.visible = false
+
 ## Updates the allegiance of entities and executes any code required on an allegiance change
 func _update_allegiance(new_allegiance:int) -> void:
 	self.allegiance = new_allegiance

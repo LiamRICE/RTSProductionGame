@@ -2,7 +2,7 @@ extends Control
 
 ## Signals
 signal fog_of_war_updated ## Emited when the fog of war texture has changed
-signal _dissolve_finished ## Emitted when the image compositing on the FOW texture has been completed
+signal _image_conversion_complete ## Emitted when the conversion from a texture to an image is completed
 
 ## Nodes for rendering the fog of war and tracking unit positions
 @onready var fog_of_war_viewport:SubViewport = $FOWViewport
@@ -31,8 +31,8 @@ func new_fog_of_war(texture_size:Vector2i) -> void:
 func fog_of_war_request_texture_update() -> void:
 	fog_of_war_render() ## Convert the texture from the viewport into an image that can be referenced for visibility checks
 	
-	## Wait until the dissolve is completed before emiting the updated texture
-	await _dissolve_finished
+	## Wait until the viewport texture to image conversion is completed before emiting the updated texture
+	await _image_conversion_complete
 	fog_of_war_updated.emit()
 
 func combined_fow_sprites_texture_update() -> void:
@@ -41,7 +41,7 @@ func combined_fow_sprites_texture_update() -> void:
 func fog_of_war_render() -> void:
 	fog_of_war_viewport_texture = fog_of_war_viewport.get_texture()
 	fog_of_war_viewport_image = fog_of_war_viewport_texture.get_image()
-	_dissolve_finished.emit()
+	_image_conversion_complete.emit()
 
 ## ------------------ ##
 ## -- HANDLE UNITS -- ##

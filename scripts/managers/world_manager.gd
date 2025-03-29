@@ -6,7 +6,9 @@ const TimingTool:Script = preload("uid://c63jpqrvvcvpa")
 var geom_parse:TimingTool = TimingTool.new("Source Geometry Parsing")
 var nav_calc:TimingTool = TimingTool.new("Navigation Mesh Baking")
 var fow_update_time:TimingTool = TimingTool.new("Fog of War Objects Update")
+var fow_visibility_update:TimingTool = TimingTool.new("Fog of War Visibility Update")
 var fow_position_update_time:float = 0
+var fow_visibility_time:float = 0
 
 ## Include classes
 const FogOfWarTexture:Script = preload("res://scripts/effects/fog_of_war/fog_of_war_texture.gd")
@@ -31,13 +33,16 @@ var is_baking:bool = false
 var has_bake_update_queued:bool = false
 
 func _ready() -> void:
+	## Register monitors for performance
 	Performance.add_custom_monitor("Fog of War/Position Update Time", _get_fow_position_update_time)
+	Performance.add_custom_monitor("Fog of War/Visibility Update Time", _get_fow_visibility_update_time)
 	
 	## Initialise world timer
 	world_timer.timeout.connect(fog_of_war_update)
 	
 	## Fog of war
 	_initialise_fog_of_war(Vector2i((22+1), (26+1)) * fog_of_war_resolution)
+	fog_of_war_texture.fog_of_war_updated.connect(_update_visibility)
 	
 	## Initialise navigation after the first frame has been processed
 	call_deferred("_initialise_navigation")
@@ -57,6 +62,13 @@ func fog_of_war_update() -> void:
 	
 	fog_of_war_texture.fog_of_war_request_texture_update()
 
+func _update_visibility() -> void:
+	fow_visibility_update.debug_timer_start()
+	for entity in get_tree().get_nodes_in_group("units"):
+		if not entity.is_in_group("fog_of_war_propagators"):
+			entity.update_visibility(self.fog_of_war_mesh.world_3d_to_world_2d(entity.position), self.fog_of_war_texture.fog_of_war_viewport_image)
+	fow_visibility_time = fow_visibility_update.debug_timer_stop()
+
 func fog_of_war_register_propagator(fow_sprite:Sprite2D, world_position:Vector3) -> void:
 	fow_sprite.scale *= self.fog_of_war_resolution
 	var position_2d:Vector2 = fog_of_war_mesh.world_3d_to_world_2d(world_position)
@@ -65,8 +77,10 @@ func fog_of_war_register_propagator(fow_sprite:Sprite2D, world_position:Vector3)
 func fog_of_war_remove_propagator(fow_sprite:Sprite2D) -> void:
 	self.fog_of_war_texture.remove_entity_sprite(fow_sprite)
 
-func _get_fow_position_update_time() -> float:
+func _get_fow_position_update_time() -> float: ## Performance monitor debug
 	return fow_position_update_time
+func _get_fow_visibility_update_time() -> float:
+	return fow_visibility_time
 
 ##----------------##
 ##-- NAVIGATION --##

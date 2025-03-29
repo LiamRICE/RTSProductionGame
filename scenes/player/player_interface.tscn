@@ -35,6 +35,13 @@ offset_right = 328.0
 offset_bottom = 31.0
 text = "MAKE BLOB"
 
+[node name="EnemyUnit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 341.0
+offset_right = 506.0
+offset_bottom = 31.0
+text = "Add test enemy unit"
+
 [node name="SpinBox" type="SpinBox" parent="."]
 layout_mode = 2
 offset_top = 32.0
@@ -60,3 +67,4 @@ patch_margin_bottom = 3
 [connection signal="pressed" from="Button" to="." method="_on_barracks_added"]
 [connection signal="pressed" from="DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]
 [connection signal="pressed" from="UnitBlob" to="." method="_on_unit_blob_pressed"]
+[connection signal="pressed" from="EnemyUnit" to="." method="_on_enemy_unit_pressed"]

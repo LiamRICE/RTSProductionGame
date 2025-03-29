@@ -39,3 +39,7 @@ text = "VRAM Used : "
 [node name="FOW_Update" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "FOW update time = "
+
+[node name="FOW_vis" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "FOW visibility update = "
