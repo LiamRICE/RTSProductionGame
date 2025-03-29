@@ -1,4 +1,4 @@
-class_name GameMenu extends Control
+extends Control
 
 # state machine
 enum MenuState{

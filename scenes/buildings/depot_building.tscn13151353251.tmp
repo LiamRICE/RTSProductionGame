@@ -44,8 +44,12 @@ shape = SubResource("BoxShape3D_oqqwk")
 
 [node name="NavigationLink3D" type="NavigationLink3D" parent="NavigationLinks"]
 start_position = Vector3(1.05, 0, 0)
-end_position = Vector3(-1.05, 0, 0)
 
 [node name="NavigationLink3D2" type="NavigationLink3D" parent="NavigationLinks"]
+start_position = Vector3(-1.05, 0, 0)
+
+[node name="NavigationLink3D3" type="NavigationLink3D" parent="NavigationLinks"]
 start_position = Vector3(0, 0, 1.6)
-end_position = Vector3(0, 0, -1.6)
+
+[node name="NavigationLink3D4" type="NavigationLink3D" parent="NavigationLinks"]
+start_position = Vector3(0, 0, -1.6)

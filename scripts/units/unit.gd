@@ -51,7 +51,7 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 	"""
 	Function description stuff...
 	"""
-	var path:PackedVector3Array = PackedVector3Array()
+	var path:PackedVector3Array
 	# check that object is in tree
 	if is_inside_tree():
 		# fetch the world's navigation map
@@ -59,17 +59,18 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 		# Fetch safe coordinates
 		var safe_start:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, global_position)
 		if is_shift:
-			if len(current_path) > 0:
-				safe_start = current_path[len(current_path)-1]
+			if len(self.current_path) > 0:
+				safe_start = self.current_path[len(self.current_path)-1]
 		var safe_end:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, location)
 		# caluclate the path
 		path = NavigationServer3D.map_get_path(map_RID, safe_start, safe_end, true)
-		print(path)
 		# return the path
 	if is_shift:
-		current_path.append_array(path)
+		self.current_path.append_array(path)
 	else:
-		current_path = path
+		self.current_path.clear()
+		self.current_path.append_array(path)
+		self.path_index = 0
 
 
 func update_target_location(target_location:Vector3, is_shift:bool = false):
@@ -81,24 +82,25 @@ func update_target_location(target_location:Vector3, is_shift:bool = false):
 
 func move(delta:float):
 	# check if path is empty, stop moving
-	if current_path.is_empty():
+	#print("Assigned path = ", self.current_path)
+	if self.current_path.is_empty():
 		return
 	# set movement speed for this frame
 	var movement_delta : float = move_speed * delta
 	# increment next path point if current point has been reached
-	if global_transform.origin.distance_to(next_point) <= path_point_margin:
-		path_index += 1
-		if path_index >= current_path.size():
-			current_path = []
-			path_index = 0
-			next_point = global_transform.origin
+	if self.global_transform.origin.distance_to(self.next_point) <= path_point_margin:
+		self.path_index += 1
+		if self.path_index >= self.current_path.size():
+			self.current_path = PackedVector3Array()
+			self.path_index = 0
+			self.next_point = global_transform.origin
 			return
-	if path_index < len(current_path):
-		next_point = current_path[path_index]
+	if self.path_index < len(current_path):
+		self.next_point = self.current_path[self.path_index]
 	# point unit towards the next path point
-	var target_vector = global_position.direction_to(next_point)
+	var target_vector = self.global_position.direction_to(self.next_point)
 	var target_basis = Basis.looking_at(target_vector)
-	basis = target_basis
+	self.basis = target_basis
 	# set unit velocity to the next path point
-	var new_velocity: Vector3 = global_transform.origin.direction_to(next_point) * movement_delta
-	global_transform.origin = global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
+	var new_velocity: Vector3 = self.global_transform.origin.direction_to(next_point) * movement_delta
+	self.global_transform.origin = self.global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)

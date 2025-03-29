@@ -7,6 +7,7 @@ var fog_of_war_sprite:Sprite2D
 ## Common Entity properties
 @export_group("Properties")
 @export var health:float
+@export var max_health:float
 @export var production_cost:float ## Cost of production for the unit in seconds
 @export var vision_radius:float ## Used to scale the vision sprite
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by vision_radius.

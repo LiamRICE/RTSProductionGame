@@ -1,4 +1,4 @@
-class_name LevelManager extends Node
+extends Node
 
 ### Contains functions and methods for the management of the in-progress game ###
 

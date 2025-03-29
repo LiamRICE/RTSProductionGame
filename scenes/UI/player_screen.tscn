@@ -1,0 +1,60 @@
+[gd_scene load_steps=11 format=3 uid="uid://cv5njxs8al6tl"]
+
+[ext_resource type="PackedScene" uid="uid://c6xaq14r46pe3" path="res://scenes/UI/subcomponents/resource_counter_h_box_container.tscn" id="1_i8xgw"]
+[ext_resource type="Script" uid="uid://bih6yn0b7x8my" path="res://scripts/ui/level_ui/player_screen.gd" id="1_kx51y"]
+[ext_resource type="Texture2D" uid="uid://bg56o585hwoud" path="res://assets/ui/icons/resources/food_global.png" id="1_wfkkp"]
+[ext_resource type="Texture2D" uid="uid://d3bp1vv5faqbm" path="res://assets/ui/icons/resources/materials_global.png" id="3_0kif4"]
+[ext_resource type="Texture2D" uid="uid://krqo7dt2oqam" path="res://assets/ui/icons/resources/rare_metal_global.png" id="4_n5b0s"]
+[ext_resource type="Texture2D" uid="uid://bdbyvhfnbdhf1" path="res://assets/ui/icons/resources/metal_global.png" id="5_kx51y"]
+[ext_resource type="Texture2D" uid="uid://bxwratobrj5an" path="res://assets/ui/icons/resources/composites_global.png" id="6_dmwgm"]
+[ext_resource type="Texture2D" uid="uid://c2xjh2qgcsa5g" path="res://assets/ui/icons/resources/computers_humans.png" id="7_tgvy8"]
+[ext_resource type="Texture2D" uid="uid://bf2dxknxcw51g" path="res://assets/ui/icons/resources/nanotech_humans.png" id="8_8i55t"]
+[ext_resource type="Texture2D" uid="uid://bi6qr05qoqx6i" path="res://assets/ui/icons/resources/fuel_humans.png" id="9_a5jvu"]
+
+[node name="PlayerScreen" type="CanvasLayer"]
+script = ExtResource("1_kx51y")
+
+[node name="ResourceBar" type="HBoxContainer" parent="."]
+offset_right = 328.0
+offset_bottom = 23.0
+theme_override_constants/separation = 10
+
+[node name="ResourceCounterHBoxContainer" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("1_wfkkp")
+icon_name = "Food"
+
+[node name="ResourceCounterHBoxContainer2" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("3_0kif4")
+icon_name = "Materials"
+
+[node name="ResourceCounterHBoxContainer3" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("5_kx51y")
+icon_name = "Metals"
+
+[node name="ResourceCounterHBoxContainer4" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("4_n5b0s")
+icon_name = "Rare Metals"
+
+[node name="ResourceCounterHBoxContainer5" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("6_dmwgm")
+icon_name = "Composites"
+
+[node name="ResourceCounterHBoxContainer6" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("7_tgvy8")
+icon_name = "Computers"
+
+[node name="ResourceCounterHBoxContainer7" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("8_8i55t")
+icon_name = "Nanotech"
+
+[node name="ResourceCounterHBoxContainer8" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+layout_mode = 2
+icon = ExtResource("9_a5jvu")
+icon_name = "Fuel"

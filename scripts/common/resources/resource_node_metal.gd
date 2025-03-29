@@ -1,1 +1,1 @@
-class_name ResourceNodeMetal extends Resources
+extends Resources
