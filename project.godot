@@ -15,6 +15,13 @@ run/main_scene="uid://dkve5n5x16hga"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
+gdscript/warnings/integer_division=0
+gdscript/warnings/narrowing_conversion=0
+
 [display]
 
 window/size/viewport_width=1600
@@ -26,11 +33,12 @@ project/assembly_name="RTSProductionGame"
 
 [global_group]
 
-units=""
-buildings=""
+units="Group of all units for all players"
+buildings="Group of all buildings for all players"
 resource=""
 navigation_map=""
 depot=""
+fog_of_war_propagators="List of all units, buildings and markers that spread FoW for the current player"
 
 [input]
 

@@ -112,7 +112,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 shape = SubResource("BoxShape3D_ygrpk")
 
 [node name="terrain_ramp" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("7_3b84l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp"]
@@ -121,7 +121,7 @@ mesh = ExtResource("7_3b84l")
 shape = SubResource("ConvexPolygonShape3D_3b84l")
 
 [node name="terrain_ramp_large" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("8_1itn7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large"]
@@ -130,7 +130,7 @@ mesh = ExtResource("8_1itn7")
 shape = SubResource("ConvexPolygonShape3D_88xeo")
 
 [node name="terrain_ramp_large_detailed" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("9_re7r1")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large_detailed"]
@@ -147,7 +147,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -1.25)
 shape = SubResource("BoxShape3D_re7r1")
 
 [node name="terrain_side" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("10_u3yxi")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side"]
@@ -156,7 +156,7 @@ mesh = ExtResource("10_u3yxi")
 shape = SubResource("ConvexPolygonShape3D_3b84l")
 
 [node name="terrain_side_cliff" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("11_08sp6")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_cliff"]
@@ -165,7 +165,7 @@ mesh = ExtResource("11_08sp6")
 shape = SubResource("ConvexPolygonShape3D_u3yxi")
 
 [node name="terrain_side_corner" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("12_7i2ck")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_corner"]
@@ -178,7 +178,7 @@ shape = SubResource("BoxShape3D_ygrpk")
 shape = SubResource("ConvexPolygonShape3D_re7r1")
 
 [node name="terrain_side_corner_inner" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("13_o4stj")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_corner_inner"]
@@ -187,7 +187,7 @@ mesh = ExtResource("13_o4stj")
 shape = SubResource("ConvexPolygonShape3D_08sp6")
 
 [node name="terrain_side_end" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("14_dlg4g")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_end"]
@@ -200,7 +200,7 @@ shape = SubResource("BoxShape3D_ygrpk")
 shape = SubResource("ConvexPolygonShape3D_7i2ck")
 
 [node name="terrain_side_end_mirror" type="MeshInstance3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = ExtResource("15_1itn7")
 skeleton = NodePath("../terrain_side_end")
 

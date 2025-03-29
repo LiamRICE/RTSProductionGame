@@ -9,6 +9,7 @@ signal selection_changed(selection:Array[Entity], selection_type:int)
 @onready var player_camera :Camera3D = $Camera/Yaw/Pitch/MainCamera
 @onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
 @onready var add_unit_button:Button = $Button # DEBUG
+@onready var unit_blob_button:Button = $UnitBlob # DEBUG
 @onready var spin_box:SpinBox = $SpinBox # DEBUG
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
@@ -139,7 +140,7 @@ func _input(_event:InputEvent) -> void:
 			var mousepos:Vector2 = self.get_local_mouse_position()
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
 			self.remove_child(self.constructing_building)
-			self.level_manager.add_building(self.spin_box.value as int, self.constructing_building, click_position)
+			self.level_manager.add_building(self.constructing_building, click_position)
 			## TODO - Debug, make allegiance based on player interface
 		else:
 			print("Invalid placement ! Object intersects placement blocker.")
@@ -201,7 +202,7 @@ func _process(_delta:float) -> void:
 	if state == ClickState.CONSTRUCTING:
 		var plane:Plane = Plane.PLANE_XZ
 		var mousepos:Vector2 = self.get_local_mouse_position()
-		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.25, 0)
+		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.05, 0)
 		self.constructing_building.is_placement_valid()
 
 ## Modifies the size of the selection rectangle based on current position
@@ -225,7 +226,7 @@ func _on_deploy_unit_button_pressed():
 	self._is_constructing = true
 	self.state = ClickState.CONSTRUCTING
 	self.constructing_building = preload("res://scenes/buildings/turret_gun.tscn").instantiate()
-	self.constructing_building.initialise_placement()
+	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
 
 
@@ -233,7 +234,7 @@ func _on_barracks_added():
 	self._is_constructing = true
 	self.state = ClickState.CONSTRUCTING
 	self.constructing_building = preload("res://scenes/buildings/barracks.tscn").instantiate()
-	self.constructing_building.initialise_placement()
+	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
 
 
@@ -249,3 +250,12 @@ func cast_ray(camera:Camera3D) -> Dictionary:
 		ray_query.collide_with_areas = true
 		var raycast_result = space.intersect_ray(ray_query)
 		return raycast_result
+
+
+func _on_unit_blob_pressed():
+	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
+	for x in range(-10, 0):
+		for z in range(-10, 0):
+			var vehicle:Vehicle = vehicle_scene.instantiate()
+			vehicle.allegiance = self.player_team
+			level_manager.add_unit(vehicle, Vector3(x, 0, z), Vector3(x + 4, 0, z))
