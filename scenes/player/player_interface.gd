@@ -5,7 +5,7 @@ signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.Se
 
 # Loading Script Classes
 const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
-const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
+const ActionsInterface := preload("res://scripts/ui/level_ui/actions_interface.gd")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
 
@@ -18,16 +18,20 @@ var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 
 # Child nodes
 @export var player_screen:PlayerScreen
-@export var orders_interface:OrdersInterface
+@export var actions_interface:ActionsInterface
+@export var camera_controller:Node3D
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
-@onready var player_camera :Camera3D = $Camera/Yaw/Pitch/MainCamera
-@onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
-@onready var add_unit_button:Button = $Button # DEBUG
-@onready var unit_blob_button:Button = $UnitBlob # DEBUG
-@onready var spin_box:SpinBox = $SpinBox # DEBUG
+@onready var player_camera :Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
+
+## DEBUG
+@onready var debug_controls:Control = $DebugControls
+@onready var deploy_unit_button:Button = $DebugControls/DeployUnitButton # DEBUG
+@onready var add_unit_button:Button = $DebugControls/Button # DEBUG
+@onready var unit_blob_button:Button = $DebugControls/UnitBlob # DEBUG
+@onready var spin_box:SpinBox = $DebugControls/SpinBox # DEBUG
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
 # Modules
@@ -117,21 +121,10 @@ func mouse_update():
 			Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
 
 
-func _on_mouse_entered() -> void:
-	self.is_on_ui = true
-	print(is_on_ui)
-
-
-func _on_mouse_exited() -> void:
-	self.is_on_ui = false
-	print(is_on_ui)
-
-
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
-	self.orders_interface.mouse_entered.connect(self._on_mouse_entered)
-	self.orders_interface.mouse_exited.connect(self._on_mouse_exited)
+	self.selection_changed.connect(self.actions_interface._on_player_interface_selection_changed)
 
 
 func initialise_state_machine():
@@ -242,7 +235,7 @@ func cast_selection() -> void:
 				building.select()
 			else:
 				building.deselect()
-	# Add the selection with the most pbjects to the selection list
+	# Add the selection with the most objects to the selection list
 	self.selected_type = UIStateUtils.SelectionType.NONE
 	var new_selection:Array[Entity]
 	if units.size() >= buildings.size() and units.size() > 0:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=20 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://bi34cw4c6gv1n" path="res://player_manager.gd" id="8_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://c6ga862t4hde5" path="res://debug_tools/performance_monitor.tscn" id="9_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://bll0qqe2act2i" path="res://scenes/buildings/depot_building.tscn" id="9_efxa6"]
+[ext_resource type="PackedScene" uid="uid://bsh0v2nxk318h" path="res://scenes/player/camera.tscn" id="10_2cqfq"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 
@@ -102,7 +103,10 @@ player_interface = NodePath("PlayerInterface")
 
 [node name="PerformanceMonitor" parent="LevelManager/UIManager" instance=ExtResource("9_2cqfq")]
 
-[node name="PlayerInterface" parent="LevelManager/UIManager" instance=ExtResource("1_0xm2m")]
+[node name="Camera" parent="LevelManager/UIManager" instance=ExtResource("10_2cqfq")]
+
+[node name="PlayerInterface" parent="LevelManager/UIManager" node_paths=PackedStringArray("camera_controller") instance=ExtResource("1_0xm2m")]
+camera_controller = NodePath("../Camera")
 
 [node name="PlayerManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("ui_manager")]
 unique_name_in_owner = true
