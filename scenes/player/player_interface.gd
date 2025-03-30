@@ -4,7 +4,7 @@ extends Control
 signal selection_changed(selection:Array[Entity], selection_type:int)
 
 # Loading Script Classes
-const PlayerScreen := preload("res://scenes/UI/player_screen.tscn")
+const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
 const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 
@@ -68,7 +68,7 @@ var mouse_state:MouseState = MouseState.DEFAULT
 var _mouse_left_click :bool = false
 var _dragged_rect_left :Rect2
 var _mouse_right_click :bool = false
-var _dragged_pos_right :Array[Vector3]
+#var _dragged_pos_right :Array[Vector3]
 var _is_constructing:bool = false
 
 # Constants
@@ -84,8 +84,9 @@ func _ready():
 	initialise_state_machine()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(delta:float):
 	mouse_update()
+	var x = delta
 
 
 func mouse_update():
@@ -364,3 +365,11 @@ func _on_enemy_unit_pressed():
 	vehicle.allegiance = self.player_team - 1
 	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(4, 0, 0))
 	vehicle.update_target_location(Vector3(-12, 0, -12), true)
+
+
+func _on_build_depot_pressed() -> void:
+	self._is_constructing = true
+	self.state = ClickState.CONSTRUCTING
+	self.constructing_building = preload("res://scenes/buildings/depot_building.tscn").instantiate()
+	self.constructing_building.initialise_placement(self.player_team)
+	self.add_child(self.constructing_building)

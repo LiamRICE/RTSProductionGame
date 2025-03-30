@@ -8,7 +8,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_oqqwk"]
 size = Vector3(2, 1, 3)
 
-[node name="DepotBuilding" type="Node3D" node_paths=PackedStringArray("mesh_container", "navigation_obstacle", "placement_collision_shape") groups=["buildings", "depot"]]
+[node name="DepotBuilding" type="Node3D" node_paths=PackedStringArray("mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
 script = ExtResource("1_6h8ua")
 mesh_container = NodePath("MeshContainer")
 navigation_obstacle = NodePath("NavigationObstacle3D")
@@ -16,6 +16,8 @@ placement_collision_shape = NodePath("Body/BaseShape")
 preview_material = ExtResource("2_l1v31")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
+body = NodePath("Body")
+vision_radius = 8.0
 allegiance = 1
 metadata/_custom_type_script = "uid://dt4ogscja4pa3"
 
