@@ -1,5 +1,8 @@
 class_name Building extends Entity
 
+## Loading modules
+const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
+
 ## Mandatory Nodes
 @export var mesh_container:Node3D
 @export var navigation_obstacle:NavigationObstacle3D
@@ -23,20 +26,29 @@ var is_preview:bool = false
 ## Called when the player wants to place down a new building
 func initialise_placement(team:int) -> void:
 	_set_preview_state(true)
-	_set_preview_material()
 	self.mesh_container.position.y += 0.5
 	self.allegiance = team
 
 func place(location:Vector3) -> void:
 	_set_preview_state(false)
-	_set_preview_material()
 	self.mesh_container.position = Vector3.ZERO
 	self.global_position = location
 
 ## Checks if the placement of the building doesn't encroach on any other buildings
 func is_placement_valid() -> bool:
+	## Check that no bodies intersect the placement collision area
 	var bodies:int = self.placement_collision_area.get_overlapping_bodies().size()
-	var is_valid:bool = bodies == 0
+	## Create the 5 placement collision raycasts and check if they are all at the same position (eg, ground is flat)
+	var points:Array[Vector3] = [Vector3.ZERO]
+	points.append_array(self.navigation_obstacle.get_vertices())
+	var previous_point:float = 0
+	var points_valid:bool = true
+	for point in points:
+		var result:Vector3 = CommonUtils.raycast(self, point, Vector3.DOWN)
+		if previous_point != 0: points_valid = points_valid and is_equal_approx(previous_point, result.y)
+		previous_point = result.y
+	
+	var is_valid:bool = bodies == 0 and points_valid
 	if is_valid:
 		self.preview_material.set_albedo(self.preview_valid_colour)
 	else:
@@ -66,7 +78,7 @@ func _set_preview_material() -> void:
 				child.set_surface_override_material(surface, null)
 
 func _init_placement_collision():
-	# Create the placement collision area
+	## Create the placement collision area
 	self.placement_collision_area = Area3D.new()
 	self.placement_collision_area.add_child(self.placement_collision_shape.duplicate(8))
 	self.add_child(self.placement_collision_area)

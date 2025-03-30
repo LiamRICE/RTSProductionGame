@@ -27,17 +27,31 @@ func _on_button_pressed(index:int) -> void:
 func _on_player_interface_selection_changed(selection: Array[Entity], selection_type: UIStateUtils.SelectionType) -> void:
 	print("Selection changed")
 	if selection.size() == 0:
-		for container in self.get_children():
-			for button in container.button_list:
-				button.set_disabled(true)
-				button.set_flat(true)
-				button.set_button_icon(null)
+		
 		return
 	
+	## Execute code depending on the unit selected
+	match selection_type:
+		UIStateUtils.SelectionType.NONE: ## Nothing is selected
+			for container in self.get_children():
+				for button in container.button_list:
+					button.set_disabled(true)
+					button.set_flat(true)
+					button.set_button_icon(null)
+		
+		UIStateUtils.SelectionType.UNITS:
+			pass
+		
+		UIStateUtils.SelectionType.BUILDINGS:
+			pass
+		
+		UIStateUtils.SelectionType.UNITS_ECONOMIC:
+			pass
+
 	## Get the selection's first item
 	var item:Entity = selection[0]
 	print("Button icon assigned")
-	if selection_type == UIStateUtils.SelectionType.BUILDINGS and item is ProductionBuilding:
+	if item is ProductionBuilding:
 		for container in self.get_children():
 			for index in range(item.building_units.size()):
 				var unit:Unit = item.building_units[index].entity_instance.instantiate()

@@ -200,9 +200,9 @@ func _input(_event:InputEvent) -> void:
 	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
 		if self.constructing_building.is_placement_valid():
 			state = UIStateUtils.ClickState.DEFAULT
-			var plane:Plane = Plane.PLANE_XZ
-			var mousepos:Vector2 = self.get_local_mouse_position()
-			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
+			var camera :Camera3D = get_viewport().get_camera_3d()
+			var mouse_position :Vector2 = get_viewport().get_mouse_position()
+			var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			self.remove_child(self.constructing_building)
 			self.level_manager.add_building(self.constructing_building, click_position)
 			## TODO - Debug, make allegiance based on player interface
@@ -272,9 +272,8 @@ func _process(_delta:float) -> void:
 			ui_selection_patch.visible = true
 	
 	if state == UIStateUtils.ClickState.CONSTRUCTING:
-		var plane:Plane = Plane.PLANE_XZ
-		var mousepos:Vector2 = self.get_local_mouse_position()
-		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.05, 0)
+		var mouse_position :Vector2 = get_viewport().get_mouse_position()
+		self.constructing_building.global_position = camera_operations.global_position_from_raycast(self.player_camera, mouse_position) + Vector3(0, 0.05, 0)
 		self.constructing_building.is_placement_valid()
 
 ## Modifies the size of the selection rectangle based on current position
