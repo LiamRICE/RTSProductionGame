@@ -38,18 +38,28 @@ offset_bottom = 61.0
 mouse_filter = 1
 text = "Build Turret"
 
+[node name="Build Depot" type="Button" parent="."]
+layout_mode = 0
+offset_left = 221.0
+offset_top = 30.0
+offset_right = 320.0
+offset_bottom = 61.0
+text = "Build Depot"
+
 [node name="UnitBlob" type="Button" parent="."]
 layout_mode = 0
-offset_left = 228.0
-offset_right = 328.0
-offset_bottom = 31.0
+offset_left = 325.0
+offset_top = 30.0
+offset_right = 425.0
+offset_bottom = 61.0
 text = "MAKE BLOB"
 
 [node name="EnemyUnit" type="Button" parent="."]
 layout_mode = 0
-offset_left = 341.0
-offset_right = 506.0
-offset_bottom = 31.0
+offset_left = 429.0
+offset_top = 30.0
+offset_right = 594.0
+offset_bottom = 61.0
 text = "Add test enemy unit"
 
 [node name="SpinBox" type="SpinBox" parent="."]
@@ -87,7 +97,9 @@ grow_vertical = 0
 
 [node name="Camera" parent="." instance=ExtResource("3_l5ywc")]
 
+[connection signal="selection_changed" from="." to="BottomBarContainer" method="_on_player_interface_selection_changed"]
 [connection signal="pressed" from="Button" to="." method="_on_barracks_added"]
 [connection signal="pressed" from="DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]
+[connection signal="pressed" from="Build Depot" to="." method="_on_build_depot_pressed"]
 [connection signal="pressed" from="UnitBlob" to="." method="_on_unit_blob_pressed"]
 [connection signal="pressed" from="EnemyUnit" to="." method="_on_enemy_unit_pressed"]

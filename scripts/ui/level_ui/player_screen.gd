@@ -1,4 +1,4 @@
-class_name PlayerScreen extends CanvasLayer
+extends CanvasLayer
 
 @onready var resource_counters:Array = $ResourceBar.get_children()
 

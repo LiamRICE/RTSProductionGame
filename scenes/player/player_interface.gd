@@ -1,12 +1,13 @@
 extends Control
 
 ## Signals
-signal selection_changed(selection:Array[Entity], selection_type:int)
+signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.SelectionType)
 
 # Loading Script Classes
-const PlayerScreen := preload("res://scenes/UI/player_screen.tscn")
+const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
 const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
+const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
 
 # Mouse images
 var mouse_default = load("res://assets/ui/icons/mouse/pointer_scifi_b.png")
@@ -33,42 +34,22 @@ var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 const camera_operations:GDScript = preload("res://scripts/utilities/camera_operations.gd")
 const CommonUtils:GDScript = preload("res://scripts/utilities/common_utils.gd")
 
-# State Machine
-enum ClickState {
-	DEFAULT,
-	SELECTING,
-	SELECTED,
-	CONSTRUCTING
-}
-enum SelectionType {
-	NONE,
-	UNITS,
-	UNITS_ECONOMIC,
-	BUILDINGS
-}
-enum MouseState {
-	DEFAULT,
-	RESOURCE,
-	REPAIR,
-	BUILD,
-	ENEMY
-}
 
-var state :ClickState
+var state :UIStateUtils.ClickState
 var is_on_ui: bool = false
 
 # Variables
 var selected_entities :Array[Entity] = []
-var selected_type:SelectionType = SelectionType.NONE
+var selected_type:UIStateUtils.SelectionType = UIStateUtils.SelectionType.NONE
 var constructing_building:Building
 var num_deployments :int = 0
-var mouse_state:MouseState = MouseState.DEFAULT
+var mouse_state:UIStateUtils.MouseState = UIStateUtils.MouseState.DEFAULT
 
 # Internal Variables
 var _mouse_left_click :bool = false
 var _dragged_rect_left :Rect2
 var _mouse_right_click :bool = false
-var _dragged_pos_right :Array[Vector3]
+#var _dragged_pos_right :Array[Vector3]
 var _is_constructing:bool = false
 
 # Constants
@@ -84,8 +65,9 @@ func _ready():
 	initialise_state_machine()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(delta:float):
 	mouse_update()
+	var x = delta
 
 
 func mouse_update():
@@ -96,42 +78,42 @@ func mouse_update():
 	var target:Entity
 	if raycast_result.get("collider") != null:
 		if raycast_result.get("collider").is_in_group("navigation_map"):
-			mouse_state = MouseState.DEFAULT
+			mouse_state = UIStateUtils.MouseState.DEFAULT
 		else:
 			print(self.selected_type)
 			target = raycast_result.get("collider").get_parent()
 			# check current selection
-			if self.selected_type in [SelectionType.UNITS_ECONOMIC]:
+			if self.selected_type in [UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				# check cast result
 				if target.is_in_group("resource"):
-					self.mouse_state = MouseState.RESOURCE
+					self.mouse_state = UIStateUtils.MouseState.RESOURCE
 				elif target.is_in_group("buildings"):
 					if target.build_percent < 100:
-						self.mouse_state = MouseState.BUILD
+						self.mouse_state = UIStateUtils.MouseState.BUILD
 					elif target.health < target.max_health:
-						self.mouse_state = MouseState.REPAIR
+						self.mouse_state = UIStateUtils.MouseState.REPAIR
 				elif (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
-					self.mouse_state = MouseState.ENEMY
+					self.mouse_state = UIStateUtils.MouseState.ENEMY
 				else:
-					self.mouse_state = MouseState.DEFAULT
-			elif self.selected_type in [SelectionType.UNITS, SelectionType.UNITS_ECONOMIC]:
+					self.mouse_state = UIStateUtils.MouseState.DEFAULT
+			elif self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				# check cast result
 				print(target.is_in_group("units"))
 				if (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
-					self.mouse_state = MouseState.ENEMY
+					self.mouse_state = UIStateUtils.MouseState.ENEMY
 				else:
-					self.mouse_state = MouseState.DEFAULT
+					self.mouse_state = UIStateUtils.MouseState.DEFAULT
 		# calculate mouse state
 		# change mouse image by mouse state
-		if mouse_state == MouseState.DEFAULT:
+		if mouse_state == UIStateUtils.MouseState.DEFAULT:
 			Input.set_custom_mouse_cursor(mouse_default, Input.CURSOR_ARROW, Vector2(9, 9))
-		elif mouse_state == MouseState.RESOURCE:
+		elif mouse_state == UIStateUtils.MouseState.RESOURCE:
 			Input.set_custom_mouse_cursor(mouse_resource, Input.CURSOR_CROSS, Vector2(15, 15))
-		elif mouse_state == MouseState.BUILD:
+		elif mouse_state == UIStateUtils.MouseState.BUILD:
 			Input.set_custom_mouse_cursor(mouse_build, Input.CURSOR_CROSS, Vector2(15, 15))
-		elif mouse_state == MouseState.REPAIR:
+		elif mouse_state == UIStateUtils.MouseState.REPAIR:
 			Input.set_custom_mouse_cursor(mouse_repair, Input.CURSOR_CROSS, Vector2(16, 16))
-		elif mouse_state == MouseState.ENEMY:
+		elif mouse_state == UIStateUtils.MouseState.ENEMY:
 			Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
 
 
@@ -154,41 +136,41 @@ func initialise_interface() -> void:
 
 func initialise_state_machine():
 	# Initialises the state machine for the user interface
-	state = ClickState.DEFAULT
+	state = UIStateUtils.ClickState.DEFAULT
 
 
 func _input(_event:InputEvent) -> void:
 	## SELECTION STATES ##
 	# Runs once at the start of each selection rect, if the state is DEFAULT
-	if Input.is_action_just_pressed("mouse_left_click") and (state == ClickState.DEFAULT or state == ClickState.SELECTED) and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_left_click") and (state == UIStateUtils.ClickState.DEFAULT or state == UIStateUtils.ClickState.SELECTED) and is_on_ui == false:
 		# Update state machine
-		state = ClickState.SELECTING
+		state = UIStateUtils.ClickState.SELECTING
 		# Updates the dragged rect start position
 		_dragged_rect_left.position = get_global_mouse_position()
 		ui_selection_patch.position = _dragged_rect_left.position
 		_mouse_left_click = true
 		
 	# Runs once at the end of each selection rect
-	if Input.is_action_just_released("mouse_left_click") and state == ClickState.SELECTING:
+	if Input.is_action_just_released("mouse_left_click") and state == UIStateUtils.ClickState.SELECTING:
 		# Hides the UI selection patch
 		_mouse_left_click = false
 		ui_selection_patch.visible = false
 		# Casts the selection and adds any units into the selection
 		cast_selection()
 		# Update state machine
-		state = ClickState.SELECTED
+		state = UIStateUtils.ClickState.SELECTED
 	
-	if Input.is_action_just_pressed("mouse_left_click") and state == ClickState.SELECTED and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_left_click") and state == UIStateUtils.ClickState.SELECTED and is_on_ui == false:
 		# TODO - need to improve the state machine, this one is causing problems with unit selection
 		# Update state machine
-		state = ClickState.DEFAULT
+		state = UIStateUtils.ClickState.DEFAULT
 		# Empty player's unit selection
 		selected_entities.clear()
 		print("Cleared Selection !")
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
-	if Input.is_action_just_pressed("mouse_right_click") and state == ClickState.SELECTED and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_right_click") and state == UIStateUtils.ClickState.SELECTED and is_on_ui == false:
 		var camera :Camera3D = get_viewport().get_camera_3d()
 		# cast to check location
 		var raycast_result = cast_ray(camera)
@@ -200,7 +182,7 @@ func _input(_event:InputEvent) -> void:
 			# check if is in group unit and is enemy -> assign as target
 			# check if on resource and unit has gatherer node -> assign as resource node
 			_mouse_right_click = true
-			if not selected_entities.is_empty() and self.selected_type in [SelectionType.UNITS, SelectionType.UNITS_ECONOMIC]:
+			if not selected_entities.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				var mouse_position :Vector2 = get_viewport().get_mouse_position()
 				
 				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
@@ -216,15 +198,15 @@ func _input(_event:InputEvent) -> void:
 							unit.update_target_location(camera_raycast_coords, is_shift)
 	
 	### CONSTRUCTION STATES ###
-	if Input.is_action_pressed("mouse_right_click") and state == ClickState.CONSTRUCTING:
-		state = ClickState.DEFAULT
+	if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
+		state = UIStateUtils.ClickState.DEFAULT
 		self._is_constructing = false
 		self.remove_child(self.constructing_building)
 		self.constructing_building = null
 	
-	if Input.is_action_pressed("mouse_left_click") and state == ClickState.CONSTRUCTING:
+	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
 		if self.constructing_building.is_placement_valid():
-			state = ClickState.DEFAULT
+			state = UIStateUtils.ClickState.DEFAULT
 			var plane:Plane = Plane.PLANE_XZ
 			var mousepos:Vector2 = self.get_local_mouse_position()
 			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
@@ -261,7 +243,7 @@ func cast_selection() -> void:
 			else:
 				building.deselect()
 	# Add the selection with the most pbjects to the selection list
-	self.selected_type = SelectionType.NONE
+	self.selected_type = UIStateUtils.SelectionType.NONE
 	var new_selection:Array[Entity]
 	if units.size() >= buildings.size() and units.size() > 0:
 		new_selection = units
@@ -271,12 +253,12 @@ func cast_selection() -> void:
 			if not u.is_in_group("resource_gatherer"):
 				all_eco = false
 		if all_eco:
-			self.selected_type = SelectionType.UNITS_ECONOMIC
+			self.selected_type = UIStateUtils.SelectionType.UNITS_ECONOMIC
 		else:
-			self.selected_type = SelectionType.UNITS
+			self.selected_type = UIStateUtils.SelectionType.UNITS
 	elif buildings.size() > 0:
 		new_selection = buildings
-		self.selected_type = SelectionType.BUILDINGS
+		self.selected_type = UIStateUtils.SelectionType.BUILDINGS
 	if not CommonUtils.is_array_equal(new_selection, self.selected_entities):
 		self.selected_entities = new_selection
 		self.selection_changed.emit(self.selected_entities, self.selected_type)
@@ -296,7 +278,7 @@ func _process(_delta:float) -> void:
 		if _dragged_rect_left.size.length_squared() > MIN_SELECT_SQUARED:
 			ui_selection_patch.visible = true
 	
-	if state == ClickState.CONSTRUCTING:
+	if state == UIStateUtils.ClickState.CONSTRUCTING:
 		var plane:Plane = Plane.PLANE_XZ
 		var mousepos:Vector2 = self.get_local_mouse_position()
 		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.05, 0)
@@ -321,7 +303,7 @@ func update_ui_selection_rect() -> void:
 ## Add building
 func _on_deploy_unit_button_pressed():
 	self._is_constructing = true
-	self.state = ClickState.CONSTRUCTING
+	self.state = UIStateUtils.ClickState.CONSTRUCTING
 	self.constructing_building = preload("res://scenes/buildings/turret_gun.tscn").instantiate()
 	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
@@ -329,24 +311,24 @@ func _on_deploy_unit_button_pressed():
 
 func _on_barracks_added():
 	self._is_constructing = true
-	self.state = ClickState.CONSTRUCTING
+	self.state = UIStateUtils.ClickState.CONSTRUCTING
 	self.constructing_building = preload("res://scenes/buildings/barracks.tscn").instantiate()
 	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
 
 
 func cast_ray(camera:Camera3D) -> Dictionary:
-		var mouse_pos = get_viewport().get_mouse_position()
-		var ray_length = 100
-		var from = camera.project_ray_origin(mouse_pos)
-		var to = from + camera.project_ray_normal(mouse_pos) * ray_length
-		var space = camera.get_world_3d().direct_space_state
-		var ray_query = PhysicsRayQueryParameters3D.new()
-		ray_query.from = from
-		ray_query.to = to
-		ray_query.collide_with_areas = true
-		var raycast_result = space.intersect_ray(ray_query)
-		return raycast_result
+	var mouse_pos = get_viewport().get_mouse_position()
+	var ray_length = 100
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * ray_length
+	var space = camera.get_world_3d().direct_space_state
+	var ray_query = PhysicsRayQueryParameters3D.new()
+	ray_query.from = from
+	ray_query.to = to
+	ray_query.collide_with_areas = true
+	var raycast_result = space.intersect_ray(ray_query)
+	return raycast_result
 
 
 func _on_unit_blob_pressed():
@@ -364,3 +346,11 @@ func _on_enemy_unit_pressed():
 	vehicle.allegiance = self.player_team - 1
 	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(4, 0, 0))
 	vehicle.update_target_location(Vector3(-12, 0, -12), true)
+
+
+func _on_build_depot_pressed() -> void:
+	self._is_constructing = true
+	self.state = UIStateUtils.ClickState.CONSTRUCTING
+	self.constructing_building = preload("res://scenes/buildings/depot_building.tscn").instantiate()
+	self.constructing_building.initialise_placement(self.player_team)
+	self.add_child(self.constructing_building)

@@ -35,10 +35,6 @@ const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
 var gatherers_counter:float = 0.05
 
 
-func _ready():
-	var player_screen = self.ui_manager.player_interface.player_screen
-
-
 func _physics_process(delta:float):
 	if self.gatherers_counter <= 0:
 		self.gatherers_counter = self.refresh_rate_gatherers
