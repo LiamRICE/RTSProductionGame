@@ -13,8 +13,9 @@ script = ExtResource("1_ubpkj")
 gather_speed = 1.0
 move_speed = 2.0
 view_distance = 10.0
-vision_radius = 6.0
+vision_radius = 10.0
 allegiance = 1
+is_mobile = true
 metadata/_custom_type_script = "uid://6dbiff4it08h"
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]

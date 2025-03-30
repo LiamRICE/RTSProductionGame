@@ -147,6 +147,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5833, 0, 1.51946)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61005, 0, 0)
 move_speed = 2.0
 rotation_speed = 0.5
+view_distance = 5.0
 max_health = 100.0
 allegiance = 2
 
