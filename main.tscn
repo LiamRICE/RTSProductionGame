@@ -1,20 +1,16 @@
-[gd_scene load_steps=19 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=15 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
 [ext_resource type="PackedScene" uid="uid://di2dykp7unme6" path="res://scenes/resources/resource_node.tscn" id="3_4c57u"]
 [ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
-[ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://1nq3s6f2ckjy" path="res://scenes/effects/fog_of_war/fog_of_war.tscn" id="3_vivmo"]
-[ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/buildings/turret_gun.tscn" id="4_1bvp3"]
 [ext_resource type="MeshLibrary" uid="uid://cd2ogelb24wqj" path="res://assets/mesh_libraries/terrain_3d.meshlib" id="4_4c57u"]
 [ext_resource type="PackedScene" uid="uid://cov0sc830su4l" path="res://scenes/effects/fog_of_war/fow_mesh.tscn" id="4_ycdy4"]
-[ext_resource type="PackedScene" uid="uid://bra66m3iaqt8s" path="res://scenes/buildings/barracks.tscn" id="5_7mycd"]
 [ext_resource type="Texture2D" uid="uid://p4iqpmnnbkoy" path="res://heightmap_test.png" id="5_w48qg"]
 [ext_resource type="Script" uid="uid://bi34cw4c6gv1n" path="res://player_manager.gd" id="8_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://c6ga862t4hde5" path="res://debug_tools/performance_monitor.tscn" id="9_2cqfq"]
-[ext_resource type="PackedScene" uid="uid://bll0qqe2act2i" path="res://scenes/buildings/depot_building.tscn" id="9_efxa6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 
@@ -119,22 +115,6 @@ ui_manager = NodePath("../UIManager")
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
-[node name="TurretGun" parent="LevelManager/PlayerManager/Player1/Buildings" instance=ExtResource("4_1bvp3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3768, 4.76837e-07, -3.18556)
-attack_range = 0.0
-build_percent = 65.0
-max_health = 100.0
-vision_radius = 0.0
-
-[node name="Barracks" parent="LevelManager/PlayerManager/Player1/Buildings" instance=ExtResource("5_7mycd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.390106, 0, -4.43581)
-max_health = 300.0
-vision_radius = 0.0
-allegiance = 1
-
-[node name="DepotBuilding" parent="LevelManager/PlayerManager/Player1/Buildings" instance=ExtResource("9_efxa6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5833, 0, 1.51946)
-
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
 [node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
@@ -142,14 +122,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5833, 0, 1.51946)
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player2"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player2"]
-
-[node name="Vehicle2" parent="LevelManager/PlayerManager/Player2/Units" instance=ExtResource("3_lquwl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61005, 0, 0)
-move_speed = 2.0
-rotation_speed = 0.5
-view_distance = 5.0
-max_health = 100.0
-allegiance = 2
 
 [node name="Player3" type="Node" parent="LevelManager/PlayerManager"]
 

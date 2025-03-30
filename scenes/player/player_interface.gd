@@ -66,13 +66,14 @@ func _ready():
 
 
 func _physics_process(delta:float):
-	mouse_update()
+	mouse_state_update()
 	var x = delta
 
 
-func mouse_update():
+func mouse_state_update():
 	# check underlying object type
 	var camera :Camera3D = get_viewport().get_camera_3d()
+	var current_state:UIStateUtils.MouseState = mouse_state
 	# cast to check location
 	var raycast_result = cast_ray(camera)
 	var target:Entity
@@ -80,14 +81,13 @@ func mouse_update():
 		if raycast_result.get("collider").is_in_group("navigation_map"):
 			mouse_state = UIStateUtils.MouseState.DEFAULT
 		else:
-			print(self.selected_type)
 			target = raycast_result.get("collider").get_parent()
 			# check current selection
 			if self.selected_type in [UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				# check cast result
 				if target.is_in_group("resource"):
 					self.mouse_state = UIStateUtils.MouseState.RESOURCE
-				elif target.is_in_group("buildings"):
+				elif target.is_in_group("buildings") and target.allegiance == self.player_team:
 					if target.build_percent < 100:
 						self.mouse_state = UIStateUtils.MouseState.BUILD
 					elif target.health < target.max_health:
@@ -96,25 +96,27 @@ func mouse_update():
 					self.mouse_state = UIStateUtils.MouseState.ENEMY
 				else:
 					self.mouse_state = UIStateUtils.MouseState.DEFAULT
-			elif self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
+			elif self.selected_type in [UIStateUtils.SelectionType.UNITS]:
 				# check cast result
-				print(target.is_in_group("units"))
 				if (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
 					self.mouse_state = UIStateUtils.MouseState.ENEMY
 				else:
 					self.mouse_state = UIStateUtils.MouseState.DEFAULT
-		# calculate mouse state
-		# change mouse image by mouse state
-		if mouse_state == UIStateUtils.MouseState.DEFAULT:
-			Input.set_custom_mouse_cursor(mouse_default, Input.CURSOR_ARROW, Vector2(9, 9))
-		elif mouse_state == UIStateUtils.MouseState.RESOURCE:
-			Input.set_custom_mouse_cursor(mouse_resource, Input.CURSOR_CROSS, Vector2(15, 15))
-		elif mouse_state == UIStateUtils.MouseState.BUILD:
-			Input.set_custom_mouse_cursor(mouse_build, Input.CURSOR_CROSS, Vector2(15, 15))
-		elif mouse_state == UIStateUtils.MouseState.REPAIR:
-			Input.set_custom_mouse_cursor(mouse_repair, Input.CURSOR_CROSS, Vector2(16, 16))
-		elif mouse_state == UIStateUtils.MouseState.ENEMY:
-			Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
+
+
+func mouse_update():
+	# set mouse image
+	if self.mouse_state == UIStateUtils.MouseState.DEFAULT:
+		Input.set_custom_mouse_cursor(mouse_default, Input.CURSOR_ARROW, Vector2(9, 9))
+	elif self.mouse_state == UIStateUtils.MouseState.RESOURCE:
+		Input.set_custom_mouse_cursor(mouse_resource, Input.CURSOR_ARROW, Vector2(15, 15))
+	elif self.mouse_state == UIStateUtils.MouseState.BUILD:
+		Input.set_custom_mouse_cursor(mouse_build, Input.CURSOR_ARROW, Vector2(15, 15))
+	elif self.mouse_state == UIStateUtils.MouseState.REPAIR:
+		Input.set_custom_mouse_cursor(mouse_repair, Input.CURSOR_ARROW, Vector2(16, 16))
+	elif self.mouse_state == UIStateUtils.MouseState.ENEMY:
+		Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
+	
 
 
 func _on_mouse_entered() -> void:
@@ -266,6 +268,9 @@ func cast_selection() -> void:
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
+	# update mouse visual
+	mouse_update()
+	# manage left click selection rectangle
 	if _mouse_left_click:
 		# Update the size of the dragged rect
 		_dragged_rect_left.size = get_global_mouse_position() - _dragged_rect_left.position
@@ -277,7 +282,7 @@ func _process(_delta:float) -> void:
 		# Only show the ui_rect if it's above a certain size to avoid it always appearing
 		if _dragged_rect_left.size.length_squared() > MIN_SELECT_SQUARED:
 			ui_selection_patch.visible = true
-	
+	# manage construction states
 	if state == UIStateUtils.ClickState.CONSTRUCTING:
 		var plane:Plane = Plane.PLANE_XZ
 		var mousepos:Vector2 = self.get_local_mouse_position()

@@ -7,7 +7,7 @@ const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
 	"type":ResourceUtils.Res.NONE,
 	"node":null
 }
-@export var depot:Entity = null
+@export var depot:Building = null
 @onready var parent:Unit = self.get_parent()
 
 var resource_amount:int = 0
@@ -121,6 +121,7 @@ func go_drop_off(delta:float):
 			self.gather_state = ResourceUtils.GatherState.GATHERING
 			# if node still exists, set as target
 			if check_node_exists():
+				print("Setting node as path")
 				self.parent.set_navigation_path(self.resource.get("node").global_transform.origin)
 		# else move to depot
 		else:
@@ -140,7 +141,7 @@ func go_drop_off(delta:float):
 
 func get_closest_depot(allegiance:int) -> bool:
 	var depots:Array = get_tree().get_nodes_in_group("depot")
-	var closest:DepotBuilding = null
+	var closest:Building = null
 	var dist:float = -1
 	# find closest depot
 	for d in depots:

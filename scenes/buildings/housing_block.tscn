@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://bjq2vwv7uqf2k"]
+
+[ext_resource type="PackedScene" uid="uid://bmkprnomvahw7" path="res://assets/kenney_buildings/building-sample-tower-d.glb" id="1_0d4se"]
+[ext_resource type="PackedScene" uid="uid://d0bk7phewcf0w" path="res://assets/kenney_buildings/building-sample-tower-c.glb" id="2_jd8ny"]
+[ext_resource type="PackedScene" uid="uid://x05o1lvtds7h" path="res://assets/kenney_buildings/building-sample-tower-b.glb" id="3_6yolw"]
+[ext_resource type="PackedScene" uid="uid://f8s8d0nngbr0" path="res://assets/kenney_buildings/building-sample-house-b.glb" id="4_gfdxl"]
+[ext_resource type="PackedScene" uid="uid://biajmfbppbuao" path="res://assets/kenney_buildings/building-sample-house-a.glb" id="5_n70r7"]
+[ext_resource type="PackedScene" uid="uid://01dcemh7nguo" path="res://assets/kenney_buildings/building-window-large-left.glb" id="6_v1e5s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hbwg0"]
+size = Vector3(3.02048, 3.82501, 3.26263)
+
+[node name="HousingBlock" type="Node3D"]
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="building-sample-tower-d2" parent="Meshes" instance=ExtResource("1_0d4se")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1)
+
+[node name="building-sample-tower-c2" parent="Meshes" instance=ExtResource("2_jd8ny")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1, 0, 0)
+
+[node name="building-sample-tower-b2" parent="Meshes" instance=ExtResource("3_6yolw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+
+[node name="building-sample-house-b2" parent="Meshes" instance=ExtResource("4_gfdxl")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0, 0)
+
+[node name="building-sample-house-a2" parent="Meshes" instance=ExtResource("5_n70r7")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0, -1)
+
+[node name="building-window-large-left2" parent="Meshes" instance=ExtResource("6_v1e5s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00157166, 1.88565, 0.0632019)
+shape = SubResource("BoxShape3D_hbwg0")
+
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
