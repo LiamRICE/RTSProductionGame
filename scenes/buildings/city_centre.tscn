@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bph3bulc5igvo"]
+[gd_scene load_steps=13 format=3 uid="uid://bph3bulc5igvo"]
 
 [ext_resource type="ArrayMesh" uid="uid://p4y0eglm5sci" path="res://assets/kenney_space/hangar_roundA.obj" id="1_jbrgn"]
 [ext_resource type="Script" uid="uid://bxjiwsbf3sthe" path="res://scripts/buildings/city_centre.gd" id="1_qv66y"]
 [ext_resource type="ArrayMesh" uid="uid://ch0br0tvpd6ri" path="res://assets/kenney_space/hangar_smallB.obj" id="2_afdsb"]
 [ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="2_nwvru"]
+[ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="2_o0tdm"]
+[ext_resource type="Resource" uid="uid://de05tslthwbju" path="res://data/units/gatherer.tres" id="3_qp8e6"]
 [ext_resource type="ArrayMesh" uid="uid://ba8sxwo3c0msc" path="res://assets/kenney_space/machine_barrel.obj" id="3_vbvpw"]
 [ext_resource type="ArrayMesh" uid="uid://2m1j7aa5xpko" path="res://assets/kenney_space/machine_generator.obj" id="4_mra1d"]
 [ext_resource type="ArrayMesh" uid="uid://ehfw045eyq21" path="res://assets/kenney_space/machine_generatorLarge.obj" id="5_qv66y"]
@@ -16,7 +18,8 @@ size = Vector3(3.02048, 2, 4)
 [node name="BaseCentre" type="Node3D" node_paths=PackedStringArray("depot_module", "production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
 script = ExtResource("1_qv66y")
 depot_module = NodePath("DepotModule")
-production_timer = NodePath("Timer")
+building_units = Array[ExtResource("2_o0tdm")]([ExtResource("3_qp8e6")])
+production_timer = NodePath("ProductionTimer")
 unit_spawn_point = NodePath("SpawnPoint")
 rally_point = NodePath("RallyPoint")
 mesh_container = NodePath("MeshContainer")
@@ -72,9 +75,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 [node name="RallyPoint" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 
-[node name="Timer" type="Timer" parent="."]
+[node name="ProductionTimer" type="Timer" parent="."]
+one_shot = true
 
 [node name="DepotModule" parent="." instance=ExtResource("8_lvxxa")]
 
 [node name="NavigationLink3D" type="NavigationLink3D" parent="."]
 end_position = Vector3(0, 0, 2)
+
+[connection signal="timeout" from="ProductionTimer" to="." method="_on_production_timer_timeout"]

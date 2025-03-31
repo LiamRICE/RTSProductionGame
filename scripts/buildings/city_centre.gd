@@ -15,6 +15,9 @@ func _ready() -> void:
 	# get the global player manager
 	_init_player_manager()
 
+	print("Production building init")
+	print(self.production_timer)
+
 
 # Required for depot functionality
 func _init_player_manager():

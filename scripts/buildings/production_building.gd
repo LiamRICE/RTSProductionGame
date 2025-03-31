@@ -24,16 +24,19 @@ func queue_unit(unit:int) -> void:
 	var new_unit:Unit = self.building_units[unit].entity_instance.instantiate()
 	new_unit.allegiance = self.allegiance
 	self.production_queue.append(new_unit)
+	print("Queuing Unit...")
 	if not self.is_producing:
 		self.start_production()
 		self.is_producing = true
 
 ## Starts the production of the unit at index 0 in the production queue
 func start_production() -> void:
+	print("Starting production...")
 	self.production_timer.start(self.production_queue[0].production_cost)
 
 ## Called when the timer for the unit production is completed
 func _on_production_timer_timeout():
+	print("Production complete.")
 	var unit:Unit = self.production_queue.pop_front() as Unit
 	# If there is another unit in the queue, start the production for it
 	if self.production_queue.size() > 0:

@@ -168,7 +168,6 @@ func _input(_event:InputEvent) -> void:
 		state = UIStateUtils.ClickState.DEFAULT
 		# Empty player's unit selection
 		selected_entities.clear()
-		print("Cleared Selection !")
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
@@ -178,7 +177,6 @@ func _input(_event:InputEvent) -> void:
 		var raycast_result = cast_ray(camera)
 		var target:Entity
 		if raycast_result.get("collider") != null:
-			print("Navigation Map? ",raycast_result.get("collider").is_in_group("navigation_map"))
 			if not raycast_result.get("collider").is_in_group("navigation_map"):
 				target = raycast_result.get("collider").get_parent()
 			# check if is in group unit and is enemy -> assign as target
@@ -193,10 +191,8 @@ func _input(_event:InputEvent) -> void:
 						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
 						if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
 							unit.set_gathering_target(target, is_shift)
-							print("Set gathering target...")
 						else:
 						# TODO - spread out units
-							print("Sending coords...")
 							unit.update_target_location(camera_raycast_coords, is_shift)
 	
 	### CONSTRUCTION STATES ###
