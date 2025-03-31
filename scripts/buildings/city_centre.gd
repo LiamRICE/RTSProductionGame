@@ -3,6 +3,7 @@ extends ProductionBuilding
 # Script loading
 const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
 const DepotModule := preload("res://scripts/buildings/building_modules/depot_module.gd")
+const PlayerManager := preload("res://player_manager.gd")
 
 # Load player manager
 var player_manager:PlayerManager

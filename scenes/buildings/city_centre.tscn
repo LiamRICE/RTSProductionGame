@@ -75,3 +75,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 [node name="Timer" type="Timer" parent="."]
 
 [node name="DepotModule" parent="." instance=ExtResource("8_lvxxa")]
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="."]
+end_position = Vector3(0, 0, 2)
