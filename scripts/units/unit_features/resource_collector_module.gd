@@ -33,6 +33,7 @@ func manage_gathering(delta:float):
 
 func set_gathering_target(target:Resources, is_shift:bool = false):
 	# set target as the navigation target
+	print(target.resource_type)
 	self.resource.set("node", target)
 	self.resource.set("type", target.resource_type)
 	self.gather_state = ResourceUtils.GatherState.GATHERING

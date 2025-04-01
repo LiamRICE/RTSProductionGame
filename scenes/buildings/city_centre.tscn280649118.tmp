@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=3 uid="uid://bph3bulc5igvo"]
+
+[ext_resource type="ArrayMesh" uid="uid://p4y0eglm5sci" path="res://assets/kenney_space/hangar_roundA.obj" id="1_jbrgn"]
+[ext_resource type="Script" uid="uid://bxjiwsbf3sthe" path="res://scripts/buildings/city_centre.gd" id="1_qv66y"]
+[ext_resource type="ArrayMesh" uid="uid://ch0br0tvpd6ri" path="res://assets/kenney_space/hangar_smallB.obj" id="2_afdsb"]
+[ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="2_nwvru"]
+[ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="2_o0tdm"]
+[ext_resource type="Resource" uid="uid://de05tslthwbju" path="res://data/units/gatherer.tres" id="3_qp8e6"]
+[ext_resource type="ArrayMesh" uid="uid://ba8sxwo3c0msc" path="res://assets/kenney_space/machine_barrel.obj" id="3_vbvpw"]
+[ext_resource type="ArrayMesh" uid="uid://2m1j7aa5xpko" path="res://assets/kenney_space/machine_generator.obj" id="4_mra1d"]
+[ext_resource type="ArrayMesh" uid="uid://ehfw045eyq21" path="res://assets/kenney_space/machine_generatorLarge.obj" id="5_qv66y"]
+[ext_resource type="ArrayMesh" uid="uid://p8qyp3llhxmp" path="res://assets/kenney_space/machine_wireless.obj" id="6_mra1d"]
+[ext_resource type="PackedScene" uid="uid://lokm0t60kg1b" path="res://scenes/buildings/BuildingModules/depot_module.tscn" id="8_lvxxa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mra1d"]
+size = Vector3(3.02048, 2, 4)
+
+[node name="BaseCentre" type="Node3D" node_paths=PackedStringArray("depot_module", "production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
+script = ExtResource("1_qv66y")
+depot_module = NodePath("DepotModule")
+building_units = Array[ExtResource("2_o0tdm")]([ExtResource("3_qp8e6")])
+production_timer = NodePath("ProductionTimer")
+unit_spawn_point = NodePath("SpawnPoint")
+rally_point = NodePath("RallyPoint")
+mesh_container = NodePath("MeshContainer")
+navigation_obstacle = NodePath("NavigationObstacle3D")
+placement_collision_shape = NodePath("StaticBody3D/CollisionShape3D")
+preview_material = ExtResource("2_nwvru")
+body = NodePath("StaticBody3D")
+vision_radius = 10.0
+
+[node name="MeshContainer" type="Node3D" parent="."]
+
+[node name="HangarRoundA" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = ExtResource("1_jbrgn")
+skeleton = NodePath("../..")
+
+[node name="HangarSmallB" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+mesh = ExtResource("2_afdsb")
+skeleton = NodePath("../..")
+
+[node name="MachineBarrel" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 2)
+mesh = ExtResource("3_vbvpw")
+
+[node name="MachineGeneratorLarge" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0011394, 1.00541, 0.495791)
+mesh = ExtResource("5_qv66y")
+skeleton = NodePath("../..")
+
+[node name="MachineWireless" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(-0.954553, 0, 0.298041, 0, 1, 0, -0.298041, 0, -0.954553, -1.57459, 0, 0.273071)
+mesh = ExtResource("6_mra1d")
+skeleton = NodePath("../..")
+
+[node name="MachineGenerator" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 1, 0, 0)
+mesh = ExtResource("4_mra1d")
+skeleton = NodePath("../../StaticBody3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00157166, 0.973145, -0.305481)
+shape = SubResource("BoxShape3D_mra1d")
+
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
+vertices = PackedVector3Array(-1.36105, 0, 2.26922, -0.802111, 0, 2.22306, -0.831542, 0, 1.58695, 0.763972, 0, 1.55321, 0.885377, 0, 1.94305, 0.994578, 0, 1.95243, 1.09163, 0, 0.515062, 1.48122, 0, -0.0596998, 1.6852, 0, -0.98629, 0.860255, 0, -2.43713, -0.787579, 0, -2.43705, -1.66721, 0, -1.01197, -2.02294, 0, 0.385552, -1.06781, 0, 0.706536, -1.04195, 0, 1.68368, -1.44481, 0, 1.72281)
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="RallyPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="ProductionTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DepotModule" parent="." instance=ExtResource("8_lvxxa")]
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="."]
+end_position = Vector3(0, 0, 2)
+
+[connection signal="timeout" from="ProductionTimer" to="." method="_on_production_timer_timeout"]

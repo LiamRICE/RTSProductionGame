@@ -60,6 +60,7 @@ func add_resource(amount:int, type:ResourceUtils.Res):
 		self.nanotech += amount
 	if type == ResourceUtils.Res.FUEL:
 		self.fuel += amount
+	print(amount, type)
 	# update resources UI every time you modify the amount of resources in the stockpile
 	update_resources_ui()
 
