@@ -17,6 +17,11 @@ func _ready():
 	# Create units
 	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
 	var gatherer_scene:PackedScene = preload("res://scenes/units/resource_collector_unit.tscn")
+	var city_centre_scene:PackedScene = preload("res://scenes/buildings/city_centre.tscn")
+	var building = city_centre_scene.instantiate()
+	building.allegiance = 1
+	building._init_placement_collision()
+	self.add_building(building, Vector3(0,0,0))
 	for x in range(3):
 		var unit:Unit
 		if x < 1:
@@ -24,7 +29,8 @@ func _ready():
 		else:
 			unit = gatherer_scene.instantiate()
 		unit.allegiance = 1
-		self.add_unit(unit, Vector3(x, 0.2, 0), Vector3(x, 0.2, 0))
+		self.add_unit(unit, Vector3(x, 0.2, 3), Vector3(x, 0.2, 3))
+	
 	# Create buildings
 
 

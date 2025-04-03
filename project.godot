@@ -26,7 +26,10 @@ gdscript/warnings/narrowing_conversion=0
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+window/vsync/vsync_mode=0
 mouse_cursor/custom_image="uid://dlcsne5a5asyj"
+mouse_cursor/custom_image_hotspot=Vector2(9, 9)
+mouse_cursor/tooltip_position_offset=Vector2(40, 10)
 
 [dotnet]
 
@@ -108,3 +111,4 @@ rotate_left={
 
 3d/physics_engine="Jolt Physics"
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
+3d/default_gravity_vector=Vector3(0, 0, 0)

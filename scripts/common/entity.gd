@@ -1,5 +1,7 @@
 class_name Entity extends Node3D
 
+const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
+
 ## Common Entity nodes
 @export var body:PhysicsBody3D
 var fog_of_war_sprite:Sprite2D
@@ -16,6 +18,10 @@ var fog_of_war_sprite:Sprite2D
 @export var vision_radius:float ## Used to scale the vision sprite
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by vision_radius.
 @export var allegiance:int = 0
+
+@export_group("Value")
+@export var resource_cost_amount:Array[int]
+@export var resource_cost_type:Array[ResourceUtils.Res]
 
 ## Common Entity states
 @export_group("States")
