@@ -5,7 +5,7 @@ signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.Se
 
 # Loading Script Classes
 const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
-const OrdersInterface := preload("res://scripts/ui/level_ui/bottom_bar_container.gd")
+const ActionsInterface := preload("res://scripts/ui/level_ui/actions_interface.gd")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
 
@@ -18,16 +18,20 @@ var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 
 # Child nodes
 @export var player_screen:PlayerScreen
-@export var orders_interface:OrdersInterface
+@export var actions_interface:ActionsInterface
+@export var camera_controller:Node3D
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
-@onready var player_camera :Camera3D = $Camera/Yaw/Pitch/MainCamera
-@onready var deploy_unit_button:Button = $DeployUnitButton # DEBUG
-@onready var add_unit_button:Button = $Button # DEBUG
-@onready var unit_blob_button:Button = $UnitBlob # DEBUG
-@onready var spin_box:SpinBox = $SpinBox # DEBUG
+@onready var player_camera :Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
+
+## DEBUG
+@onready var debug_controls:Control = $DebugControls
+@onready var deploy_unit_button:Button = $DebugControls/DeployUnitButton # DEBUG
+@onready var add_unit_button:Button = $DebugControls/Button # DEBUG
+@onready var unit_blob_button:Button = $DebugControls/UnitBlob # DEBUG
+@onready var spin_box:SpinBox = $DebugControls/SpinBox # DEBUG
 #const UNIT = preload("res://scenes/units/unit_2.tscn")
 
 # Modules
@@ -119,21 +123,10 @@ func mouse_update():
 	
 
 
-func _on_mouse_entered() -> void:
-	self.is_on_ui = true
-	print(is_on_ui)
-
-
-func _on_mouse_exited() -> void:
-	self.is_on_ui = false
-	print(is_on_ui)
-
-
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
-	self.orders_interface.mouse_entered.connect(self._on_mouse_entered)
-	self.orders_interface.mouse_exited.connect(self._on_mouse_exited)
+	self.selection_changed.connect(self.actions_interface._on_player_interface_selection_changed)
 
 
 func initialise_state_machine():
@@ -205,9 +198,9 @@ func _input(_event:InputEvent) -> void:
 	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
 		if self.constructing_building.is_placement_valid():
 			state = UIStateUtils.ClickState.DEFAULT
-			var plane:Plane = Plane.PLANE_XZ
-			var mousepos:Vector2 = self.get_local_mouse_position()
-			var click_position:Vector3 = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0)
+			var camera :Camera3D = get_viewport().get_camera_3d()
+			var mouse_position :Vector2 = get_viewport().get_mouse_position()
+			var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			self.remove_child(self.constructing_building)
 			self.level_manager.add_building(self.constructing_building, click_position)
 			## TODO - Debug, make allegiance based on player interface
@@ -240,7 +233,7 @@ func cast_selection() -> void:
 				building.select()
 			else:
 				building.deselect()
-	# Add the selection with the most pbjects to the selection list
+	# Add the selection with the most objects to the selection list
 	self.selected_type = UIStateUtils.SelectionType.NONE
 	var new_selection:Array[Entity]
 	if units.size() >= buildings.size() and units.size() > 0:
@@ -280,9 +273,8 @@ func _process(_delta:float) -> void:
 			ui_selection_patch.visible = true
 	# manage construction states
 	if state == UIStateUtils.ClickState.CONSTRUCTING:
-		var plane:Plane = Plane.PLANE_XZ
-		var mousepos:Vector2 = self.get_local_mouse_position()
-		self.constructing_building.global_position = plane.intersects_ray(self.player_camera.project_ray_origin(mousepos), self.player_camera.project_ray_normal(mousepos) * 1000.0) + Vector3(0, 0.05, 0)
+		var mouse_position :Vector2 = get_viewport().get_mouse_position()
+		self.constructing_building.global_position = camera_operations.global_position_from_raycast(self.player_camera, mouse_position) + Vector3(0, 0.05, 0)
 		self.constructing_building.is_placement_valid()
 
 ## Modifies the size of the selection rectangle based on current position

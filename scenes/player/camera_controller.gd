@@ -22,9 +22,11 @@ var goal_transform :Transform3D = Transform3D.IDENTITY
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.goal_transform.origin = Vector3(0, (MIN_HEIGHT + MAX_HEIGHT)/2, 0)
 	pitch.global_rotation = Vector3(-TAU/8, 0, 0)
 	yaw.global_rotation = Vector3(0, TAU/8, 0)
+	
+	self.goal_transform.origin = Vector3(0, (MIN_HEIGHT + MAX_HEIGHT)/2, 0)
+	self.goal_transform.basis = camera.transform.basis
 	
 	camera.global_transform = goal_transform
 
@@ -42,22 +44,19 @@ func _process(delta):
 	goal_transform.basis = goal_transform.basis.rotated(Vector3.UP, rotate_order * ROT_SPEED * delta).orthonormalized()
 	
 	# Zoom the camera in and out
+	var zoom_order:float = Input.get_axis("rotate_right", "rotate_left")
 	if Input.is_action_just_pressed("zoom_out"):
 		if not goal_transform.origin.y >= MAX_HEIGHT:
-			# TODO - Switch constant zoom to relative speed zoom based on camera height (higher cameras have faster zoom than low down)
 			#goal_transform += Vector3(0, ZOOM_SPEED * (goal_transform.y + 1), 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
-			goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
+			goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	if Input.is_action_just_pressed("zoom_in"):
 		if not goal_transform.origin.y <= MIN_HEIGHT:
-			# TODO - Switch constant zoom to relative speed zoom based on camera height (higher cameras have faster zoom than low down)
 			#goal_transform -= Vector3(0, ZOOM_SPEED * (goal_transform.y - 1), 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
-			goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
-			#if goal_transform.y <= MIN_HEIGHT:
-			#	goal_transform += Vector3(0, MIN_HEIGHT - goal_transform.y, 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
+			goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	camera.global_transform.origin = camera.global_transform.origin.lerp(goal_transform.origin, PAN_RESPONSIVENESS * delta)
-	camera.basis = camera.basis.slerp(goal_transform.basis, YAW_RESPONSIVENESS * delta).orthonormalized()
+	yaw.basis = yaw.basis.slerp(goal_transform.basis, YAW_RESPONSIVENESS * delta).orthonormalized()
 
 
 # Projects the 3D world space coordinate into the camera's 2D screen space

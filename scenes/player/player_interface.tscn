@@ -1,26 +1,43 @@
-[gd_scene load_steps=6 format=3 uid="uid://codd0sfjcvg05"]
+[gd_scene load_steps=5 format=3 uid="uid://codd0sfjcvg05"]
 
 [ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scenes/player/player_interface.gd" id="1_x6a1n"]
 [ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_u4r1x"]
-[ext_resource type="PackedScene" uid="uid://bsh0v2nxk318h" path="res://scenes/player/camera.tscn" id="3_l5ywc"]
-[ext_resource type="PackedScene" uid="uid://cujpnla0w646r" path="res://scenes/player/level_ui/bottom_bar_container.tscn" id="4_5mnt7"]
+[ext_resource type="PackedScene" uid="uid://cujpnla0w646r" path="res://scenes/player/level_ui/actions_interface.tscn" id="4_5mnt7"]
 [ext_resource type="PackedScene" uid="uid://cv5njxs8al6tl" path="res://scenes/UI/player_screen.tscn" id="4_n7n0g"]
 
-[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "orders_interface")]
+[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "actions_interface")]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
 script = ExtResource("1_x6a1n")
 player_screen = NodePath("PlayerScreen")
-orders_interface = NodePath("BottomBarContainer")
+actions_interface = NodePath("ActionsInterface")
 metadata/_edit_lock_ = true
 
 [node name="PlayerScreen" parent="." instance=ExtResource("4_n7n0g")]
 unique_name_in_owner = true
 
-[node name="Button" type="Button" parent="."]
+[node name="ActionsInterface" parent="." instance=ExtResource("4_5mnt7")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="DebugControls" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="DebugControls"]
 layout_mode = 2
 offset_left = 1.0
 offset_top = 30.0
@@ -29,7 +46,7 @@ offset_bottom = 61.0
 mouse_filter = 1
 text = "Add barracks"
 
-[node name="DeployUnitButton" type="Button" parent="."]
+[node name="DeployUnitButton" type="Button" parent="DebugControls"]
 layout_mode = 2
 offset_left = 115.0
 offset_top = 30.0
@@ -38,7 +55,7 @@ offset_bottom = 61.0
 mouse_filter = 1
 text = "Build Turret"
 
-[node name="Build Depot" type="Button" parent="."]
+[node name="Build Depot" type="Button" parent="DebugControls"]
 layout_mode = 0
 offset_left = 221.0
 offset_top = 30.0
@@ -46,7 +63,7 @@ offset_right = 320.0
 offset_bottom = 61.0
 text = "Build Depot"
 
-[node name="UnitBlob" type="Button" parent="."]
+[node name="UnitBlob" type="Button" parent="DebugControls"]
 layout_mode = 0
 offset_left = 325.0
 offset_top = 30.0
@@ -54,7 +71,7 @@ offset_right = 425.0
 offset_bottom = 61.0
 text = "MAKE BLOB"
 
-[node name="EnemyUnit" type="Button" parent="."]
+[node name="EnemyUnit" type="Button" parent="DebugControls"]
 layout_mode = 0
 offset_left = 429.0
 offset_top = 30.0
@@ -62,7 +79,7 @@ offset_right = 594.0
 offset_bottom = 61.0
 text = "Add test enemy unit"
 
-[node name="SpinBox" type="SpinBox" parent="."]
+[node name="SpinBox" type="SpinBox" parent="DebugControls"]
 layout_mode = 2
 offset_left = 2.0
 offset_top = 63.0
@@ -83,23 +100,8 @@ patch_margin_top = 3
 patch_margin_right = 3
 patch_margin_bottom = 3
 
-[node name="BottomBarContainer" parent="." instance=ExtResource("4_5mnt7")]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-offset_left = 1600.0
-offset_top = 869.0
-offset_right = 1600.0
-offset_bottom = 900.0
-grow_horizontal = 0
-grow_vertical = 0
-
-[node name="Camera" parent="." instance=ExtResource("3_l5ywc")]
-
-[connection signal="selection_changed" from="." to="BottomBarContainer" method="_on_player_interface_selection_changed"]
-[connection signal="pressed" from="Button" to="." method="_on_barracks_added"]
-[connection signal="pressed" from="DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]
-[connection signal="pressed" from="Build Depot" to="." method="_on_build_depot_pressed"]
-[connection signal="pressed" from="UnitBlob" to="." method="_on_unit_blob_pressed"]
-[connection signal="pressed" from="EnemyUnit" to="." method="_on_enemy_unit_pressed"]
+[connection signal="pressed" from="DebugControls/Button" to="." method="_on_barracks_added"]
+[connection signal="pressed" from="DebugControls/DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]
+[connection signal="pressed" from="DebugControls/Build Depot" to="." method="_on_build_depot_pressed"]
+[connection signal="pressed" from="DebugControls/UnitBlob" to="." method="_on_unit_blob_pressed"]
+[connection signal="pressed" from="DebugControls/EnemyUnit" to="." method="_on_enemy_unit_pressed"]

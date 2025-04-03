@@ -14,14 +14,12 @@ var is_on_ui:bool = false:
 
 
 func _ready() -> void:
-	self.player_interface.selection_changed.connect(self.player_interface.orders_interface._on_player_interface_selection_changed)
-	self.player_interface.mouse_entered.connect(self._on_mouse_entered)
-	self.player_interface.mouse_exited.connect(self._on_mouse_exited)
+	for child_control in self.player_interface.find_children("", "Control", false, true):
+		child_control.mouse_entered.connect(_on_mouse_entered)
+		child_control.mouse_exited.connect(_on_mouse_exited)
 
 func _on_mouse_entered() -> void:
-	self.is_on_ui = true
-	print(is_on_ui)
+	self.player_interface.is_on_ui = true
 
 func _on_mouse_exited() -> void:
-	self.is_on_ui = false
-	print(is_on_ui)
+	self.player_interface.is_on_ui = false
