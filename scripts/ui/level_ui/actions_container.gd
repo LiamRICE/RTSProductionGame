@@ -1,9 +1,5 @@
 extends GridContainer
 
-## Properties
-@export var container_name:String = ""
-@export var container_icon:Texture2D
-
 ## Grid internal variables
 var types_array:Array[String]
 var button_list:Array[IntButton] = []

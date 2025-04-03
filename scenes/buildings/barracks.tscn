@@ -26,10 +26,11 @@ preview_material = ExtResource("3_r6xbr")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
+entity_name = "Barrack"
+icon = ExtResource("3_xhwwk")
 health = 250.0
 production_cost = 10.0
 vision_radius = 10.0
-icon = ExtResource("3_xhwwk")
 metadata/_custom_type_script = "uid://ffduxcvmiea4"
 
 [node name="Meshes" type="Node3D" parent="."]

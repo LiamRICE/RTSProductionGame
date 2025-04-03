@@ -13,10 +13,11 @@ script = ExtResource("1_qm2ug")
 acceleration = 2.0
 max_speed = 5.0
 rotation_speed = 10.0
+entity_name = "Vehicle"
+icon = ExtResource("2_4hctu")
 health = 100.0
 production_cost = 10.0
 vision_radius = 5.0
-icon = ExtResource("2_4hctu")
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]

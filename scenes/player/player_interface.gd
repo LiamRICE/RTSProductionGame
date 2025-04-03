@@ -5,7 +5,7 @@ signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.Se
 
 # Loading Script Classes
 const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
-const ActionsInterface := preload("res://scripts/ui/level_ui/actions_interface.gd")
+const GroupActionsPanel := preload("uid://cbkqp04y5bfn5")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
 
@@ -18,7 +18,7 @@ var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 
 # Child nodes
 @export var player_screen:PlayerScreen
-@export var actions_interface:ActionsInterface
+@export var group_actions_panel:GroupActionsPanel
 @export var camera_controller:Node3D
 
 # Nodes
@@ -124,7 +124,7 @@ func mouse_update():
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
-	self.selection_changed.connect(self.actions_interface._on_player_interface_selection_changed)
+	self.selection_changed.connect(self.group_actions_panel._on_player_interface_selection_changed)
 
 
 func initialise_state_machine():

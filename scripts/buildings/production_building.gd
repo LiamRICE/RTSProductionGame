@@ -41,4 +41,3 @@ func _on_production_timer_timeout():
 	else:
 		self.is_producing = false
 	self.unit_constructed.emit(unit, unit_spawn_point.global_position, rally_point.global_position)
-	
