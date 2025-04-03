@@ -16,12 +16,12 @@ view_distance = 5.0
 health = 20.0
 max_health = 20.0
 production_cost = 10.0
+entity_name = "ResourceCollectorUnit"
 vision_radius = 5.0
 allegiance = 1
 resource_cost_amount = Array[int]([20])
 resource_cost_type = Array[int]([3])
 is_mobile = true
-metadata/_custom_type_script = "uid://6dbiff4it08h"
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.1, 0)

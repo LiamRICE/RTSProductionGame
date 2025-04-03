@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scenes/player/player_interface.gd" id="1_x6a1n"]
 [ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_u4r1x"]
-[ext_resource type="PackedScene" path="res://scenes/player/level_ui/actions_interface.tscn" id="4_5mnt7"]
+[ext_resource type="PackedScene" uid="uid://bsd8go50orsrn" path="res://scenes/player/level_ui/group_actions_panel.tscn" id="3_n7n0g"]
 [ext_resource type="PackedScene" uid="uid://cv5njxs8al6tl" path="res://scenes/UI/player_screen.tscn" id="4_n7n0g"]
 
-[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "actions_interface")]
+[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "group_actions_panel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,30 +17,15 @@ size_flags_vertical = 3
 mouse_filter = 1
 script = ExtResource("1_x6a1n")
 player_screen = NodePath("PlayerScreen")
-actions_interface = NodePath("ActionsInterface")
+group_actions_panel = NodePath("GroupActionsPanel")
 metadata/_edit_lock_ = true
 
 [node name="PlayerScreen" parent="." instance=ExtResource("4_n7n0g")]
 unique_name_in_owner = true
 
-[node name="ActionsInterface" parent="."]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="GroupActionsPanel" parent="." instance=ExtResource("3_n7n0g")]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-offset_top = -31.0
-grow_horizontal = 0
-grow_vertical = 0
-script = null
+offset_left = -204.0
 
 [node name="DebugControls" type="Control" parent="."]
 anchors_preset = 0

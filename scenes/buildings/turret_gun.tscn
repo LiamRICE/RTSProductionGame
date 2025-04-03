@@ -27,11 +27,12 @@ preview_material = ExtResource("2_wophf")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
+entity_name = "TurretGun"
+icon = ExtResource("2_grxsd")
 health = 100.0
 production_cost = 25.0
 vision_radius = 10.0
 allegiance = 1
-icon = ExtResource("2_grxsd")
 metadata/_custom_type_script = "uid://bmbcm5f6vnvg7"
 
 [node name="Meshes" type="Node3D" parent="."]

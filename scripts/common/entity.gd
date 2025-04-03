@@ -6,6 +6,10 @@ const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
 @export var body:PhysicsBody3D
 var fog_of_war_sprite:Sprite2D
 
+## Necessary Entity declaration
+@export var entity_name:String = ""
+@export var icon:Texture2D
+
 ## Common Entity properties
 @export_group("Properties")
 @export var health:float
@@ -14,7 +18,6 @@ var fog_of_war_sprite:Sprite2D
 @export var vision_radius:float ## Used to scale the vision sprite
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by vision_radius.
 @export var allegiance:int = 0
-@export var icon:Texture2D
 
 @export_group("Value")
 @export var resource_cost_amount:Array[int]

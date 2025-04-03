@@ -19,6 +19,7 @@ preview_material = ExtResource("2_l1v31")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
+entity_name = "Depot"
 vision_radius = 8.0
 allegiance = 1
 metadata/_custom_type_script = "uid://dt4ogscja4pa3"
