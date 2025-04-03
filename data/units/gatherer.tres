@@ -1,7 +1,17 @@
-[gd_resource type="Resource" script_class="UnitResource" load_steps=2 format=3 uid="uid://de05tslthwbju"]
+[gd_resource type="Resource" script_class="UnitResource" load_steps=4 format=3 uid="uid://de05tslthwbju"]
 
+[ext_resource type="PackedScene" uid="uid://ditvkcv1wolek" path="res://scenes/units/resource_collector_unit.tscn" id="1_3w17c"]
 [ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="1_bi0t2"]
+[ext_resource type="Texture2D" uid="uid://wr5m5r5xxwnp" path="res://assets/ui/icons/mouse/tool_pickaxe.png" id="3_3t3li"]
 
 [resource]
 script = ExtResource("1_bi0t2")
+move_speed = 0.0
+entity_instance = ExtResource("1_3w17c")
+health = 20.0
+production_cost = 10.0
+name = "Gatherer"
+ui_icon = ExtResource("3_3t3li")
+ui_description = "Gatherer"
+ui_tooltip = "Gatherer"
 metadata/_custom_type_script = "uid://q3n2tt8hr314"

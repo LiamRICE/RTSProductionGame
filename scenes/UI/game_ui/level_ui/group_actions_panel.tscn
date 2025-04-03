@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bsd8go50orsrn"]
 
 [ext_resource type="Script" uid="uid://cbkqp04y5bfn5" path="res://scripts/ui/level_ui/group_actions_panel.gd" id="1_15t1k"]
-[ext_resource type="PackedScene" uid="uid://sd787f5q5m1m" path="res://scenes/player/level_ui/selected_units_panel.tscn" id="1_mbvov"]
-[ext_resource type="PackedScene" uid="uid://cujpnla0w646r" path="res://scenes/player/level_ui/actions_interface.tscn" id="2_15t1k"]
+[ext_resource type="PackedScene" uid="uid://sd787f5q5m1m" path="res://scenes/UI/game_ui/level_ui/selected_units_panel.tscn" id="1_mbvov"]
+[ext_resource type="PackedScene" uid="uid://cujpnla0w646r" path="res://scenes/UI/game_ui/level_ui/actions_interface.tscn" id="2_15t1k"]
 
 [node name="GroupActionsPanel" type="VBoxContainer" node_paths=PackedStringArray("selected_units_panel", "actions_interface")]
 anchors_preset = 3

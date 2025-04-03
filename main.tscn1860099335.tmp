@@ -108,6 +108,24 @@ camera_controller = NodePath("../Camera")
 [node name="PlayerManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("ui_manager")]
 unique_name_in_owner = true
 script = ExtResource("8_ycdy4")
+food = null
+materials = null
+metals = null
+rare_metals = null
+composites = null
+computers = null
+nanotech = null
+fuel = null
+food_gatherers = null
+materials_gatherers = null
+metals_gatherers = null
+rare_metals_gatherers = null
+composites_gatherers = null
+computers_gatherers = null
+nanotech_gatherers = null
+fuel_gatherers = null
+allegiance = null
+refresh_rate_gatherers = null
 ui_manager = NodePath("../UIManager")
 
 [node name="Player0" type="Node" parent="LevelManager/PlayerManager"]

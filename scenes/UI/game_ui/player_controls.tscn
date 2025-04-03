@@ -1,33 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://codd0sfjcvg05"]
+[gd_scene load_steps=3 format=3 uid="uid://dpmvcs1687nfx"]
 
-[ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scenes/player/player_interface.gd" id="1_x6a1n"]
-[ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_u4r1x"]
-[ext_resource type="PackedScene" uid="uid://bsd8go50orsrn" path="res://scenes/player/level_ui/group_actions_panel.tscn" id="3_n7n0g"]
-[ext_resource type="PackedScene" uid="uid://cv5njxs8al6tl" path="res://scenes/UI/player_screen.tscn" id="4_n7n0g"]
+[ext_resource type="Script" uid="uid://dwtqie48lcc3h" path="res://scenes/UI/game_ui/player_controls.gd" id="1_2suqq"]
+[ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_6510l"]
 
-[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "group_actions_panel")]
+[node name="PlayerControls" type="Control" node_paths=PackedStringArray("ui_selection_patch")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 1
-script = ExtResource("1_x6a1n")
-player_screen = NodePath("PlayerScreen")
-group_actions_panel = NodePath("GroupActionsPanel")
-metadata/_edit_lock_ = true
+script = ExtResource("1_2suqq")
+ui_selection_patch = NodePath("SelectionRect")
 
-[node name="PlayerScreen" parent="." instance=ExtResource("4_n7n0g")]
-unique_name_in_owner = true
-
-[node name="GroupActionsPanel" parent="." instance=ExtResource("3_n7n0g")]
-layout_mode = 1
-offset_left = -204.0
+[node name="SelectionRect" type="NinePatchRect" parent="."]
+offset_right = 283.0
+offset_bottom = 191.0
+texture = ExtResource("2_6510l")
+patch_margin_left = 3
+patch_margin_top = 3
+patch_margin_right = 3
+patch_margin_bottom = 3
 
 [node name="DebugControls" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -83,17 +79,6 @@ offset_bottom = 94.0
 mouse_filter = 1
 value = 1.0
 
-[node name="SelectionRect" type="NinePatchRect" parent="."]
-layout_mode = 0
-offset_right = 283.0
-offset_bottom = 191.0
-texture = ExtResource("2_u4r1x")
-patch_margin_left = 3
-patch_margin_top = 3
-patch_margin_right = 3
-patch_margin_bottom = 3
-
-[connection signal="pressed" from="DebugControls/Button" to="." method="_on_barracks_added"]
 [connection signal="pressed" from="DebugControls/DeployUnitButton" to="." method="_on_deploy_unit_button_pressed"]
 [connection signal="pressed" from="DebugControls/Build Depot" to="." method="_on_build_depot_pressed"]
 [connection signal="pressed" from="DebugControls/UnitBlob" to="." method="_on_unit_blob_pressed"]

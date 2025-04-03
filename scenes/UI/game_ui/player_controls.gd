@@ -4,8 +4,6 @@ extends Control
 signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.SelectionType)
 
 # Loading Script Classes
-const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
-const GroupActionsPanel := preload("uid://cbkqp04y5bfn5")
 const LevelManager := preload("res://scripts/managers/level_manager.gd")
 const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
 
@@ -17,13 +15,12 @@ var mouse_build = load("res://assets/ui/icons/mouse/tool_hammer.png")
 var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 
 # Child nodes
-@export var player_screen:PlayerScreen
-@export var group_actions_panel:GroupActionsPanel
-@export var camera_controller:Node3D
+@export_category("Child Nodes")
+@export var ui_selection_patch :NinePatchRect
 
 # Nodes
-@onready var level_manager:LevelManager = %LevelManager
-@onready var ui_selection_patch :NinePatchRect = $SelectionRect
+@onready var level_manager:LevelManager = self.get_parent().level_manager
+@onready var camera_controller:Node3D = self.get_parent().camera_controller
 @onready var player_camera :Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
 
 ## DEBUG
@@ -126,7 +123,6 @@ func mouse_update():
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
-	self.selection_changed.connect(self.group_actions_panel._on_player_interface_selection_changed)
 
 
 func initialise_state_machine():

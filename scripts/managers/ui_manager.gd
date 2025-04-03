@@ -1,7 +1,7 @@
 extends Node
 
 ## Loading Script Classes
-const PlayerInterface := preload("res://scenes/player/player_interface.gd")
+const PlayerInterface := preload("uid://crs777xecsrt4")
 
 ## Child controls
 @export var player_interface:PlayerInterface

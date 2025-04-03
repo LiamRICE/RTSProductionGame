@@ -1,6 +1,6 @@
-extends CanvasLayer
+extends Control
 
-@onready var resource_counters:Array = $ResourceBar.get_children()
+@onready var resource_counters:Array = $CanvasLayer/ResourceBar.get_children()
 
 func set_resources(resource_array:Array):
 	var num = mini(len(resource_counters), len(resource_array))

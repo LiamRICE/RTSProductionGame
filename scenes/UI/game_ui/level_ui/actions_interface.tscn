@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cujpnla0w646r"]
 
 [ext_resource type="Script" uid="uid://r3l8d5sfkbuw" path="res://scripts/ui/level_ui/actions_interface.gd" id="1_n0gk6"]
-[ext_resource type="PackedScene" uid="uid://c2cjvi6u0mgro" path="res://scenes/player/level_ui/actions_container.tscn" id="2_bbu8u"]
+[ext_resource type="PackedScene" uid="uid://c2cjvi6u0mgro" path="res://scenes/UI/game_ui/level_ui/actions_container.tscn" id="2_bbu8u"]
 
 [node name="ActionsInterface" type="PanelContainer" node_paths=PackedStringArray("actions_container")]
 anchors_preset = 15

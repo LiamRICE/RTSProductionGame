@@ -99,8 +99,7 @@ player_interface = NodePath("PlayerInterface")
 
 [node name="PerformanceMonitor" parent="LevelManager/UIManager" instance=ExtResource("9_2cqfq")]
 
-[node name="PlayerInterface" parent="LevelManager/UIManager" node_paths=PackedStringArray("level_manager", "camera_controller") instance=ExtResource("11_dg77c")]
-level_manager = NodePath("../..")
+[node name="PlayerInterface" parent="LevelManager/UIManager" node_paths=PackedStringArray("camera_controller") instance=ExtResource("11_dg77c")]
 camera_controller = NodePath("../Camera")
 
 [node name="Camera" parent="LevelManager/UIManager" instance=ExtResource("10_2cqfq")]
