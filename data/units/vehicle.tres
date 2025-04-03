@@ -1,16 +1,7 @@
-[gd_resource type="Resource" script_class="UnitResource" load_steps=4 format=3 uid="uid://cpf0cu1b3n607"]
+[gd_resource type="Resource" script_class="UnitResource" load_steps=2 format=3 uid="uid://cpf0cu1b3n607"]
 
-[ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/units/vehicle.tscn" id="1_ebht4"]
 [ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="1_xa01o"]
-[ext_resource type="Texture2D" uid="uid://dq7beibq4ll4s" path="res://assets/ui/icons/units/monorail_trainFront_SW.png" id="3_qqpeq"]
 
 [resource]
 script = ExtResource("1_xa01o")
-entity_instance = ExtResource("1_ebht4")
-health = 100.0
-production_cost = 10.0
-name = "Vehicle"
-ui_icon = ExtResource("3_qqpeq")
-ui_description = "This is a vehicle."
-ui_tooltip = "Still a vehicle"
 metadata/_custom_type_script = "uid://q3n2tt8hr314"
