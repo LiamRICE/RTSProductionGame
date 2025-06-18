@@ -9,6 +9,7 @@ extends Camera3D
 @export var PAN_SPEED :float = 2
 @export var PAN_RESPONSIVENESS :float = 10
 @export var ROT_SPEED :float = 2
+@export var ROT_SENSITIVITY:float = 1
 @export var YAW_RESPONSIVENESS :float = 10
 @export var ZOOM_SPEED :float = 300
 
@@ -18,6 +19,9 @@ const MIN_HEIGHT :float = 3
 
 # Internal Variables
 var goal_transform :Transform3D = Transform3D.IDENTITY
+var last_mouse_position:Vector2 = Vector2.ZERO
+var mouse_position_delta:Vector2 = Vector2.ZERO
+var is_rotating:bool = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -31,6 +35,13 @@ func _ready():
 	camera.global_transform = goal_transform
 
 
+# Reads input events fired by the engine (eg. mouse motion)
+func _input(event:InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		if self.is_rotating:
+			self.mouse_position_delta -= event.relative * self.ROT_SENSITIVITY
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# Pan the camera in 2D over the map
@@ -40,19 +51,29 @@ func _process(delta):
 	goal_transform.origin += dir_3D.rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	# Rotate camera
+	## Check if the camera is rotating
+	if Input.is_action_just_pressed("rotate_modifier"):
+		self.is_rotating = true
+		self.last_mouse_position = self.get_viewport().get_mouse_position()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	elif Input.is_action_just_released("rotate_modifier"):
+		self.is_rotating = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		Input.warp_mouse(self.last_mouse_position)
 	var rotate_order:float = Input.get_axis("rotate_right", "rotate_left")
-	goal_transform.basis = goal_transform.basis.rotated(Vector3.UP, rotate_order * ROT_SPEED * delta).orthonormalized()
+	
+	## Execute the rotation
+	self.goal_transform.basis = self.goal_transform.basis.rotated(Vector3.UP, rotate_order * self.ROT_SPEED * delta + self.mouse_position_delta.x * self.ROT_SPEED * delta).orthonormalized()
+	self.mouse_position_delta = Vector2.ZERO
 	
 	# Zoom the camera in and out
 	var zoom_order:float = Input.get_axis("rotate_right", "rotate_left")
 	if Input.is_action_just_pressed("zoom_out"):
 		if not goal_transform.origin.y >= MAX_HEIGHT:
-			#goal_transform += Vector3(0, ZOOM_SPEED * (goal_transform.y + 1), 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
 			goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	if Input.is_action_just_pressed("zoom_in"):
 		if not goal_transform.origin.y <= MIN_HEIGHT:
-			#goal_transform -= Vector3(0, ZOOM_SPEED * (goal_transform.y - 1), 0).rotated(Vector3.LEFT, pitch.global_rotation.x)
 			goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	camera.global_transform.origin = camera.global_transform.origin.lerp(goal_transform.origin, PAN_RESPONSIVENESS * delta)

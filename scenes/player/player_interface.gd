@@ -4,10 +4,11 @@ extends Control
 signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.SelectionType)
 
 # Loading Script Classes
-const PlayerScreen := preload("res://scripts/ui/level_ui/player_screen.gd")
-const GroupActionsPanel := preload("uid://cbkqp04y5bfn5")
-const LevelManager := preload("res://scripts/managers/level_manager.gd")
-const UIStateUtils := preload("res://scripts/utilities/ui_state_utils.gd")
+const PlayerScreen:Script = preload("res://scripts/ui/level_ui/player_screen.gd")
+const GroupActionsPanel:Script = preload("uid://cbkqp04y5bfn5")
+const LevelManager:Script = preload("res://scripts/managers/level_manager.gd")
+const UIManager:Script = preload("uid://brcxb50tcwui4")
+const UIStateUtils:Script = preload("res://scripts/utilities/ui_state_utils.gd")
 
 # Mouse images
 var mouse_default = load("res://assets/ui/icons/mouse/pointer_scifi_b.png")
@@ -17,12 +18,11 @@ var mouse_build = load("res://assets/ui/icons/mouse/tool_hammer.png")
 var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 
 # Child nodes
-@export var player_screen:PlayerScreen
-@export var group_actions_panel:GroupActionsPanel
 @export var camera_controller:Node3D
 
 # Nodes
 @onready var level_manager:LevelManager = %LevelManager
+@onready var ui_manager:UIManager = %UIManager
 @onready var ui_selection_patch :NinePatchRect = $SelectionRect
 @onready var player_camera :Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
 
@@ -40,7 +40,6 @@ const CommonUtils:GDScript = preload("res://scripts/utilities/common_utils.gd")
 
 
 var state :UIStateUtils.ClickState
-var is_on_ui: bool = false
 
 # Variables
 var selected_entities :Array[Entity] = []
@@ -53,8 +52,8 @@ var mouse_state:UIStateUtils.MouseState = UIStateUtils.MouseState.DEFAULT
 var _mouse_left_click :bool = false
 var _dragged_rect_left :Rect2
 var _mouse_right_click :bool = false
-#var _dragged_pos_right :Array[Vector3]
 var _is_constructing:bool = false
+var is_on_ui:bool = false
 
 # Constants
 const MIN_SELECT_SQUARED :float = 81
@@ -126,7 +125,6 @@ func mouse_update():
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
-	self.selection_changed.connect(self.group_actions_panel._on_player_interface_selection_changed)
 
 
 func initialise_state_machine():
@@ -137,7 +135,7 @@ func initialise_state_machine():
 func _input(_event:InputEvent) -> void:
 	## SELECTION STATES ##
 	# Runs once at the start of each selection rect, if the state is DEFAULT
-	if Input.is_action_just_pressed("mouse_left_click") and (state == UIStateUtils.ClickState.DEFAULT or state == UIStateUtils.ClickState.SELECTED) and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_left_click") and (state == UIStateUtils.ClickState.DEFAULT or state == UIStateUtils.ClickState.SELECTED) and not self.ui_manager.is_on_ui:
 		# Update state machine
 		state = UIStateUtils.ClickState.SELECTING
 		# Updates the dragged rect start position
@@ -155,7 +153,7 @@ func _input(_event:InputEvent) -> void:
 		# Update state machine
 		state = UIStateUtils.ClickState.SELECTED
 	
-	if Input.is_action_just_pressed("mouse_left_click") and state == UIStateUtils.ClickState.SELECTED and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_left_click") and state == UIStateUtils.ClickState.SELECTED and not self.ui_manager.is_on_ui:
 		# TODO - need to improve the state machine, this one is causing problems with unit selection
 		# Update state machine
 		state = UIStateUtils.ClickState.DEFAULT
@@ -164,7 +162,7 @@ func _input(_event:InputEvent) -> void:
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
-	if Input.is_action_just_pressed("mouse_right_click") and state == UIStateUtils.ClickState.SELECTED and is_on_ui == false:
+	if Input.is_action_just_pressed("mouse_right_click") and state == UIStateUtils.ClickState.SELECTED and not self.ui_manager.is_on_ui:
 		var camera :Camera3D = get_viewport().get_camera_3d()
 		# cast to check location
 		var raycast_result = cast_ray(camera)
@@ -195,7 +193,7 @@ func _input(_event:InputEvent) -> void:
 		self.remove_child(self.constructing_building)
 		self.constructing_building = null
 	
-	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
+	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING and not self.ui_manager.is_on_ui:
 		if self.constructing_building.is_placement_valid():
 			state = UIStateUtils.ClickState.DEFAULT
 			var camera :Camera3D = get_viewport().get_camera_3d()

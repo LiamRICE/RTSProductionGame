@@ -149,8 +149,8 @@ func update_gatherers():
 
 
 func update_resources_ui():
-	self.ui_manager.player_interface.player_screen.set_resources([self.food, self.materials, self.metals, self.rare_metals, self.composites, self.computers, self.nanotech, self.fuel])
+	self.ui_manager.resource_bar.set_resources([self.food, self.materials, self.metals, self.rare_metals, self.composites, self.computers, self.nanotech, self.fuel])
 
 
 func update_gatherer_ui():
-	self.ui_manager.player_interface.player_screen.set_gatherers([self.food_gatherers, self.materials_gatherers, self.metals_gatherers, self.rare_metals_gatherers, self.composites_gatherers, self.computers_gatherers, self.nanotech_gatherers, self.fuel_gatherers])
+	self.ui_manager.resource_bar.set_gatherers([self.food_gatherers, self.materials_gatherers, self.metals_gatherers, self.rare_metals_gatherers, self.composites_gatherers, self.computers_gatherers, self.nanotech_gatherers, self.fuel_gatherers])

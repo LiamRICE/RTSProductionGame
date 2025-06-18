@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://bph3bulc5igvo"]
 
 [ext_resource type="ArrayMesh" uid="uid://p4y0eglm5sci" path="res://assets/kenney_space/hangar_roundA.obj" id="1_jbrgn"]
-[ext_resource type="Script" uid="uid://bxjiwsbf3sthe" path="res://scripts/buildings/city_centre.gd" id="1_qv66y"]
+[ext_resource type="Script" uid="uid://bxjiwsbf3sthe" path="res://scripts/entities/buildings/city_centre.gd" id="1_qv66y"]
 [ext_resource type="ArrayMesh" uid="uid://ch0br0tvpd6ri" path="res://assets/kenney_space/hangar_smallB.obj" id="2_afdsb"]
 [ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="2_nwvru"]
 [ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="2_o0tdm"]
@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://lokm0t60kg1b" path="res://scenes/buildings/BuildingModules/depot_module.tscn" id="8_lvxxa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mra1d"]
-size = Vector3(3.02048, 2, 4)
+size = Vector3(2.83721, 1.28528, 4)
 
 [node name="BaseCentre" type="Node3D" node_paths=PackedStringArray("depot_module", "production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
 script = ExtResource("1_qv66y")
@@ -61,13 +61,17 @@ mesh = ExtResource("4_mra1d")
 skeleton = NodePath("../../StaticBody3D")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00157166, 0.973145, -0.305481)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000133757, 0.615784, -0.305481)
 shape = SubResource("BoxShape3D_mra1d")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
 vertices = PackedVector3Array(-1.36105, 0, 2.26922, -0.802111, 0, 2.22306, -0.831542, 0, 1.58695, 0.763972, 0, 1.55321, 0.885377, 0, 1.94305, 0.994578, 0, 1.95243, 1.09163, 0, 0.515062, 1.48122, 0, -0.0596998, 1.6852, 0, -0.98629, 0.860255, 0, -2.43713, -0.787579, 0, -2.43705, -1.66721, 0, -1.01197, -2.02294, 0, 0.385552, -1.06781, 0, 0.706536, -1.04195, 0, 1.68368, -1.44481, 0, 1.72281)
+affect_navigation_mesh = true
+avoidance_enabled = false
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)

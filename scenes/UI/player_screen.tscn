@@ -11,50 +11,48 @@
 [ext_resource type="Texture2D" uid="uid://bf2dxknxcw51g" path="res://assets/ui/icons/resources/nanotech_humans.png" id="8_8i55t"]
 [ext_resource type="Texture2D" uid="uid://bi6qr05qoqx6i" path="res://assets/ui/icons/resources/fuel_humans.png" id="9_a5jvu"]
 
-[node name="PlayerScreen" type="CanvasLayer"]
-script = ExtResource("1_kx51y")
-
-[node name="ResourceBar" type="HBoxContainer" parent="."]
+[node name="ResourceBar" type="HBoxContainer"]
 offset_right = 328.0
 offset_bottom = 23.0
 theme_override_constants/separation = 10
+script = ExtResource("1_kx51y")
 
-[node name="ResourceCounterHBoxContainer" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("1_wfkkp")
 icon_name = "Food"
 
-[node name="ResourceCounterHBoxContainer2" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer2" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("3_0kif4")
 icon_name = "Materials"
 
-[node name="ResourceCounterHBoxContainer3" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer3" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("5_kx51y")
 icon_name = "Metals"
 
-[node name="ResourceCounterHBoxContainer4" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer4" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("4_n5b0s")
 icon_name = "Rare Metals"
 
-[node name="ResourceCounterHBoxContainer5" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer5" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("6_dmwgm")
 icon_name = "Composites"
 
-[node name="ResourceCounterHBoxContainer6" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer6" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("7_tgvy8")
 icon_name = "Computers"
 
-[node name="ResourceCounterHBoxContainer7" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer7" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("8_8i55t")
 icon_name = "Nanotech"
 
-[node name="ResourceCounterHBoxContainer8" parent="ResourceBar" instance=ExtResource("1_i8xgw")]
+[node name="ResourceCounterHBoxContainer8" parent="." instance=ExtResource("1_i8xgw")]
 layout_mode = 2
 icon = ExtResource("9_a5jvu")
 icon_name = "Fuel"

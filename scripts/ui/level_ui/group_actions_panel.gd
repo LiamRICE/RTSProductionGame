@@ -12,6 +12,3 @@ const ActionsInterface:Script = preload("uid://r3l8d5sfkbuw")
 func _on_player_interface_selection_changed(selection: Array[Entity], selection_type: UIStateUtils.SelectionType):
 	self.selected_units_panel._on_player_interface_selection_changed(selection, selection_type)
 	self.actions_interface._on_player_interface_selection_changed(selection, selection_type)
-
-func _ready() -> void:
-	pass

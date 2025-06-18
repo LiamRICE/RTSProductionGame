@@ -1,7 +1,7 @@
 extends ProductionBuilding
 
 # Script loading
-const DepotModule := preload("res://scripts/buildings/building_modules/depot_module.gd")
+const DepotModule := preload("uid://b6to6vvsk7c8u")
 
 # Load player manager
 @export_category("Depot")

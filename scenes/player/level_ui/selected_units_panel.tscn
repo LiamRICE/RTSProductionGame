@@ -5,6 +5,7 @@
 [node name="SelectedUnitsPanel" type="PanelContainer" node_paths=PackedStringArray("group_name_label", "item_list")]
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 1
 script = ExtResource("1_ot0xu")
 group_name_label = NodePath("VBoxContainer/GroupName")
 item_list = NodePath("VBoxContainer/ItemList")
@@ -19,6 +20,8 @@ text = "GroupName"
 [node name="ItemList" type="ItemList" parent="VBoxContainer"]
 custom_minimum_size = Vector2(200, 450)
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
 allow_search = false
 auto_height = true
 same_column_width = true

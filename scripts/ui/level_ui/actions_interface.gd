@@ -13,7 +13,7 @@ var selection_list:Array[Entity]
 
 ## Info bar methods
 func _ready() -> void:
-	actions_container.init(container_size, _on_button_pressed)
+	self.actions_container.init(container_size, _on_button_pressed)
 
 
 ## Executed when a button is pressed
@@ -21,7 +21,6 @@ func _on_button_pressed(index:int) -> void:
 	print("Pressed : ", index)
 	## TODO - execute button's effect on object
 	selection_list[0].queue_unit(index)
-
 
 func _on_player_interface_selection_changed(sub_selection: Array[Entity], selection_type: UIStateUtils.SelectionType) -> void:
 	print("Selection changed")

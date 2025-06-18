@@ -1,6 +1,7 @@
 class_name Unit extends Entity
 
-const unit_utils:GDScript = preload("res://scripts/utilities/unit_utils.gd")
+const unit_utils:Script = preload("res://scripts/utilities/unit_utils.gd")
+const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 
 @export_group("Properties")
 @export var move_speed : float = 0.
@@ -13,6 +14,9 @@ var current_path : PackedVector3Array
 var next_point : Vector3
 var path_index : int = 0
 @export var path_point_margin : float = 0.1
+
+## Navigation rendering
+var path_mesh_instances:Array[MeshInstance3D] = []
 
 # selection
 @onready var selection_sprite : Sprite3D = $SelectionSprite3D
@@ -71,6 +75,9 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 		self.current_path.clear()
 		self.current_path.append_array(path)
 		self.path_index = 0
+	
+	## Debug - TODO Maybe turn this into an effect
+	debug_render_unit_path(current_path)
 
 
 func update_target_location(target_location:Vector3, is_shift:bool = false):
@@ -104,3 +111,22 @@ func move(delta:float):
 	# set unit velocity to the next path point
 	var new_velocity: Vector3 = self.global_transform.origin.direction_to(next_point) * movement_delta
 	self.global_transform.origin = self.global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
+
+
+func debug_render_unit_path(path:PackedVector3Array) -> void:
+	if self.path_mesh_instances.size() > 0:
+		for mesh in self.path_mesh_instances:
+			mesh.free()
+		self.path_mesh_instances.clear()
+	
+	if path.size() <= 0:
+		return
+	
+	var point_array:Array[Vector3] = []
+	point_array.resize(path.size())
+	for i in path.size():
+		point_array[i] = path[i]
+	self.path_mesh_instances = MeshCommonTools.create_polyline(point_array, [Color.RED] as Array[Color])
+	for mesh in self.path_mesh_instances:
+		self.add_child(mesh)
+		mesh.owner = self

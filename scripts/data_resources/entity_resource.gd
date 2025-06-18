@@ -8,6 +8,9 @@ class_name EntityResource extends Resource
 @export var health:float
 @export var production_cost:float
 
+@export_group("Abilities")
+@export var abilities:Array[EntityAbility]
+
 ## Additional info
 @export_group("UI variables")
 @export var name:String

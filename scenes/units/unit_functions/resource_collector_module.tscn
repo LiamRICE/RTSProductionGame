@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c1ku6ido7lle5"]
 
-[ext_resource type="Script" uid="uid://boci3e8npvh1a" path="res://scripts/units/unit_features/resource_collector_module.gd" id="1_kwwq7"]
+[ext_resource type="Script" uid="uid://boci3e8npvh1a" path="res://scripts/entities/units/unit_features/resource_collector_module.gd" id="1_kwwq7"]
 
 [node name="ResourceCollectorModule" type="Node"]
 script = ExtResource("1_kwwq7")

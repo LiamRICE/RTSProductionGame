@@ -95,6 +95,8 @@ func _initialise_navigation() -> void:
 	navigation_mesh.agent_radius = 0.2
 	navigation_mesh.set_parsed_geometry_type(NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS)
 	navigation_mesh.set_collision_mask_value(1, true)
+	navigation_mesh.set_collision_mask_value(2, false)
+	navigation_mesh.set_collision_mask_value(3, false)
 	navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
 	navigation_mesh.set_agent_max_climb(0.1)
 	navigation_mesh.set_agent_max_slope(30)

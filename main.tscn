@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=18 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://c6ga862t4hde5" path="res://debug_tools/performance_monitor.tscn" id="9_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://bsh0v2nxk318h" path="res://scenes/player/camera.tscn" id="10_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="11_dg77c"]
+[ext_resource type="PackedScene" uid="uid://bsd8go50orsrn" path="res://scenes/player/level_ui/group_actions_panel.tscn" id="12_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://cv5njxs8al6tl" path="res://scenes/UI/player_screen.tscn" id="13_w48qg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 
@@ -92,10 +94,13 @@ resource_amount = 10
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.93246, 0, 1.13476)
 resource_amount = 10
 
-[node name="UIManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("player_interface")]
+[node name="UIManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("performance_monitor", "player_interface", "actions_panel", "resource_bar")]
 unique_name_in_owner = true
 script = ExtResource("3_272bh")
+performance_monitor = NodePath("PerformanceMonitor")
 player_interface = NodePath("PlayerInterface")
+actions_panel = NodePath("GroupActionsPanel")
+resource_bar = NodePath("ResourceBar")
 
 [node name="PerformanceMonitor" parent="LevelManager/UIManager" instance=ExtResource("9_2cqfq")]
 
@@ -103,6 +108,10 @@ player_interface = NodePath("PlayerInterface")
 
 [node name="PlayerInterface" parent="LevelManager/UIManager" node_paths=PackedStringArray("camera_controller") instance=ExtResource("11_dg77c")]
 camera_controller = NodePath("../Camera")
+
+[node name="GroupActionsPanel" parent="LevelManager/UIManager" instance=ExtResource("12_ycdy4")]
+
+[node name="ResourceBar" parent="LevelManager/UIManager" instance=ExtResource("13_w48qg")]
 
 [node name="PlayerManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("ui_manager")]
 unique_name_in_owner = true
@@ -168,3 +177,5 @@ cell_size = Vector3(1, 1, 1)
 cell_center_y = false
 
 [node name="LevelManager_WorldManager_NavigationRegion3D#StaticBody3D" type="StaticBody3D" parent="."]
+
+[connection signal="selection_changed" from="LevelManager/UIManager/PlayerInterface" to="LevelManager/UIManager/GroupActionsPanel" method="_on_player_interface_selection_changed"]

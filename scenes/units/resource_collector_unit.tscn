@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ditvkcv1wolek"]
 
-[ext_resource type="Script" uid="uid://b3534gvpb4lug" path="res://scripts/units/resource_collector_unit.gd" id="1_ubpkj"]
+[ext_resource type="Script" uid="uid://b3534gvpb4lug" path="res://scripts/entities/units/resource_collector_unit.gd" id="1_ubpkj"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_c3eiw"]
 [ext_resource type="ArrayMesh" uid="uid://tey2nup14j4s" path="res://assets/kenney_space/astronautA.obj" id="3_xtrm0"]
 [ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
@@ -13,10 +13,10 @@ script = ExtResource("1_ubpkj")
 gather_speed = 1.0
 move_speed = 2.0
 view_distance = 5.0
+entity_name = "ResourceCollectorUnit"
 health = 20.0
 max_health = 20.0
 production_cost = 10.0
-entity_name = "ResourceCollectorUnit"
 vision_radius = 5.0
 allegiance = 1
 resource_cost_amount = Array[int]([20])
@@ -35,6 +35,8 @@ mesh = ExtResource("3_xtrm0")
 [node name="ResourceCollectorModule" parent="." instance=ExtResource("4_du1o4")]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0170288, 0.40033, 0.0344543)

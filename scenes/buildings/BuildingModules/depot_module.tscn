@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://lokm0t60kg1b"]
 
-[ext_resource type="Script" uid="uid://b6to6vvsk7c8u" path="res://scripts/buildings/building_modules/depot_module.gd" id="1_68wxb"]
+[ext_resource type="Script" uid="uid://b6to6vvsk7c8u" path="res://scripts/entities/buildings/building_modules/depot_module.gd" id="1_68wxb"]
 
 [node name="DepotModule" type="Node"]
 script = ExtResource("1_68wxb")

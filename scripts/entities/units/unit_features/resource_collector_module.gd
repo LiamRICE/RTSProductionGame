@@ -40,7 +40,7 @@ func set_gathering_target(target:Resources, is_shift:bool = false):
 	self.parent.set_navigation_path(target.global_transform.origin, is_shift)
 
 
-func gather(res:ResourceUtils.Res, gather_speed:float, max:int, amount:int, delta:float) -> bool:
+func gather(res:ResourceUtils.Res, gather_speed:float, resource_max:int, amount:int, delta:float) -> bool:
 	counter -= gather_speed * delta
 	if resource.get("type") != res:
 		resource.set("type", res)
@@ -53,7 +53,7 @@ func gather(res:ResourceUtils.Res, gather_speed:float, max:int, amount:int, delt
 			exists = resource.get("node").harvest(1)
 			resource.set("quantity", resource.get("quantity") + 1)
 		print("Quanity of resource mined = ",resource.get("quantity"))
-		if resource.get("quantity") >= max:
+		if resource.get("quantity") >= resource_max:
 			ret = true
 	if not exists:
 		resource.set("node", null)

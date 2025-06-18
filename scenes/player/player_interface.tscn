@@ -1,85 +1,49 @@
-[gd_scene load_steps=5 format=3 uid="uid://codd0sfjcvg05"]
+[gd_scene load_steps=3 format=3 uid="uid://codd0sfjcvg05"]
 
 [ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scenes/player/player_interface.gd" id="1_x6a1n"]
 [ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_u4r1x"]
-[ext_resource type="PackedScene" uid="uid://bsd8go50orsrn" path="res://scenes/player/level_ui/group_actions_panel.tscn" id="3_n7n0g"]
-[ext_resource type="PackedScene" uid="uid://cv5njxs8al6tl" path="res://scenes/UI/player_screen.tscn" id="4_n7n0g"]
 
-[node name="PlayerInterface" type="Control" node_paths=PackedStringArray("player_screen", "group_actions_panel")]
+[node name="PlayerInterface" type="Control"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+anchors_preset = 0
 mouse_filter = 1
 script = ExtResource("1_x6a1n")
-player_screen = NodePath("PlayerScreen")
-group_actions_panel = NodePath("GroupActionsPanel")
 metadata/_edit_lock_ = true
 
-[node name="PlayerScreen" parent="." instance=ExtResource("4_n7n0g")]
-unique_name_in_owner = true
-
-[node name="GroupActionsPanel" parent="." instance=ExtResource("3_n7n0g")]
-layout_mode = 1
-offset_left = -204.0
-
-[node name="DebugControls" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="DebugControls" type="HBoxContainer" parent="."]
+layout_mode = 2
+offset_top = 25.0
+offset_right = 681.0
+offset_bottom = 56.0
+size_flags_horizontal = 0
 
 [node name="Button" type="Button" parent="DebugControls"]
 layout_mode = 2
-offset_left = 1.0
-offset_top = 30.0
-offset_right = 111.0
-offset_bottom = 61.0
 mouse_filter = 1
 text = "Add barracks"
 
 [node name="DeployUnitButton" type="Button" parent="DebugControls"]
 layout_mode = 2
-offset_left = 115.0
-offset_top = 30.0
-offset_right = 216.0
-offset_bottom = 61.0
 mouse_filter = 1
 text = "Build Turret"
 
 [node name="Build Depot" type="Button" parent="DebugControls"]
-layout_mode = 0
-offset_left = 221.0
-offset_top = 30.0
-offset_right = 320.0
-offset_bottom = 61.0
+layout_mode = 2
+mouse_filter = 1
 text = "Build Depot"
 
 [node name="UnitBlob" type="Button" parent="DebugControls"]
-layout_mode = 0
-offset_left = 325.0
-offset_top = 30.0
-offset_right = 425.0
-offset_bottom = 61.0
+layout_mode = 2
+mouse_filter = 1
 text = "MAKE BLOB"
 
 [node name="EnemyUnit" type="Button" parent="DebugControls"]
-layout_mode = 0
-offset_left = 429.0
-offset_top = 30.0
-offset_right = 594.0
-offset_bottom = 61.0
+layout_mode = 2
+mouse_filter = 1
 text = "Add test enemy unit"
 
 [node name="SpinBox" type="SpinBox" parent="DebugControls"]
 layout_mode = 2
-offset_left = 2.0
-offset_top = 63.0
-offset_right = 88.5625
-offset_bottom = 94.0
 mouse_filter = 1
 value = 1.0
 

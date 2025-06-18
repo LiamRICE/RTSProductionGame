@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1tdkpg420s70"]
+[gd_scene load_steps=8 format=3 uid="uid://b1tdkpg420s70"]
 
-[ext_resource type="Script" uid="uid://bmbcm5f6vnvg7" path="res://scripts/buildings/turret.gd" id="1_a5qkp"]
-[ext_resource type="Texture2D" uid="uid://2f6bvkqxhkr8" path="res://assets/ui/icons/buildings/turret_single_SW.png" id="2_grxsd"]
+[ext_resource type="Script" uid="uid://bmbcm5f6vnvg7" path="res://scripts/entities/buildings/turret.gd" id="1_a5qkp"]
 [ext_resource type="ArrayMesh" uid="uid://co0stnihivdcm" path="res://assets/kenney_space/turret_single.obj" id="2_i41cj"]
 [ext_resource type="Material" uid="uid://caxgtux7hse03" path="res://assets/materials/preview/hologram_preview.material" id="2_wophf"]
 [ext_resource type="ArrayMesh" uid="uid://ca4owjrduuf5y" path="res://assets/kenney_space/platform_small.obj" id="3_grxsd"]
@@ -28,7 +27,6 @@ preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
 body = NodePath("Body")
 entity_name = "TurretGun"
-icon = ExtResource("2_grxsd")
 health = 100.0
 production_cost = 25.0
 vision_radius = 10.0
@@ -51,6 +49,8 @@ mesh = ExtResource("4_wophf")
 skeleton = NodePath("../..")
 
 [node name="Body" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="BaseShape" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
@@ -64,3 +64,4 @@ shape = SubResource("CylinderShape3D_i41cj")
 height = 2.0
 vertices = PackedVector3Array(-0.5, 0, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5, 0.5, 0, -0.5)
 affect_navigation_mesh = true
+avoidance_enabled = false

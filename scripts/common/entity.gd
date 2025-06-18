@@ -8,7 +8,6 @@ var fog_of_war_sprite:Sprite2D
 
 ## Necessary Entity declaration
 @export var entity_name:String = ""
-@export var icon:Texture2D
 
 ## Common Entity properties
 @export_group("Properties")

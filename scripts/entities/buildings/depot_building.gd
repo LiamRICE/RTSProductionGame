@@ -1,7 +1,7 @@
 class_name DepotBuilding extends Building
 
 # Loading script classes
-const DepotModule := preload("res://scripts/buildings/building_modules/depot_module.gd")
+const DepotModule := preload("uid://b6to6vvsk7c8u")
 const PlayerManager := preload("res://player_manager.gd")
 
 # Load player manager

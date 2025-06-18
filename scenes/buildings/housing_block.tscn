@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://01dcemh7nguo" path="res://assets/kenney_buildings/building-window-large-left.glb" id="6_v1e5s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hbwg0"]
-size = Vector3(3.02048, 3.82501, 3.26263)
+size = Vector3(3.02048, 3.8, 3)
 
 [node name="HousingBlock" type="Node3D"]
 
@@ -33,9 +33,14 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00157166, 1.88565, 0.0632019)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00157166, 1.89816, -0.00548316)
 shape = SubResource("BoxShape3D_hbwg0")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
+vertices = PackedVector3Array(1.5, 0, 1.5, -1.5, 0, 1.5, -1.5, 0, -0.5, -0.5, 0, -0.5, -0.5, 0, -1.5, 1.5, 0, -1.5)
+affect_navigation_mesh = true
+avoidance_enabled = false
