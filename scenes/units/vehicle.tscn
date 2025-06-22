@@ -7,17 +7,10 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.613342, 0.807037, 1.0376)
 
-[node name="Vehicle" type="Node3D" groups=["units"]]
+[node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
 script = ExtResource("1_qm2ug")
-acceleration = 2.0
-max_speed = 5.0
-rotation_speed = 10.0
-entity_name = "Vehicle"
+body = NodePath("StaticBody3D")
 entity_id = 2
-current_health = 100.0
-health = 100.0
-production_cost = 10.0
-vision_radius = 5.0
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]

@@ -1,6 +1,6 @@
 extends Node
 
-const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
+const RESOURCE := preload("res://scripts/utilities/resource_utils.gd").RESOURCE
 #const PlayerManager := preload("res://player_manager.gd")
 
 var player_manager:PlayerManager
@@ -18,6 +18,6 @@ func _init_player_manager():
 		printerr("Warning! No player manager found! Check the SceneTree for 'GameManager/LevelManager/PlayerManager'.")
 
 
-func drop_off(amount:int, type:ResourceUtils.Res):
+func drop_off(amount:int, type:RESOURCE):
 	print("Units dropped off ", amount, " of type ", type)
 	self.player_manager.add_resource(amount, type)

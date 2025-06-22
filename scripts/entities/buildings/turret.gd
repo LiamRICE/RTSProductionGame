@@ -20,6 +20,9 @@ var is_attacking:bool
 
 ## Ready function
 func _ready() -> void:
+	## Execute parent _ready function
+	super._ready()
+	
 	# Create the attack zone which detects attackable units
 	_initialise_range_detection()
 

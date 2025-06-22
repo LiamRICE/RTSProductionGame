@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://dtu4174gvre8n"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_nvaw6"]
+[ext_resource type="Texture2D" uid="uid://2f6bvkqxhkr8" path="res://assets/ui/icons/buildings/turret_single_SW.png" id="2_kg67j"]
+
+[resource]
+script = ExtResource("1_nvaw6")
+entity_statistics = Dictionary[int, float]({
+0: 0.0,
+1: 0.0,
+2: 0.0,
+3: 0.0,
+4: 0.0,
+5: 0.0,
+6: 0.0,
+7: 0.0,
+8: 0.0,
+9: 0.0,
+10: 0.0
+})
+production_cost = Dictionary[int, float]({})
+production_time = 0.0
+name = "Turret"
+ui_icon = ExtResource("2_kg67j")
+ui_description = ""
+ui_tooltip = ""

@@ -1,1 +1,0 @@
-class_name UnitResource extends EntityResource

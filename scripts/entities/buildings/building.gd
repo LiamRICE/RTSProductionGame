@@ -25,6 +25,9 @@ var is_preview:bool = false
 
 ## Called when the player wants to place down a new building
 func initialise_placement(team:int) -> void:
+	## Execute parent _ready function
+	super._ready()
+	
 	_set_preview_state(true)
 	self.mesh_container.position.y += 0.5
 	self.allegiance = team

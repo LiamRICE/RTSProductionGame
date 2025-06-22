@@ -12,5 +12,5 @@ func _ready() -> void:
 	super._ready()
 
 # Required for depot functionality
-func drop_off(amount:int, type:ResourceUtils.Res):
+func drop_off(amount:int, type:RESOURCE):
 	self.depot_module.drop_off(amount, type)

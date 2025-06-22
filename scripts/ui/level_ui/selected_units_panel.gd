@@ -12,7 +12,7 @@ const UIStateUtils := preload("uid://cs16g08ckh1rw")
 
 ## Properties
 @export_group("Properties")
-var categories:Dictionary[String, Array]
+var categories:Dictionary[int, Array]
 var selection_type:UIStateUtils.SelectionType = UIStateUtils.SelectionType.NONE
 @export var group_name:String:
 	set(value):
@@ -35,8 +35,9 @@ func _on_player_interface_selection_changed(selection: Array[Entity], selection_
 	
 	self.categories = self.categorise(selection)
 	for key in self.categories:
-		print("adding item " + key)
-		item_list.add_item(key + " : " + str(categories[key]), null, true)
+		var ui_name:String = EntityDatabase.get_entity_name(key)
+		print("adding item ", ui_name)
+		self.item_list.add_item(ui_name + " : " + str(categories[key]), null, true)
 
 func _on_item_changed(index:int) -> void:
 	print("Selected ", index)
@@ -47,13 +48,13 @@ func _on_no_item_selected() -> void:
 	sub_selection_changed.emit(Array(), UIStateUtils.SelectionType.NONE)
 
 ## Sort units into categories based on their names
-func categorise(selection:Array[Entity]) -> Dictionary[String, Array]:
-	var categories:Dictionary[String, Array]
+func categorise(selection:Array[Entity]) -> Dictionary[int, Array]:
+	var categories:Dictionary[int, Array]
 	
 	for entity in selection:
-		if categories.has(entity.entity_name):
-			categories[entity.entity_name].append(entity)
+		if categories.has(entity.entity_id):
+			categories[entity.entity_id].append(entity)
 		else:
-			categories[entity.entity_name] = [entity]
+			categories[entity.entity_id] = [entity]
 	
 	return categories

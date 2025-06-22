@@ -1,8 +1,10 @@
 class_name EntityActiveStatModAbility extends EntityActiveAbility
 
+## Constants
+const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Properties
-@export var stat_to_modify:String
+@export var stat_to_modify:STATS
 @export var stat_mod_amount:float
 
 ## Initialise the ability, should be run when the initialising the unit

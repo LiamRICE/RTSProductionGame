@@ -3,11 +3,6 @@ class_name Unit extends Entity
 const unit_utils:Script = preload("res://scripts/utilities/unit_utils.gd")
 const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 
-@export_group("Properties")
-@export var move_speed : float = 0.
-@export var rotation_speed : float = 0.
-@export var view_distance : float = 0.
-
 # path information
 @export_group("Navigation")
 var current_path : PackedVector3Array
@@ -24,15 +19,14 @@ var TEAM : int
 
 
 func _ready():
+	## Execute parent _ready function
+	super._ready()
+	
 	TEAM = allegiance
-	_unit_specific_ready()
 
 func spawn(location:Vector3, rally_point:Vector3) -> void:
 	self.global_position = location
 	set_navigation_path(rally_point)
-
-func _unit_specific_ready():
-	pass
 
 
 func _physics_process(delta: float) -> void:
@@ -93,7 +87,7 @@ func move(delta:float):
 	if self.current_path.is_empty():
 		return
 	# set movement speed for this frame
-	var movement_delta : float = move_speed * delta
+	var movement_delta : float = self.entity_statistics[STATS.SPEED] * delta
 	# increment next path point if current point has been reached
 	if self.global_transform.origin.distance_to(self.next_point) <= path_point_margin:
 		self.path_index += 1
@@ -111,6 +105,9 @@ func move(delta:float):
 	# set unit velocity to the next path point
 	var new_velocity: Vector3 = self.global_transform.origin.direction_to(next_point) * movement_delta
 	self.global_transform.origin = self.global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
+
+
+""" DEBUG METHODS """
 
 ## Debug method : draws a mesh polyline to represent the unit's chosen navigation path
 func debug_render_unit_path(path:PackedVector3Array) -> void:

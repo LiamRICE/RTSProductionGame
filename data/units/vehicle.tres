@@ -1,12 +1,29 @@
-[gd_resource type="Resource" script_class="UnitResource" load_steps=2 format=3 uid="uid://cpf0cu1b3n607"]
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://bi7fdmflrc76y"]
 
-[ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="1_xa01o"]
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_xa01o"]
+[ext_resource type="Texture2D" uid="uid://dq7beibq4ll4s" path="res://assets/ui/icons/units/monorail_trainFront_SW.png" id="2_jmvym"]
 
 [resource]
 script = ExtResource("1_xa01o")
-health = 0.0
-production_cost = Dictionary[int, float]({})
-name = ""
-ui_description = ""
-ui_tooltip = ""
-metadata/_custom_type_script = "uid://q3n2tt8hr314"
+entity_statistics = Dictionary[int, float]({
+0: 200.0,
+1: 20.0,
+2: 4.0,
+3: 25.0,
+4: 6.0,
+5: 2.0,
+6: 7.0,
+7: 6.0,
+8: 3.0,
+9: 120.0,
+10: 180.0
+})
+production_cost = Dictionary[int, float]({
+1: 25.0,
+3: 75.0
+})
+production_time = 10.0
+name = "Vehicle"
+ui_icon = ExtResource("2_jmvym")
+ui_description = "Vehicle"
+ui_tooltip = "A vehicle unit"

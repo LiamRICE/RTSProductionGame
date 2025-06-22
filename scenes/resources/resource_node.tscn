@@ -6,10 +6,12 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_yrqnr"]
 size = Vector3(0.884399, 0.353455, 0.795029)
 
-[node name="ResourceNodeMetal" type="Node3D" groups=["resource"]]
+[node name="ResourceNodeMetal" type="Node3D" node_paths=PackedStringArray("body") groups=["resource"]]
 script = ExtResource("1_o7r71")
 resource_type = 3
 resource_amount = 5
+body = NodePath("StaticBody3D")
+entity_name = "Resource Node"
 metadata/_custom_type_script = "uid://djpbit5h4ps0b"
 
 [node name="RockCrystals" type="MeshInstance3D" parent="."]

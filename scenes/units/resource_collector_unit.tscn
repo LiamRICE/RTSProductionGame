@@ -8,19 +8,12 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_1m3al"]
 size = Vector3(0.491333, 0.829468, 0.36554)
 
-[node name="ResourceCollectorUnit" type="Node3D" groups=["resource_gatherer", "units"]]
+[node name="ResourceCollectorUnit" type="Node3D" node_paths=PackedStringArray("body") groups=["resource_gatherer", "units"]]
 script = ExtResource("1_ubpkj")
 gather_speed = 1.0
-move_speed = 2.0
-view_distance = 5.0
-entity_name = "ResourceCollectorUnit"
-health = 20.0
-max_health = 20.0
-production_cost = 10.0
-vision_radius = 5.0
+body = NodePath("StaticBody3D")
+entity_id = 3
 allegiance = 1
-resource_cost_amount = Array[int]([20])
-resource_cost_type = Array[int]([3])
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]

@@ -118,6 +118,10 @@ unique_name_in_owner = true
 script = ExtResource("8_ycdy4")
 ui_manager = NodePath("../UIManager")
 
+[node name="UIUpdateTimer" type="Timer" parent="LevelManager/PlayerManager"]
+autostart = true
+ignore_time_scale = true
+
 [node name="Player0" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player0"]

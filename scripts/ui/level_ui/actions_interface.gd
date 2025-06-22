@@ -20,7 +20,9 @@ func _ready() -> void:
 func _on_button_pressed(index:int) -> void:
 	print("Pressed : ", index)
 	## TODO - execute button's effect on object
-	selection_list[0].queue_unit(index)
+	if self.selection_list[0] is ProductionBuilding:
+		self.selection_list[0].queue_unit(index)
+		print("Queued unit")
 
 func _on_player_interface_selection_changed(sub_selection: Array[Entity], selection_type: UIStateUtils.SelectionType) -> void:
 	print("Selection changed")
@@ -48,7 +50,7 @@ func _on_player_interface_selection_changed(sub_selection: Array[Entity], select
 	print("Button icon assigned")
 	if entity is ProductionBuilding:
 		for index in range(entity.building_units.size()):
-			var unit:EntityResource = entity.building_units[index]
+			var unit:EntityResource = EntityDatabase.get_resource(entity.building_units[index])
 			self.actions_container.button_list[index].icon = unit.ui_icon
 			self.actions_container.button_list[index].set_disabled(false)
 			self.actions_container.button_list[index].set_flat(false)

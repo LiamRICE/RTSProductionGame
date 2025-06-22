@@ -22,6 +22,9 @@ func _ready():
 	building.allegiance = 1
 	building._init_placement_collision()
 	self.add_building(building, Vector3(0,0,0))
+	
+	""" Wait for next frame """
+	await RenderingServer.frame_post_draw
 	for x in range(3):
 		var unit:Unit
 		if x < 1:

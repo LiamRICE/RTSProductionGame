@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://cu06huqxcdw0w"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_a7bwr"]
+[ext_resource type="Texture2D" uid="uid://d1ms3ptbajxbw" path="res://assets/ui/icons/buildings/hangar_largeB_NW.png" id="2_nm55l"]
+
+[resource]
+script = ExtResource("1_a7bwr")
+entity_statistics = Dictionary[int, float]({
+0: 1000.0,
+1: 200.0,
+2: 10.0,
+3: 20.0,
+4: 5.0,
+5: 2.0,
+6: 10.0,
+7: 0.0,
+8: 0.0,
+9: 0.0,
+10: 0.0
+})
+production_cost = Dictionary[int, float]({
+2: 500.0,
+4: 50.0
+})
+production_time = 120.0
+name = "Base Centre"
+ui_icon = ExtResource("2_nm55l")
+ui_description = "The Faction Home Base"
+ui_tooltip = "The Main Faction Building."

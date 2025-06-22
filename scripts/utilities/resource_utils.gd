@@ -1,7 +1,7 @@
 extends RefCounted
 
 
-enum Res {
+enum RESOURCE {
 	NONE,
 	FOOD,
 	MATERIAL,
@@ -13,7 +13,7 @@ enum Res {
 	FUEL
 }
 
-enum GatherState {
+enum GATHER_STATE {
 	NONE,
 	GATHERING,
 	DROPPING

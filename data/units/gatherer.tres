@@ -1,18 +1,28 @@
-[gd_resource type="Resource" script_class="UnitResource" load_steps=4 format=3 uid="uid://de05tslthwbju"]
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://byvhmf4w6cp2q"]
 
-[ext_resource type="PackedScene" uid="uid://ditvkcv1wolek" path="res://scenes/units/resource_collector_unit.tscn" id="1_3t3li"]
-[ext_resource type="Script" uid="uid://q3n2tt8hr314" path="res://scripts/data_resources/unit_resource.gd" id="1_bi0t2"]
-[ext_resource type="Texture2D" uid="uid://c3wky05j2jguu" path="res://assets/ui/icons/units/astronautA_SW.png" id="3_idl76"]
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_bi0t2"]
+[ext_resource type="Texture2D" uid="uid://c3wky05j2jguu" path="res://assets/ui/icons/units/astronautA_SW.png" id="2_3w17c"]
 
 [resource]
 script = ExtResource("1_bi0t2")
-entity_instance = ExtResource("1_3t3li")
-health = 100.0
+entity_statistics = Dictionary[int, float]({
+0: 50.0,
+1: 0.0,
+2: 0.0,
+3: 5.0,
+4: 2.0,
+5: 1.0,
+6: 5.0,
+7: 2.0,
+8: 5.0,
+9: 360.0,
+10: 0.0
+})
 production_cost = Dictionary[int, float]({
 1: 50.0
 })
-name = "Getherer"
-ui_icon = ExtResource("3_idl76")
-ui_description = "The basic gatherer unit. Can gather food, materials and metals."
-ui_tooltip = "Gatherer. Harvests FOOD, MATERIAL, METAL."
-metadata/_custom_type_script = "uid://q3n2tt8hr314"
+production_time = 3.0
+name = "Gatherer"
+ui_icon = ExtResource("2_3w17c")
+ui_description = "Gatherer unit"
+ui_tooltip = "A materials gatherer."

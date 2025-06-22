@@ -1,7 +1,9 @@
 class_name Entity extends Node3D
 
-const ResourceUtils := preload("uid://c4mlh3p0sd0vd")
-const ENTITY_LIST := preload("uid://dki6gr7rrru2p").ENTITY_LIST
+## Constants
+const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
+const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
+const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Common Entity nodes
 @export var body:PhysicsBody3D
@@ -9,25 +11,17 @@ var fog_of_war_sprite:Sprite2D
 
 ## Necessary Entity declaration
 @export_group("Properties")
-@export var entity_name:String = ""
-@export var entity_id:ENTITY_LIST = ENTITY_LIST.DEFAULT
+@export var entity_id:ENTITY_ID
 
 ## Common Entity properties
 @export_group("Statistics")
-@export var entity_statistics:EntityStats = EntityStats.new()
+@export var entity_statistics:Dictionary[STATS, float]
 @export var current_health:float ## The current health the unit has
-@export var health:float ## The max health the unit can have
-@export var production_cost:float ## Cost of production for the unit in seconds
-@export var vision_radius:float ## Used to scale the vision sprite
-@export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by vision_radius.
+@export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by sight stat.
 @export var allegiance:int = 0
 
 @export_group("Abilities")
 @export var abilities:Array[EntityAbility]
-
-@export_group("Value")
-@export var resource_cost_amount:Array[int]
-@export var resource_cost_type:Array[ResourceUtils.Res]
 
 ## Common Entity states
 @export_group("States")
@@ -36,11 +30,11 @@ var fog_of_war_sprite:Sprite2D
 @export var is_mobile:bool = false
 
 
-""" Entity Methods """
+""" ENTITY METHODS """
 
 func _ready() -> void:
 	## Set unit health to max
-	self.current_health = self.health
+	self.entity_statistics = EntityDatabase.get_stats(self.entity_id)
 	
 	## Initialise abilities
 	for ability in self.abilities:
@@ -66,11 +60,22 @@ func _update_allegiance(new_allegiance:int) -> void:
 
 ## Code to execute when unit is destroyed
 func _on_destroyed() -> void:
+	## Remove FOW effect nodes
+	self.remove_from_group("fog_of_war_propagators")
+	self.fog_of_war_sprite.queue_free()
+	
+	## Remove unit
 	self.queue_free()
 
+""" ABILITY METHODS """
+
 ## Triggered by an ability
-func _on_ability_stat_modification(stat:String, value_mod:float) -> void:
-	self.set(stat, self.get(stat) + value_mod)
+func _on_ability_stat_modification(stat:STATS, value_mod:float) -> void:
+	self.modify_stat(stat, value_mod)
+
+## Triggered by an ability
+func _on_ability_stat_override(stat:STATS, value:float) -> void:
+	self.update_stat(stat, value)
 
 """ FOG OF WAR METHODS """
 
@@ -80,7 +85,7 @@ func initialise_fog_of_war_propagation() -> Sprite2D:
 	
 	## Create the FoW sprite, assign it's texture and return it to the calling object
 	self.fog_of_war_sprite = Sprite2D.new()
-	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * vision_radius * 2
+	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2
 	self.fog_of_war_sprite.texture = self.vision_texture
 	return self.fog_of_war_sprite
 
@@ -89,3 +94,11 @@ func update_visibility(position_2d:Vector2, fow_image:Image):
 		self.visible = true
 	else:
 		self.visible = false
+
+""" STATS METHODS """
+
+func update_stat(stat:STATS, value:float) -> void:
+	self.entity_statistics[stat] = value
+
+func modify_stat(stat:STATS, modifier:float) -> void:
+	self.entity_statistics[stat] += modifier
