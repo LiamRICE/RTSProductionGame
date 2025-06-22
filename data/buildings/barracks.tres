@@ -8,7 +8,9 @@
 script = ExtResource("1_y8cv6")
 entity_instance = ExtResource("1_5mpgk")
 health = 250.0
-production_cost = 10.0
+production_cost = Dictionary[int, float]({
+2: 100.0
+})
 name = "Barracks"
 ui_icon = ExtResource("3_x3hrc")
 ui_description = "Produces basic infantry units. This building can build :

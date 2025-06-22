@@ -112,7 +112,7 @@ func move(delta:float):
 	var new_velocity: Vector3 = self.global_transform.origin.direction_to(next_point) * movement_delta
 	self.global_transform.origin = self.global_transform.origin.move_toward(global_transform.origin + new_velocity, movement_delta)
 
-
+## Debug method : draws a mesh polyline to represent the unit's chosen navigation path
 func debug_render_unit_path(path:PackedVector3Array) -> void:
 	if self.path_mesh_instances.size() > 0:
 		for mesh in self.path_mesh_instances:

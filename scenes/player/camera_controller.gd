@@ -67,14 +67,11 @@ func _process(delta):
 	self.mouse_position_delta = Vector2.ZERO
 	
 	# Zoom the camera in and out
-	var zoom_order:float = Input.get_axis("rotate_right", "rotate_left")
-	if Input.is_action_just_pressed("zoom_out"):
-		if not goal_transform.origin.y >= MAX_HEIGHT:
-			goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
-	
-	if Input.is_action_just_pressed("zoom_in"):
-		if not goal_transform.origin.y <= MIN_HEIGHT:
-			goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
+	var zoom_order:float = Input.get_axis("zoom_in", "zoom_out")
+	if Input.is_action_just_pressed("zoom_out") and not goal_transform.origin.y >= MAX_HEIGHT:
+		goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
+	if Input.is_action_just_pressed("zoom_in") and not goal_transform.origin.y <= MIN_HEIGHT:
+		goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
 	camera.global_transform.origin = camera.global_transform.origin.lerp(goal_transform.origin, PAN_RESPONSIVENESS * delta)
 	yaw.basis = yaw.basis.slerp(goal_transform.basis, YAW_RESPONSIVENESS * delta).orthonormalized()

@@ -8,7 +8,10 @@
 script = ExtResource("1_teo1b")
 entity_instance = ExtResource("1_kgsoq")
 health = 100.0
-production_cost = 10.0
+production_cost = Dictionary[int, float]({
+2: 75.0,
+3: 25.0
+})
 name = "Gun Turret"
 ui_icon = ExtResource("3_gnvjy")
 ui_description = "A defensive structure that fires on the closest enemy unit within line of sight. Targets both land and air units."

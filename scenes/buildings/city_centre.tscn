@@ -27,6 +27,11 @@ navigation_obstacle = NodePath("NavigationObstacle3D")
 placement_collision_shape = NodePath("StaticBody3D/CollisionShape3D")
 preview_material = ExtResource("2_nwvru")
 body = NodePath("StaticBody3D")
+entity_name = "Base Centre"
+entity_id = 4
+current_health = 500.0
+health = 500.0
+production_cost = 500.0
 vision_radius = 10.0
 
 [node name="MeshContainer" type="Node3D" parent="."]

@@ -124,11 +124,15 @@ ui_manager = NodePath("../UIManager")
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player0"]
 
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player0"]
+
 [node name="Player1" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player1"]
+
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player1"]
 
 [node name="Player2" type="Node" parent="LevelManager/PlayerManager"]
 
@@ -136,11 +140,15 @@ ui_manager = NodePath("../UIManager")
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player2"]
 
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player2"]
+
 [node name="Player3" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player3"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player3"]
+
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player3"]
 
 [node name="Player4" type="Node" parent="LevelManager/PlayerManager"]
 
@@ -148,11 +156,15 @@ ui_manager = NodePath("../UIManager")
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player4"]
 
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player4"]
+
 [node name="Player5" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player5"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player5"]
+
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player5"]
 
 [node name="Player6" type="Node" parent="LevelManager/PlayerManager"]
 
@@ -160,17 +172,23 @@ ui_manager = NodePath("../UIManager")
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player6"]
 
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player6"]
+
 [node name="Player7" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player7"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player7"]
 
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player7"]
+
 [node name="Player8" type="Node" parent="LevelManager/PlayerManager"]
 
 [node name="Buildings" type="Node" parent="LevelManager/PlayerManager/Player8"]
 
 [node name="Units" type="Node" parent="LevelManager/PlayerManager/Player8"]
+
+[node name="EffectAreas" type="Node" parent="LevelManager/PlayerManager/Player8"]
 
 [node name="LevelManager_WorldManager_NavigationRegion3D#GridMap" type="GridMap" parent="."]
 cell_size = Vector3(1, 1, 1)

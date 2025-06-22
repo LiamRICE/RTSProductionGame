@@ -11,8 +11,8 @@ const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
 ## Building properties
 @export_group("Properties")
 @export var preview_material:StandardMaterial3D
-@export var preview_valid_colour:Color
-@export var preview_invalid_colour:Color
+@export var preview_valid_colour:Color = Color("0000ff3f")
+@export var preview_invalid_colour:Color = Color("ff00003f")
 @export_group("Statistics")
 @export var build_percent:float = 100
 var placement_collision_area:Area3D

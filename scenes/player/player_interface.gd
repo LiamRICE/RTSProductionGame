@@ -70,7 +70,6 @@ func _ready():
 
 func _physics_process(delta:float):
 	mouse_state_update()
-	var x = delta
 
 
 func mouse_state_update():
@@ -93,7 +92,7 @@ func mouse_state_update():
 				elif target.is_in_group("buildings") and target.allegiance == self.player_team:
 					if target.build_percent < 100:
 						self.mouse_state = UIStateUtils.MouseState.BUILD
-					elif target.health < target.max_health:
+					elif target.current_health < target.current_health:
 						self.mouse_state = UIStateUtils.MouseState.REPAIR
 				elif (target.is_in_group("units") or target.is_in_group("buildings")) and target.allegiance != self.player_team:
 					self.mouse_state = UIStateUtils.MouseState.ENEMY

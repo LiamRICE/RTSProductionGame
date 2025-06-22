@@ -15,6 +15,10 @@ run/main_scene="uid://dkve5n5x16hga"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="uid://bva3m1240mv2f"
 
+[autoload]
+
+EntityDatabase="*res://scenes/managers/entity_database.tscn"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0

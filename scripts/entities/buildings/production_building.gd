@@ -1,7 +1,7 @@
 class_name ProductionBuilding extends Building
 
 ## Loading script classes
-const PlayerManager := preload("res://player_manager.gd")
+#const PlayerManager := preload("res://player_manager.gd")
 
 ## Signals
 signal unit_constructed(unit:Unit, position:Vector3, move_order:Vector3)
@@ -24,6 +24,7 @@ var is_producing:bool
 ## ProductionBuilding Methods
 
 func _ready() -> void:
+	super._ready()
 	# initialise player_manager
 	_init_player_manager()
 
@@ -31,7 +32,7 @@ func _ready() -> void:
 func _init_player_manager():
 	self.player_manager = get_tree().get_root().get_node("GameManager/LevelManager/PlayerManager")
 	if self.player_manager == null:
-		printerr("Warning! No player manager found! Check the SceneTree for 'GameManager/LevelManager/PlayerManager'.")
+		printerr("Error! No player manager found! Check the SceneTree for 'GameManager/LevelManager/PlayerManager'.")
 
 ## Starts a timer for the production of a new unit
 func queue_unit(unit:int) -> void:

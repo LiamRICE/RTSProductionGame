@@ -1,7 +1,7 @@
 extends Node
 
 const ResourceUtils := preload("res://scripts/utilities/resource_utils.gd")
-const PlayerManager := preload("res://player_manager.gd")
+#const PlayerManager := preload("res://player_manager.gd")
 
 var player_manager:PlayerManager
 

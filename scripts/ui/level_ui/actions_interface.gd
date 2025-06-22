@@ -44,13 +44,14 @@ func _on_player_interface_selection_changed(sub_selection: Array[Entity], select
 			pass
 
 	## Get the selection's first item
-	var item:Entity = sub_selection[0]
+	var entity:Entity = sub_selection[0]
 	print("Button icon assigned")
-	if item is ProductionBuilding:
-		for index in range(item.building_units.size()):
-			var unit:Unit = item.building_units[index].entity_instance.instantiate()
-			self.actions_container.button_list[index].icon = unit.icon
+	if entity is ProductionBuilding:
+		for index in range(entity.building_units.size()):
+			var unit:EntityResource = entity.building_units[index]
+			self.actions_container.button_list[index].icon = unit.ui_icon
 			self.actions_container.button_list[index].set_disabled(false)
 			self.actions_container.button_list[index].set_flat(false)
-			unit.free()
+		for index_2 in range(entity.abilities.size()):
+			print(entity.abilities[index_2])
 	self.selection_list = sub_selection

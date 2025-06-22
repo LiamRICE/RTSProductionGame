@@ -1,6 +1,6 @@
 class_name Resources extends Entity
 
-const resource_utils:GDScript = preload("res://scripts/utilities/resource_utils.gd")
+const resource_utils:GDScript = preload("uid://c4mlh3p0sd0vd")
 
 
 @export var resource_type:resource_utils.Res

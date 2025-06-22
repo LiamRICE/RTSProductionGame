@@ -9,8 +9,7 @@ const DepotModule := preload("uid://b6to6vvsk7c8u")
 
 
 func _ready() -> void:
-	# get the global player manager
-	_init_player_manager()
+	super._ready()
 
 # Required for depot functionality
 func drop_off(amount:int, type:ResourceUtils.Res):
