@@ -26,6 +26,7 @@ func _ready():
 
 func spawn(location:Vector3, rally_point:Vector3) -> void:
 	self.global_position = location
+	self.basis = Basis.IDENTITY
 	set_navigation_path(rally_point)
 
 
@@ -53,7 +54,7 @@ func set_navigation_path(location:Vector3, is_shift:bool = false):
 	# check that object is in tree
 	if is_inside_tree():
 		# fetch the world's navigation map
-		var map_RID:RID = get_world_3d().get_navigation_map()
+		var map_RID:RID = NavigationServer3D.get_maps()[0]
 		# Fetch safe coordinates
 		var safe_start:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, global_position)
 		if is_shift:

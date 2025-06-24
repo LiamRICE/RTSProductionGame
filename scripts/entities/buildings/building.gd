@@ -4,9 +4,12 @@ class_name Building extends Entity
 const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
 
 ## Mandatory Nodes
+@export_group("Nodes")
 @export var mesh_container:Node3D
+@export var particles_container:Node3D
 @export var navigation_obstacle:NavigationObstacle3D
 @export var placement_collision_shape:CollisionShape3D
+var placement_collision_area:Area3D
 
 ## Building properties
 @export_group("Properties")
@@ -15,7 +18,6 @@ const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
 @export var preview_invalid_colour:Color = Color("ff00003f")
 @export_group("Statistics")
 @export var build_percent:float = 100
-var placement_collision_area:Area3D
 
 ## Internal state
 var is_preview:bool = false
@@ -68,6 +70,7 @@ func _set_preview_state(is_preview:bool) -> void:
 	else:
 		self.body.process_mode = Node.PROCESS_MODE_INHERIT
 		self._free_placement_collision()
+	self._toggle_particles(!is_preview)
 
 ## Changes the materials of the object to preview materials
 func _set_preview_material() -> void:
@@ -83,9 +86,16 @@ func _set_preview_material() -> void:
 func _init_placement_collision():
 	## Create the placement collision area
 	self.placement_collision_area = Area3D.new()
+	self.placement_collision_area.collision_layer = 2
+	self.placement_collision_area.collision_mask = 2
 	self.placement_collision_area.add_child(self.placement_collision_shape.duplicate(8))
 	self.add_child(self.placement_collision_area)
 
 func _free_placement_collision():
 	# Disconnect signals and free the area3D node
 	self.placement_collision_area.queue_free()
+
+func _toggle_particles(active:bool) -> void:
+	if self.particles_container != null:
+		for child in self.particles_container.get_children():
+			child.emitting = active

@@ -1,24 +1,29 @@
 extends MeshInstance3D
 
 ## Constants
-const FogOfWarScene:Script = preload("uid://hjkey36jrmgt")
+const FogOfWarTexture:Script = preload("uid://hjkey36jrmgt")
 
 @export var terrain_node:GridMap
-@export var fog_of_war_scene:FogOfWarScene
+@export var fog_of_war_texture:FogOfWarTexture
 var texture_size:Vector2i
 var terrain_size:Vector2
 var terrain_centre:Vector3
-#var height_array:Array[float]
 
 
-func _ready() -> void:
+## Creates a new fog of war texture and connects the fog_of_war_updated signal to the update function
+func _initialise_fog_of_war(new_texture_size:Vector2i) -> void:
+	## Initialise the fog of war mesh
 	if terrain_node == null:
 		push_error("No terrain node assigned to the fog of war mesh.")
 		return
 	
 	var data:PackedByteArray = self._parse_terrain_node()
 	self._create_mesh(data)
-	#self._initialise_fog_of_war(Vector2(128, 128))
+	
+	## Initialise the fog of war texture
+	self.texture_size = new_texture_size
+	fog_of_war_texture.new_fog_of_war(new_texture_size)
+	fog_of_war_texture.fog_of_war_updated.connect(_update_fog_of_war)
 
 func _parse_terrain_node() -> PackedByteArray:
 	var max_x:float = 0
@@ -39,7 +44,8 @@ func _parse_terrain_node() -> PackedByteArray:
 	self.position = terrain_centre
 	self.position.y += 0.165
 	var cell_minimums:Vector3 = self.terrain_node.local_to_map(Vector3(min_x, 0, min_z))
-	print("Terrain size : ", terrain_size)
+	
+	print("Terrain size : ", terrain_size) ## DEBUG
 	
 	## Populate heightmap data into an array
 	var data_array:Array[float] = []
@@ -90,17 +96,11 @@ func _create_mesh(data:PackedByteArray) -> void:
 	## Set the mesh as the meshinstance's mesh
 	self.mesh = planemesh
 
-## Creates a new fog of war texture and connects the fog_of_war_updated signal to the update function
-func _initialise_fog_of_war(new_texture_size:Vector2i) -> void:
-	self.texture_size = new_texture_size
-	fog_of_war_scene.new_fog_of_war(new_texture_size)
-	fog_of_war_scene.fog_of_war_updated.connect(_update_fog_of_war)
-
 ## Stores the current FOW texture for the minimap and updates the FOW texture in the material shader
 func _update_fog_of_war() -> void:
 	#print("Updating FOW texture")
 	#var FOW_Texture = fog_of_war_scene.fog_of_war_viewport_texture
-	self.mesh.material.set_shader_parameter("fow_texture", fog_of_war_scene.fog_of_war_viewport_texture)
+	self.mesh.material.set_shader_parameter("fow_texture", fog_of_war_texture.fog_of_war_viewport_texture)
 
 ## --------------------------- ##
 ## -- POSITION TRANSFORMERS -- ##
@@ -118,7 +118,7 @@ func _index_to_map(index:int) -> Vector2:
 
 ## Converts from 3D world space to UV texture space for fog of war
 func _world_3d_to_UV(world_3d_coordinate:Vector3) -> Vector2:
-	var absolute_coordinate:Vector3 = world_3d_coordinate - self.terrain_centre + Vector3((self.terrain_size.x - 1) / 2, 0, (self.terrain_size.y - 1) / 2)
+	var absolute_coordinate:Vector3 = world_3d_coordinate - self.terrain_centre + Vector3((self.terrain_size.x - 1) * 0.5, 0, (self.terrain_size.y - 1) * 0.5)
 	var unit_centered_coordinate:Vector2 = Vector2(absolute_coordinate.x, absolute_coordinate.z) / ((self.terrain_size - Vector2(1, 1)))
 	return unit_centered_coordinate
 

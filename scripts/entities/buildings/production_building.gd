@@ -23,7 +23,7 @@ var is_producing:bool
 func _ready() -> void:
 	super._ready()
 	# initialise player_manager
-	_init_player_manager()
+	self._init_player_manager()
 
 # Required for spending resources
 func _init_player_manager():
@@ -36,17 +36,22 @@ func queue_unit(unit:int) -> void:
 	## Unit's properties and statistics
 	var unit_resource:EntityResource = EntityDatabase.get_resource(self.building_units[unit])
 	if self.player_manager.spend_resources(unit_resource.production_cost):
-		print(unit_resource.production_cost, unit_resource.production_time)
 		self.production_queue.append(self.building_units[unit])
 		print("Queuing " + unit_resource.name + "...") ## DEBUG
 		if not self.is_producing:
-			self.start_production()
+			self._start_production()
 			self.is_producing = true
 	else:
 		print("Not enough resources to buy ", EntityDatabase.get_entity_name(self.building_units[unit]), "!")
 
+func get_production_percentage() -> float:
+	if self.is_producing:
+		var e_id:ENTITY_ID = self.production_queue[0]
+		return 1 - self.production_timer.time_left / EntityDatabase.get_production_time(e_id)
+	return 0
+
 ## Starts the production of the unit at index 0 in the production queue
-func start_production() -> void:
+func _start_production() -> void:
 	var e_id:ENTITY_ID = self.production_queue[0]
 	print("Starting production with time ", EntityDatabase.get_production_time(e_id))
 	self.production_timer.start(EntityDatabase.get_production_time(e_id))
@@ -60,7 +65,7 @@ func _on_production_timer_timeout():
 	new_unit.allegiance = self.allegiance
 	# If there is another unit in the queue, start the production for it
 	if self.production_queue.size() > 0:
-		start_production()
+		self._start_production()
 	else:
 		self.is_producing = false
 	self.unit_constructed.emit(new_unit, unit_spawn_point.global_position, rally_point.global_position)

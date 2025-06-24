@@ -1,11 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://cov0sc830su4l"]
+[gd_scene load_steps=4 format=3 uid="uid://cov0sc830su4l"]
 
 [ext_resource type="Script" uid="uid://cwlxvuyy3e330" path="res://scripts/effects/fog_of_war/fow_mesh.gd" id="1_n4cfy"]
+[ext_resource type="PackedScene" uid="uid://1nq3s6f2ckjy" path="res://scenes/effects/fog_of_war/fog_of_war.tscn" id="2_j3s31"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4meol"]
 subdivide_width = 3
 subdivide_depth = 3
 
-[node name="FOWMesh" type="MeshInstance3D"]
+[node name="FOWMesh" type="MeshInstance3D" node_paths=PackedStringArray("fog_of_war_texture")]
 mesh = SubResource("PlaneMesh_4meol")
 script = ExtResource("1_n4cfy")
+fog_of_war_texture = NodePath("FogOfWar")
+
+[node name="FogOfWar" parent="." instance=ExtResource("2_j3s31")]

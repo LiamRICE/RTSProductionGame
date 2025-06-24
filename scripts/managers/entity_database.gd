@@ -28,6 +28,7 @@ func get_production_cost(id:ENTITY_ID) -> Dictionary[RESOURCE, float]:
 func get_production_time(id:ENTITY_ID) -> float:
 	return db[id].resource.production_time
 
+## Returns the ui info for the given entity_id in an array in the following format : name, description, tooltip, icon
 func get_ui_info(id:ENTITY_ID) -> Array:
 	var ref:DataRef = db[id]
 	return [ref.resource.name, ref.resource.ui_description, ref.resource.ui_tooltip, ref.resource.ui_icon]

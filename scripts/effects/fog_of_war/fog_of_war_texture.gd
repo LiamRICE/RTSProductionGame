@@ -5,10 +5,11 @@ signal fog_of_war_updated ## Emited when the fog of war texture has changed
 signal _image_conversion_complete ## Emitted when the conversion from a texture to an image is completed
 
 ## Nodes for rendering the fog of war and tracking unit positions
-@onready var fog_of_war_viewport:SubViewport = $FOWViewport
-@onready var fog_of_war_camera:Camera2D = $FOWViewport/FOWCamera
-@onready var fog_of_war_sprite:Sprite2D = $FOWViewport/FOWTexture
-@onready var fog_of_war_units:Node2D = $FOWViewport/FOWUnits
+@onready var fog_of_way_view_container:SubViewportContainer = $FOWContainer
+@onready var fog_of_war_viewport:SubViewport = %FOWViewport
+@onready var fog_of_war_camera:Camera2D = %FOWViewport/FOWCamera
+@onready var fog_of_war_sprite:Sprite2D = %FOWViewport/FOWTexture
+@onready var fog_of_war_units:Node2D = %FOWViewport/FOWUnits
 
 var fog_of_war_bg_image:Image
 var fog_of_war_viewport_texture:ViewportTexture
@@ -24,7 +25,6 @@ func new_fog_of_war(texture_size:Vector2i) -> void:
 	## Create a new image that is the same size as the FOW texture size
 	fog_of_war_bg_image = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
 	fog_of_war_bg_image.fill(Color(0, 0, 0, 1))
-	$FOWViewport/FOWUnits/Sprite2D.scale = Vector2.ONE / $FOWViewport/FOWUnits/Sprite2D.texture.get_size() * 8
 	
 	combined_fow_sprites_texture_update()
 

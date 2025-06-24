@@ -16,7 +16,7 @@ func move(delta:float):
 		current_speed = 0
 		return
 	# increment next path point if current point has been reached
-	if global_transform.origin.distance_to(next_point) <= path_point_margin:
+	if global_transform.origin.distance_squared_to(next_point) <= path_point_margin:
 		path_index += 1
 		if path_index >= current_path.size():
 			current_path = []

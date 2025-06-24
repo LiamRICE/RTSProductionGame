@@ -1,30 +1,33 @@
 extends Control
 
 ## Signals
-signal selection_changed(selection:Array[Entity], selection_type:UIStateUtils.SelectionType)
+signal selection_changed(selection:Selection, selection_type:UIStateUtils.SelectionType)
 
-# Loading Script Classes
-const PlayerScreen:Script = preload("res://scripts/ui/level_ui/player_screen.gd")
+## Loading Script Classes
+const PlayerScreen:Script = preload("uid://bih6yn0b7x8my")
 const GroupActionsPanel:Script = preload("uid://cbkqp04y5bfn5")
-const LevelManager:Script = preload("res://scripts/managers/level_manager.gd")
+const LevelManager:Script = preload("uid://c3m2j27g87q0x")
 const UIManager:Script = preload("uid://brcxb50tcwui4")
-const UIStateUtils:Script = preload("res://scripts/utilities/ui_state_utils.gd")
+const UIStateUtils:Script = preload("uid://cs16g08ckh1rw")
+const camera_operations:Script = preload("uid://chhtn0cum8l6r")
+const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
+const Selection:Script = preload("uid://cj0c8liafc0fd")
 
-# Mouse images
-var mouse_default = load("res://assets/ui/icons/mouse/pointer_scifi_b.png")
-var mouse_enemy = load("res://assets/ui/icons/mouse/target_round_b.png")
-var mouse_resource = load("res://assets/ui/icons/mouse/tool_pickaxe.png")
-var mouse_build = load("res://assets/ui/icons/mouse/tool_hammer.png")
-var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
+## Mouse images
+var mouse_default:Texture2D = preload("res://assets/ui/icons/mouse/pointer_scifi_b.png")
+var mouse_enemy:Texture2D = preload("res://assets/ui/icons/mouse/target_round_b.png")
+var mouse_resource:Texture2D = preload("res://assets/ui/icons/mouse/tool_pickaxe.png")
+var mouse_build:Texture2D = preload("res://assets/ui/icons/mouse/tool_hammer.png")
+var mouse_repair:Texture2D = preload("res://assets/ui/icons/mouse/tool_wrench.png")
 
-# Child nodes
+## Child nodes
 @export var camera_controller:Node3D
 
-# Nodes
+## Nodes
 @onready var level_manager:LevelManager = %LevelManager
 @onready var ui_manager:UIManager = %UIManager
-@onready var ui_selection_patch :NinePatchRect = $SelectionRect
-@onready var player_camera :Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
+@onready var ui_selection_patch:NinePatchRect = $SelectionRect
+@onready var player_camera:Camera3D = camera_controller.get_node(NodePath("Yaw/Pitch/MainCamera"))
 
 ## DEBUG
 @onready var debug_controls:Control = $DebugControls
@@ -32,34 +35,29 @@ var mouse_repair = load("res://assets/ui/icons/mouse/tool_wrench.png")
 @onready var add_unit_button:Button = $DebugControls/Button # DEBUG
 @onready var unit_blob_button:Button = $DebugControls/UnitBlob # DEBUG
 @onready var spin_box:SpinBox = $DebugControls/SpinBox # DEBUG
-#const UNIT = preload("res://scenes/units/unit_2.tscn")
 
-# Modules
-const camera_operations:GDScript = preload("res://scripts/utilities/camera_operations.gd")
-const CommonUtils:GDScript = preload("res://scripts/utilities/common_utils.gd")
+## Internal mouse state
+var state:UIStateUtils.ClickState
 
-
-var state :UIStateUtils.ClickState
-
-# Variables
-var selected_entities :Array[Entity] = []
+## Variables
+var selected_entities:Selection = Selection.new()
 var selected_type:UIStateUtils.SelectionType = UIStateUtils.SelectionType.NONE
 var constructing_building:Building
-var num_deployments :int = 0
+var num_deployments:int = 0
 var mouse_state:UIStateUtils.MouseState = UIStateUtils.MouseState.DEFAULT
 
-# Internal Variables
-var _mouse_left_click :bool = false
-var _dragged_rect_left :Rect2
-var _mouse_right_click :bool = false
+## Internal Variables
+var _mouse_left_click:bool = false
+var _dragged_rect_left:Rect2
+var _mouse_right_click:bool = false
 var _is_constructing:bool = false
 var is_on_ui:bool = false
 
-# Constants
-const MIN_SELECT_SQUARED :float = 81
+## Constants
+const MIN_SELECT_SQUARED:float = 81
 
-# Team
-var player_team: int = 1
+## Team
+var player_team:int = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -132,7 +130,7 @@ func initialise_state_machine():
 
 
 func _input(_event:InputEvent) -> void:
-	## SELECTION STATES ##
+	""" SELECTION STATES """
 	# Runs once at the start of each selection rect, if the state is DEFAULT
 	if Input.is_action_just_pressed("mouse_left_click") and (state == UIStateUtils.ClickState.DEFAULT or state == UIStateUtils.ClickState.SELECTED) and not self.ui_manager.is_on_ui:
 		# Update state machine
@@ -157,7 +155,7 @@ func _input(_event:InputEvent) -> void:
 		# Update state machine
 		state = UIStateUtils.ClickState.DEFAULT
 		# Empty player's unit selection
-		selected_entities.clear()
+		selected_entities.contents.clear()
 		for unit in get_tree().get_nodes_in_group("units"):
 			unit.deselect()
 	
@@ -172,12 +170,12 @@ func _input(_event:InputEvent) -> void:
 			# check if is in group unit and is enemy -> assign as target
 			# check if on resource and unit has gatherer node -> assign as resource node
 			_mouse_right_click = true
-			if not selected_entities.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
+			if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				var mouse_position :Vector2 = get_viewport().get_mouse_position()
 				
 				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 				if not camera_raycast_coords.is_zero_approx():
-					for unit in selected_entities:
+					for unit in selected_entities.contents:
 						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
 						if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
 							unit.set_gathering_target(target, is_shift)
@@ -185,7 +183,7 @@ func _input(_event:InputEvent) -> void:
 						# TODO - spread out units
 							unit.update_target_location(camera_raycast_coords, is_shift)
 	
-	### CONSTRUCTION STATES ###
+	""" CONSTRUCTION STATES """
 	if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
 		state = UIStateUtils.ClickState.DEFAULT
 		self._is_constructing = false
@@ -247,54 +245,54 @@ func cast_selection() -> void:
 	elif buildings.size() > 0:
 		new_selection = buildings
 		self.selected_type = UIStateUtils.SelectionType.BUILDINGS
-	if not CommonUtils.is_array_equal(new_selection, self.selected_entities):
-		self.selected_entities = new_selection
+	if not CommonUtils.is_array_equal(new_selection, self.selected_entities.contents):
+		self.selected_entities.contents = new_selection
 		self.selection_changed.emit(self.selected_entities, self.selected_type)
 
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
 	# update mouse visual
-	mouse_update()
+	self.mouse_update()
 	# manage left click selection rectangle
-	if _mouse_left_click:
+	if self._mouse_left_click:
 		# Update the size of the dragged rect
-		_dragged_rect_left.size = get_global_mouse_position() - _dragged_rect_left.position
+		self._dragged_rect_left.size = get_global_mouse_position() - self._dragged_rect_left.position
 	
 		# Update the UI rect's position and scale
-		update_ui_selection_rect()
-		cast_selection()
+		self.update_ui_selection_rect()
+		self.cast_selection()
 		
 		# Only show the ui_rect if it's above a certain size to avoid it always appearing
-		if _dragged_rect_left.size.length_squared() > MIN_SELECT_SQUARED:
-			ui_selection_patch.visible = true
+		if self._dragged_rect_left.size.length_squared() > self.MIN_SELECT_SQUARED:
+			self.ui_selection_patch.visible = true
 	# manage construction states
-	if state == UIStateUtils.ClickState.CONSTRUCTING:
+	if self.state == self.UIStateUtils.ClickState.CONSTRUCTING:
 		var mouse_position :Vector2 = get_viewport().get_mouse_position()
-		self.constructing_building.global_position = camera_operations.global_position_from_raycast(self.player_camera, mouse_position) + Vector3(0, 0.05, 0)
+		self.constructing_building.global_position = self.camera_operations.global_position_from_raycast(self.player_camera, mouse_position) + Vector3(0, 0.05, 0)
 		self.constructing_building.is_placement_valid()
 
 ## Modifies the size of the selection rectangle based on current position
 func update_ui_selection_rect() -> void:
 	# Gives the UI rect the same size as the dragged rect (absoluted since a NinePatchRect can't have a negative size)
-	ui_selection_patch.size = abs(_dragged_rect_left.size)
+	self.ui_selection_patch.size = abs(self._dragged_rect_left.size)
 	# Negative scaling since NinePatchRect only allows for positive sizes
 	# Scale the nine patch rect X axis by -1 to enable dragging left
-	if _dragged_rect_left.size.x < 0:
-		ui_selection_patch.scale.x = -1
+	if self._dragged_rect_left.size.x < 0:
+		self.ui_selection_patch.scale.x = -1
 	else:
-		ui_selection_patch.scale.x = 1
+		self.ui_selection_patch.scale.x = 1
 	# Scale the nine patch rect Y axis by -1 to enable dragging up
-	if _dragged_rect_left.size.y < 0:
-		ui_selection_patch.scale.y = -1
+	if self._dragged_rect_left.size.y < 0:
+		self.ui_selection_patch.scale.y = -1
 	else:
-		ui_selection_patch.scale.y = 1
+		self.ui_selection_patch.scale.y = 1
 
 ## Add building
 func _on_deploy_unit_button_pressed():
 	self._is_constructing = true
 	self.state = UIStateUtils.ClickState.CONSTRUCTING
-	self.constructing_building = preload("res://scenes/buildings/turret_gun.tscn").instantiate()
+	self.constructing_building = preload("uid://b1tdkpg420s70").instantiate()
 	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
 
@@ -302,7 +300,7 @@ func _on_deploy_unit_button_pressed():
 func _on_barracks_added():
 	self._is_constructing = true
 	self.state = UIStateUtils.ClickState.CONSTRUCTING
-	self.constructing_building = preload("res://scenes/buildings/barracks.tscn").instantiate()
+	self.constructing_building = preload("uid://bra66m3iaqt8s").instantiate()
 	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)
 
@@ -322,7 +320,7 @@ func cast_ray(camera:Camera3D) -> Dictionary:
 
 
 func _on_unit_blob_pressed():
-	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
+	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	for x in range(-10, 0):
 		for z in range(-10, 0):
 			var vehicle:Vehicle = vehicle_scene.instantiate()
@@ -331,7 +329,7 @@ func _on_unit_blob_pressed():
 
 
 func _on_enemy_unit_pressed():
-	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
+	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	var vehicle:Vehicle = vehicle_scene.instantiate()
 	vehicle.allegiance = self.player_team - 1
 	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(4, 0, 0))
@@ -341,6 +339,6 @@ func _on_enemy_unit_pressed():
 func _on_build_depot_pressed() -> void:
 	self._is_constructing = true
 	self.state = UIStateUtils.ClickState.CONSTRUCTING
-	self.constructing_building = preload("res://scenes/buildings/depot_building.tscn").instantiate()
+	self.constructing_building = preload("uid://bll0qqe2act2i").instantiate()
 	self.constructing_building.initialise_placement(self.player_team)
 	self.add_child(self.constructing_building)

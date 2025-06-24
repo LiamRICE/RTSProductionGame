@@ -15,16 +15,18 @@ const PlayerInterface:Script = preload("uid://crs777xecsrt4")
 ## Initial setup
 func _ready():
 	# Create units
-	var vehicle_scene:PackedScene = preload("res://scenes/units/vehicle.tscn")
-	var gatherer_scene:PackedScene = preload("res://scenes/units/resource_collector_unit.tscn")
-	var city_centre_scene:PackedScene = preload("res://scenes/buildings/city_centre.tscn")
-	var building = city_centre_scene.instantiate()
-	building.allegiance = 1
-	building._init_placement_collision()
-	self.add_building(building, Vector3(0,0,0))
+	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
+	var gatherer_scene:PackedScene = preload("uid://ditvkcv1wolek")
+	var city_centre_scene:PackedScene = preload("uid://bph3bulc5igvo")
 	
 	""" Wait for next frame """
 	await RenderingServer.frame_post_draw
+	
+	var building = city_centre_scene.instantiate()
+	building.allegiance = 1
+	building._init_placement_collision()
+	self.add_building(building, Vector3(0,1.5,0))
+	
 	for x in range(3):
 		var unit:Unit
 		if x < 1:
@@ -32,7 +34,7 @@ func _ready():
 		else:
 			unit = gatherer_scene.instantiate()
 		unit.allegiance = 1
-		self.add_unit(unit, Vector3(x, 0.2, 3), Vector3(x, 0.2, 3))
+		self.add_unit(unit, Vector3(x, 1.5, 3), Vector3(x, 1.5, 3))
 	
 	# Create buildings
 
@@ -52,6 +54,8 @@ func add_building(building:Building, location:Vector3) -> void:
 	if building.allegiance == self.player_interface.player_team:
 		var fow_sprite:Sprite2D = building.initialise_fog_of_war_propagation()
 		world_manager.fog_of_war_register_propagator(fow_sprite, location)
+	
+	self.world_manager.update_navigation()
 
 
 ## Adds a unit to the world

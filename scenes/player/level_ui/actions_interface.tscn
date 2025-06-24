@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://cujpnla0w646r"]
+[gd_scene load_steps=5 format=3 uid="uid://cujpnla0w646r"]
 
 [ext_resource type="Script" uid="uid://r3l8d5sfkbuw" path="res://scripts/ui/level_ui/actions_interface.gd" id="1_n0gk6"]
 [ext_resource type="PackedScene" uid="uid://c2cjvi6u0mgro" path="res://scenes/player/level_ui/actions_container.tscn" id="2_bbu8u"]
+[ext_resource type="Texture2D" uid="uid://ccaem516h0wnc" path="res://assets/ui/interface/Add.svg" id="2_daogw"]
+[ext_resource type="Texture2D" uid="uid://dbiqalsl6okpk" path="res://assets/ui/interface/Subtract.svg" id="3_p8o8t"]
 
-[node name="ActionsInterface" type="PanelContainer" node_paths=PackedStringArray("actions_container")]
+[node name="ActionsInterface" type="HBoxContainer" node_paths=PackedStringArray("actions_container")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,9 +13,33 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-mouse_filter = 1
 script = ExtResource("1_n0gk6")
-actions_container = NodePath("ActionsContainer")
+actions_container = NodePath("Panel/ActionsContainer")
 
-[node name="ActionsContainer" parent="." instance=ExtResource("2_bbu8u")]
+[node name="SideActions" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="SideActions"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlusButton" type="Button" parent="SideActions"]
+texture_filter = 1
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+icon = ExtResource("2_daogw")
+
+[node name="MinusButton" type="Button" parent="SideActions"]
+texture_filter = 1
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+icon = ExtResource("3_p8o8t")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="ActionsContainer" parent="Panel" instance=ExtResource("2_bbu8u")]
 layout_mode = 2

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b3534gvpb4lug" path="res://scripts/entities/units/resource_collector_unit.gd" id="1_ubpkj"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_c3eiw"]
 [ext_resource type="ArrayMesh" uid="uid://tey2nup14j4s" path="res://assets/kenney_space/astronautA.obj" id="3_xtrm0"]
-[ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
+[ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/entities/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1m3al"]
 size = Vector3(0.491333, 0.829468, 0.36554)

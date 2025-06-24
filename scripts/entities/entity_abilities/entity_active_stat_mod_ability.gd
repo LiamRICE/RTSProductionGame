@@ -14,6 +14,7 @@ func init_ability(parent_entity:Entity) -> void:
 ## Called when an ability is activated. This function should start the "process ability" function
 func start_ability() -> void:
 	super.start_ability()
+	print("Ability activated on ", self.get_parent())
 
 ## Called every frame once start_ability has been called until the ability times out
 func process_ability(delta:float) -> void:

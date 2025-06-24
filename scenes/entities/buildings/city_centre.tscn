@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bph3bulc5igvo"]
+[gd_scene load_steps=14 format=3 uid="uid://bph3bulc5igvo"]
 
 [ext_resource type="ArrayMesh" uid="uid://p4y0eglm5sci" path="res://assets/kenney_space/hangar_roundA.obj" id="1_jbrgn"]
 [ext_resource type="Script" uid="uid://bxjiwsbf3sthe" path="res://scripts/entities/buildings/city_centre.gd" id="1_qv66y"]
@@ -8,15 +8,25 @@
 [ext_resource type="ArrayMesh" uid="uid://2m1j7aa5xpko" path="res://assets/kenney_space/machine_generator.obj" id="4_mra1d"]
 [ext_resource type="ArrayMesh" uid="uid://ehfw045eyq21" path="res://assets/kenney_space/machine_generatorLarge.obj" id="5_qv66y"]
 [ext_resource type="ArrayMesh" uid="uid://p8qyp3llhxmp" path="res://assets/kenney_space/machine_wireless.obj" id="6_mra1d"]
-[ext_resource type="PackedScene" uid="uid://lokm0t60kg1b" path="res://scenes/buildings/BuildingModules/depot_module.tscn" id="8_lvxxa"]
+[ext_resource type="PackedScene" uid="uid://lokm0t60kg1b" path="res://scenes/entities/buildings/BuildingModules/depot_module.tscn" id="8_lvxxa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mra1d"]
-size = Vector3(2.83721, 1.28528, 4)
+size = Vector3(2, 1, 3.25)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_nwvru"]
+points = PackedVector3Array(-1.6, 0, 0, -0.8, 0, -1.4, 0.8, 0, -1.4, 1.6, 0, 0, 0.8, 0, 1.4, -0.8, 0, 1.4, -1.6, 1, 0, -0.8, 1, -1.4, 0.8, 1, -1.4, 1.6, 1, 0, 0.8, 1, 1.4, -0.8, 1, 1.4, -0.6, 1.5, 0, -0.3, 1.5, -0.55, 0.3, 1.5, -0.55, 0.6, 1.5, 0, 0.3, 1.5, 0.55, -0.3, 1.5, 0.55)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_o0tdm"]
+points = PackedVector3Array(-0.5, 0, -0.6, 0.5, 0, -0.6, 0.5, 0, 0.6, -0.5, 0, 0.6, -0.5, 0.25, -0.6, 0.5, 0.25, -0.6, 0.5, 0.25, 0.6, -0.5, 0.25, 0.6, -0.25, 0.7, -0.25, 0.25, 0.7, -0.25, -0.25, 0.7, 0.25, 0.25, 0.7, 0.25)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qp8e6"]
+height = 0.6
+radius = 0.2
 
 [node name="BaseCentre" type="Node3D" node_paths=PackedStringArray("depot_module", "production_timer", "unit_spawn_point", "rally_point", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
 script = ExtResource("1_qv66y")
 depot_module = NodePath("DepotModule")
-building_units = Array[int]([3])
+building_units = Array[int]([3, 2])
 production_timer = NodePath("ProductionTimer")
 unit_spawn_point = NodePath("SpawnPoint")
 rally_point = NodePath("RallyPoint")
@@ -49,7 +59,7 @@ mesh = ExtResource("5_qv66y")
 skeleton = NodePath("../..")
 
 [node name="MachineWireless" type="MeshInstance3D" parent="MeshContainer"]
-transform = Transform3D(-0.954553, 0, 0.298041, 0, 1, 0, -0.298041, 0, -0.954553, -1.57459, 0, 0.273071)
+transform = Transform3D(-0.954553, 0, 0.298041, 0, 1, 0, -0.298041, 0, -0.954553, -1.47459, 0, 0.173071)
 mesh = ExtResource("6_mra1d")
 skeleton = NodePath("../..")
 
@@ -63,19 +73,31 @@ collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000133757, 0.615784, -0.305481)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.019, 0.5, -0.0299999)
 shape = SubResource("BoxShape3D_mra1d")
 
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+shape = SubResource("ConvexPolygonShape3D_nwvru")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.5)
+shape = SubResource("ConvexPolygonShape3D_o0tdm")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.3, 2)
+shape = SubResource("CylinderShape3D_qp8e6")
+
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
-vertices = PackedVector3Array(-1.36105, 0, 2.26922, -0.802111, 0, 2.22306, -0.831542, 0, 1.58695, 0.763972, 0, 1.55321, 0.885377, 0, 1.94305, 0.994578, 0, 1.95243, 1.09163, 0, 0.515062, 1.48122, 0, -0.0596998, 1.6852, 0, -0.98629, 0.860255, 0, -2.43713, -0.787579, 0, -2.43705, -1.66721, 0, -1.01197, -2.02294, 0, 0.385552, -1.06781, 0, 0.706536, -1.04195, 0, 1.68368, -1.44481, 0, 1.72281)
+vertices = PackedVector3Array(-1, 0, 2.25, -0.8, 0, 2.15, -0.8, 0, 1.85, -0.9, 0, 1.45, 0.9, 0, 1.45, 0.9, 0, 2, 1, 0, 2, 1, 0, 0.4, 1.3, 0, -0.1, 1.15, 0, -0.2, 1.6, 0, -1, 0.8, 0, -2.4, -0.8, 0, -2.4, -1.6, 0, -1, -1, 0, 0.1, -1.75, 0, -0.15, -1.9, 0, 0.3, -1, 0, 0.55, -1, 0, 1.75, -1.4, 0, 1.85, -1.4, 0, 2.15)
 affect_navigation_mesh = true
 avoidance_enabled = false
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.15)
 
 [node name="RallyPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.15)
 
 [node name="ProductionTimer" type="Timer" parent="."]
 one_shot = true
