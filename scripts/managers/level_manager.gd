@@ -4,12 +4,15 @@ extends Node
 
 ## Constants
 const WorldManager:Script = preload("uid://djyeu4i21c28o")
+const EnvironmentManager:Script = preload("uid://dl1m8wjdgtkai")
+const PlayerManager:Script = preload("uid://bi34cw4c6gv1n")
 const PlayerInterface:Script = preload("uid://crs777xecsrt4")
 
 ## Nodes
+@onready var environment_manager:EnvironmentManager = %EnvironmentManager
 @onready var world_manager:WorldManager = %WorldManager
-@onready var player_manager = %PlayerManager
-@onready var player_interface:PlayerInterface = $UIManager/PlayerInterface
+@onready var player_manager:PlayerManager = %PlayerManager
+@onready var player_interface:PlayerInterface = %UIManager/PlayerInterface
 
 
 ## Initial setup
@@ -66,5 +69,9 @@ func add_unit(unit:Unit, location:Vector3, rally_point:Vector3=location) -> void
 	unit.spawn(location, rally_point) ## Place the unit
 	
 	if unit.allegiance == self.player_interface.player_team:
+		## Assign it to units with mobile FOW
 		var fow_sprite:Sprite2D = unit.initialise_fog_of_war_propagation()
 		world_manager.fog_of_war_register_propagator(fow_sprite, location)
+		
+		## Assign the unit to trigger a path mesh update on the environment effects
+		unit.path_updated.connect(self.environment_manager.add_mesh_path)

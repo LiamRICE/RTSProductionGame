@@ -1,5 +1,8 @@
 class_name ProductionBuilding extends Building
 
+## Constants
+const PlayerManager:Script = preload("uid://bi34cw4c6gv1n")
+
 ## Signals
 signal unit_constructed(unit:Unit, position:Vector3, move_order:Vector3)
 

@@ -1,19 +1,19 @@
 class_name Unit extends Entity
 
+## Constants
 const unit_utils:Script = preload("res://scripts/utilities/unit_utils.gd")
-const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 
-# path information
+## Signals
+signal path_updated(Entity, PackedVector3Array)
+
+## Path Information
 @export_group("Navigation")
 var current_path : PackedVector3Array
 var next_point : Vector3
 var path_index : int = 0
 @export var path_point_margin : float = 0.1
 
-## Navigation rendering
-var path_mesh_instances:Array[MeshInstance3D] = []
-
-# selection
+## Selection
 @onready var selection_sprite : Sprite3D = $SelectionSprite3D
 var TEAM : int
 
@@ -112,19 +112,4 @@ func move(delta:float):
 
 ## Debug method : draws a mesh polyline to represent the unit's chosen navigation path
 func debug_render_unit_path(path:PackedVector3Array) -> void:
-	if self.path_mesh_instances.size() > 0:
-		for mesh in self.path_mesh_instances:
-			mesh.free()
-		self.path_mesh_instances.clear()
-	
-	if path.size() <= 0:
-		return
-	
-	var point_array:Array[Vector3] = []
-	point_array.resize(path.size())
-	for i in path.size():
-		point_array[i] = path[i]
-	self.path_mesh_instances = MeshCommonTools.create_polyline(point_array, [Color.RED] as Array[Color])
-	for mesh in self.path_mesh_instances:
-		self.add_child(mesh)
-		mesh.owner = self
+	self.path_updated.emit(self, path)

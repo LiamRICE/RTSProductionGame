@@ -1,7 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=19 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
+[ext_resource type="Script" uid="uid://dl1m8wjdgtkai" path="res://scripts/managers/environment_manager.gd" id="2_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://di2dykp7unme6" path="res://scenes/entities/resources/resource_node.tscn" id="3_4c57u"]
 [ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://cxc08ltwhh3no" path="res://scenes/terrain/random_map_generator.tscn" id="4_w48qg"]
@@ -47,8 +48,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 5)
 unique_name_in_owner = true
 script = ExtResource("1_1bvp3")
 
-[node name="EnvironmentManager" type="Node" parent="LevelManager"]
+[node name="EnvironmentManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("static_effects")]
 unique_name_in_owner = true
+script = ExtResource("2_ycdy4")
+static_effects = NodePath("StaticEffects")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="LevelManager/EnvironmentManager"]
 environment = SubResource("Environment_1bvp3")
@@ -57,6 +60,8 @@ environment = SubResource("Environment_1bvp3")
 transform = Transform3D(0.866025, 0.353553, -0.353554, 0, 0.707107, 0.707106, 0.5, -0.612372, 0.612373, 0, 5.3, 0)
 shadow_enabled = true
 directional_shadow_blend_splits = true
+
+[node name="StaticEffects" type="Node" parent="LevelManager/EnvironmentManager"]
 
 [node name="WorldManager" type="Node" parent="LevelManager" node_paths=PackedStringArray("map_generator", "world_timer", "fog_of_war_mesh")]
 unique_name_in_owner = true

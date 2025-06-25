@@ -1,4 +1,4 @@
-class_name PlayerManager extends Node
+extends Node
 
 # Loading Script Classes
 const UIManager := preload("res://scripts/managers/ui_manager.gd")
