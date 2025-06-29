@@ -12,8 +12,8 @@ signal map_generation_completed(size:Vector2i)
 @export_tool_button("Reset Map") var _reset_map_method:Callable = self.clear
 
 @export_group("Map Properties")
-@export var size:Vector2i = Vector2(64, 64)
-@export var height:float = 5
+@export var size:Vector2i = Vector2(128, 128) ## Size of the map. Must be a power of two or divisible by a power of two (eg. 16, 32, etc...)
+@export var height:int = 5 ## The number of different height levels in the map.
 
 ## Internal properties
 var rng:RandomNumberGenerator

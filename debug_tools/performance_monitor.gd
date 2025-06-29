@@ -6,7 +6,9 @@ extends Control
 @onready var draw_calls_display:Label = $PanelContainer/VBoxContainer/DrawCalls
 @onready var vram_usage:Label = $PanelContainer/VBoxContainer/VRAMUsage
 @onready var fow_display:Label = $PanelContainer/VBoxContainer/FOW_Update
-@onready var fow_vis = $PanelContainer/VBoxContainer/FOW_vis
+@onready var fow_vis:Label = $PanelContainer/VBoxContainer/FOW_vis
+@onready var nav_parse_time:Label = $PanelContainer/VBoxContainer/NavParseTime
+@onready var nav_update_time:Label = $PanelContainer/VBoxContainer/NavUpdateTime
 
 func _process(delta:float) -> void:
 	var FPS:float = Performance.get_monitor(Performance.TIME_FPS)
@@ -15,6 +17,8 @@ func _process(delta:float) -> void:
 	var vram:float = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1000000.0
 	var FOW_time:float = Performance.get_custom_monitor("Fog of War/Position Update Time")
 	var FOW_vis:float = Performance.get_custom_monitor("Fog of War/Visibility Update Time")
+	var nav_bake:float = Performance.get_custom_monitor("Navigation/Navigation Bake Time")
+	var nav_parse:float = Performance.get_custom_monitor("Navigation/Geometry Parse Time")
 	
 	self.fps_display.text = "Performance = " + str(FPS) + " FPS"
 	self.display_ms.text = "Frame time : " + frame_time + " ms"
@@ -22,3 +26,5 @@ func _process(delta:float) -> void:
 	self.vram_usage.text = "VRAM Used : " + str(snappedf(vram, 0.01)) + " MiB"
 	self.fow_display.text = "FOW update time = " + str(FOW_time) + " µs"
 	self.fow_vis.text = "FOW visibility update = " + str(FOW_vis) + " µs"
+	self.nav_parse_time.text = "Navigation parse time = " + str(nav_parse) + " µs"
+	self.nav_update_time.text = "Navigation bake time = " + str(nav_bake) + " µs"

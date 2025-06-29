@@ -56,3 +56,13 @@ text = "FOW update time = "
 layout_mode = 2
 mouse_filter = 1
 text = "FOW visibility update = "
+
+[node name="NavParseTime" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Navigation parse time = "
+
+[node name="NavUpdateTime" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Navigation bake time = "

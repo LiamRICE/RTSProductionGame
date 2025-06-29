@@ -5,6 +5,8 @@ extends Node
 const TimingTool:Script = preload("uid://c63jpqrvvcvpa")
 var geom_parse:TimingTool = TimingTool.new("Source Geometry Parsing")
 var nav_calc:TimingTool = TimingTool.new("Navigation Mesh Baking")
+var geom_parse_time:float = 0
+var nav_calc_time:float = 0
 var fow_update_time:TimingTool = TimingTool.new("Fog of War Objects Update")
 var fow_visibility_update:TimingTool = TimingTool.new("Fog of War Visibility Update")
 var fow_position_update_time:float = 0
@@ -22,15 +24,20 @@ const MapGenerator:Script = preload("uid://dxvkb5diu86pt")
 @export var world_timer:Timer
 
 ## Fog Of War Data
-@export var fog_of_war_texture:FogOfWarTexture
+var fog_of_war_texture:FogOfWarTexture
 @export var fog_of_war_mesh:FogOfWarMesh
 @export var fog_of_war_resolution:int = 4 ## Resolution of the fog of war in pixels per metre
 
 ## Navigation Data
+@export_group("Navigation")
 var source_geometry_data:NavigationMeshSourceGeometryData3D
+var navigation_mesh:NavigationMesh
 var navigation_map:RID
 var navigation_region:RID
-var navigation_mesh:NavigationMesh
+
+@export var navigation_chunk_size:Vector2i = Vector2i(32, 32) ## The size of each navigation region. Must be a power of two.
+@export_flags_3d_navigation var navigation_layers:int = 1
+var navigation_chunks:Array[NavigationChunk] = [] ## Dictionary of chunks. Each chunk is 
 
 ## Navigation state
 var is_baking:bool = false
@@ -40,6 +47,8 @@ func _ready() -> void:
 	## Register monitors for performance
 	Performance.add_custom_monitor("Fog of War/Position Update Time", self._get_fow_position_update_time)
 	Performance.add_custom_monitor("Fog of War/Visibility Update Time", self._get_fow_visibility_update_time)
+	Performance.add_custom_monitor("Navigation/Navigation Bake Time", self._get_nav_bake_time)
+	Performance.add_custom_monitor("Navigation/Geometry Parse Time", self._get_nav_parse_time)
 	
 	## Generate the terrain
 	self.map_generator.map_generation_completed.connect(self._initialise_fog_of_war)
@@ -95,24 +104,9 @@ func _get_fow_visibility_update_time() -> float:
 ##-- NAVIGATION --##
 ##----------------##
 
+
 ## Initialise navigation map
 func _initialise_navigation() -> void:
-	## Create the navigation mesh and adjust it's settings
-	self.navigation_mesh = NavigationMesh.new()
-	self.navigation_mesh.cell_height = 0.1
-	self.navigation_mesh.cell_size = 0.1
-	self.navigation_mesh.agent_radius = 0.2
-	self.navigation_mesh.set_parsed_geometry_type(NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS)
-	self.navigation_mesh.set_collision_mask_value(1, true)
-	self.navigation_mesh.set_collision_mask_value(2, false)
-	self.navigation_mesh.set_collision_mask_value(3, false)
-	self.navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
-	self.navigation_mesh.set_agent_max_climb(0.1)
-	self.navigation_mesh.set_agent_max_slope(30)
-	self.navigation_mesh.set_edge_max_length(5)
-	self.navigation_mesh.set_edge_max_error(0.8)
-	self.navigation_mesh.sample_partition_type = NavigationMesh.SAMPLE_PARTITION_WATERSHED
-	
 	## Update navigation server
 	self.source_geometry_data = NavigationMeshSourceGeometryData3D.new()
 	if NavigationServer3D.get_maps().size() > 0:
@@ -121,43 +115,153 @@ func _initialise_navigation() -> void:
 		self.navigation_map = NavigationServer3D.map_create()
 		NavigationServer3D.map_set_cell_size(self.navigation_map, 0.1)
 		NavigationServer3D.map_set_cell_height(self.navigation_map, 0.1)
-	self.navigation_region = NavigationServer3D.region_create()
-	NavigationServer3D.region_set_map(self.navigation_region, self.navigation_map)
-	self.update_navigation()
+	
+	## Create the navigation chunks
+	self.navigation_chunks.resize((self.map_generator.size.x / self.navigation_chunk_size.x) * (self.map_generator.size.y / self.navigation_chunk_size.y))
+	NavigationChunk.source_geometry_data = self.source_geometry_data ## Set the static variable source_geometry_data
+	var index:int = 0
+	for x in range(-self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.navigation_chunk_size.x):
+		for z in range(-self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.navigation_chunk_size.y):
+			var chunk:NavigationChunk = NavigationChunk.new(Vector3(x, 0, z), self.navigation_map, self.navigation_chunk_size)
+			chunk.bake_completed.connect(self._bake_completed)
+			self.navigation_chunks[index] = chunk
+			index += 1
+	
+	## Start the navigation baking
+	self._parse_navigation_source_geometry()
 
-## Starts the baking process for the navigation map. Parses the scene tree and hands the parsed data to the navigation server for baking
-func update_navigation():
-	if self.is_baking:
-		self.has_bake_update_queued = true
-		return
-	geom_parse.debug_timer_start() ## DEBUG
-	self.is_baking = true
-	NavigationServer3D.parse_source_geometry_data(self.navigation_mesh, self.source_geometry_data, self.get_tree().root, self._bake_navigation)
+## Starts the baking process for the navigation map. Uses the navigation mesh source geometry data and sends it to the navigation server for baking.
+## Queues a bake if one is already underway
+func update_navigation_map(location:Vector3 = Vector3.ZERO):
+	self.geom_parse_time = geom_parse.debug_timer_stop() ## DEBUG
+	print("Baking navigation")
+	self._bake_navigation(location)
+
+## Registers the building as a navigation obstacle and queues a rebake of the navigation mesh. Must be called after placing the building in it's final location.
+func register_navigation_obstacle(obstacle:Building) -> void:
+	print("Registering new obstacle")
+	self.geom_parse.debug_timer_start() ## DEBUG
+	var vertices:PackedVector3Array = PackedVector3Array(obstacle.navigation_obstacle.vertices)
+	for index in range(vertices.size()):
+		vertices.set(index, vertices[index] + obstacle.navigation_obstacle.global_position)
+	self.source_geometry_data.add_projected_obstruction(vertices,
+														obstacle.navigation_obstacle.global_position.y,
+														obstacle.navigation_obstacle.height,
+														obstacle.navigation_obstacle.carve_navigation_mesh)
+	self.update_navigation_map(obstacle.global_position)
+
+## Parses the navigation source geometry (the terrain map) and then queues a navigation mesh bake
+func _parse_navigation_source_geometry() -> void:
+	print("Parsing navigation source geometry")
+	self.geom_parse.debug_timer_start() ## DEBUG
+	NavigationServer3D.parse_source_geometry_data(self.navigation_chunks[0].navigation_mesh, self.source_geometry_data, self.get_tree().root, self.update_navigation_map)
 
 ## Once the scene tree has been parsed, bake the navigation mesh
-func _bake_navigation() -> void:
-	var time = geom_parse.debug_timer_stop()
-	print("Process ", geom_parse.process_name, " completed in ", time, " µs.")
-	nav_calc.debug_timer_start()
-	NavigationServer3D.bake_from_source_geometry_data_async(self.navigation_mesh, self.source_geometry_data, self._bake_completed)
+func _bake_navigation(location:Vector3 = Vector3.ZERO) -> void:
+	self.nav_calc.debug_timer_start() ## DEBUG
+	if location == Vector3.ZERO:
+		print("All chunks baking...")
+		for chunk in self.navigation_chunks:
+			chunk.update_navigation_map()
+	else:
+		## Find which chunks are affected by the navigation rebake
+		var positions_array:Array[Vector2i] = []
+		for x in range(-4, 5, 8):
+			for y in range(-4, 5, 8):
+				var loc:Vector2i = _position_to_navigation_chunk_position(location + Vector3(x, 0, y))
+				if not positions_array.has(loc): positions_array.append(loc)
+		print(positions_array)
+		## Update these chunks
+		for pos in positions_array:
+			self.navigation_chunks[pos.x * (self.map_generator.size.x / self.navigation_chunk_size.x) + pos.y].update_navigation_map()
 
-## When the navigation mesh has been baked, send the conpleted mesh to the navigation region of the world manager
 func _bake_completed() -> void:
-	var time = nav_calc.debug_timer_stop()
-	print("Process ", nav_calc.process_name, " completed in ", time, " µs.")
-	NavigationServer3D.region_set_navigation_mesh(self.navigation_region, self.navigation_mesh)
-	NavigationServer3D.region_set_transform(self.navigation_region, Transform3D(Basis.IDENTITY, Vector3(0, -self.navigation_mesh.agent_radius, 0)))
-	NavigationServer3D.set_debug_enabled(true)
+	self.nav_calc_time = nav_calc.debug_timer_stop() ## DEBUG
+
+func _position_to_navigation_chunk_position(location:Vector3) -> Vector2i:
+	var location_2d:Vector2i = Vector2i(roundi(location.x), roundi(location.z))
+	location_2d -= self.navigation_chunk_size / 2
+	return (location_2d.snapped(self.navigation_chunk_size) + self.map_generator.size / 2) / self.navigation_chunk_size
+
+func _get_nav_bake_time() -> float:
+	return self.nav_calc_time
+
+func _get_nav_parse_time() -> float:
+	return self.geom_parse_time
+
+########################
+## NAVIGATION CLASSES ##
+########################
+
+class NavigationChunk:
+	## Static variables
+	static var source_geometry_data:NavigationMeshSourceGeometryData3D
+	## Chunk variables
+	var position:Vector3
+	var region_rid:RID
+	var navigation_mesh:NavigationMesh
+	## Control variables
+	var is_baking:bool = false
+	var has_bake_update_queued:bool = false
+	## Debug
+	var debug_node:Node
+	signal bake_completed
 	
-	## DEBUG - create a dummy region for debugging
-	var region:NavigationRegion3D = NavigationRegion3D.new()
-	region.navigation_mesh = self.navigation_mesh
-	region.enabled = false
-	self.add_child(region)
-	region.owner = self
+	func _init(position:Vector3, navigation_map:RID, chunk_size:Vector2i, debug_vis_node:Node = null) -> void:
+		self.position = position
+		self.region_rid = NavigationServer3D.region_create()
+		## Create the navigation mesh and adjust it's settings
+		self.navigation_mesh = NavigationMesh.new()
+		self.navigation_mesh.set_cell_height(0.1)
+		self.navigation_mesh.set_cell_size(0.1)
+		self.navigation_mesh.set_agent_radius(0.2)
+		self.navigation_mesh.set_parsed_geometry_type(NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS)
+		self.navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
+		self.navigation_mesh.set_sample_partition_type(NavigationMesh.SAMPLE_PARTITION_WATERSHED)
+		self.navigation_mesh.set_agent_max_climb(0.1)
+		self.navigation_mesh.set_agent_max_slope(30)
+		self.navigation_mesh.set_edge_max_length(5)
+		self.navigation_mesh.set_edge_max_error(1.5)
+		chunk_size = chunk_size + Vector2i(4, 4)
+		self.navigation_mesh.set_filter_baking_aabb(AABB(Vector3(-(chunk_size.x / 2), -4, -(chunk_size.y / 2)), Vector3(chunk_size.x, 12, chunk_size.y)))
+		self.navigation_mesh.set_filter_baking_aabb_offset(position)
+		self.navigation_mesh.set_border_size(2)
+		## Set navigation layers
+		self.navigation_mesh.set_collision_mask_value(1, true)
+		self.navigation_mesh.set_collision_mask_value(2, false)
+		self.navigation_mesh.set_collision_mask_value(3, false)
+		
+		## Set the region in the navigation server
+		NavigationServer3D.region_set_map(self.region_rid, navigation_map)
+		self.debug_node = debug_vis_node
 	
-	## Check if another map bake is queued
-	self.is_baking = false
-	if self.has_bake_update_queued:
-		self.has_bake_update_queued = false
-		self.update_navigation()
+	func update_navigation_map():
+		if self.is_baking:
+			self.has_bake_update_queued = true
+			return
+		else:
+			self._bake_navigation()
+	
+	func _bake_navigation() -> void:
+		self.is_baking = true
+		NavigationServer3D.bake_from_source_geometry_data_async(self.navigation_mesh, self.source_geometry_data, self._bake_completed)
+	
+	func _bake_completed() -> void:
+		NavigationServer3D.region_set_navigation_mesh(self.region_rid, self.navigation_mesh)
+		NavigationServer3D.region_set_transform(self.region_rid, Transform3D(Basis.IDENTITY, Vector3(0, -self.navigation_mesh.agent_radius, 0)))
+		
+		## Check is the debug vis node is added
+		if not self.debug_node == null:
+			var region:NavigationRegion3D = NavigationRegion3D.new()
+			region.navigation_mesh = self.navigation_mesh
+			region.enabled = false
+			self.debug_node.add_child(region)
+			region.owner = self.debug_node
+		
+		self.bake_completed.emit() ## Debug
+		
+		## Check if another map bake is queued
+		self.is_baking = false
+		if self.has_bake_update_queued:
+			self.has_bake_update_queued = false
+			self.update_navigation_map()

@@ -46,19 +46,18 @@ func _ready():
 
 ## Adds a building to the world
 func add_building(building:Building, location:Vector3) -> void:
-	var player:Node = player_manager.get_node("Player" + str(building.allegiance))
+	var player:Node = self.player_manager.get_node("Player" + str(building.allegiance))
 	## Add the building to the list of player buildings
 	player.get_node("Buildings").add_child(building)
 	building.place(location) ## Place the building
+	self.world_manager.register_navigation_obstacle(building) ## Registers the building to the navigation system and queues a rebake
 	
 	if building is ProductionBuilding:
 		building.unit_constructed.connect(add_unit)
 	
 	if building.allegiance == self.player_interface.player_team:
 		var fow_sprite:Sprite2D = building.initialise_fog_of_war_propagation()
-		world_manager.fog_of_war_register_propagator(fow_sprite, location)
-	
-	self.world_manager.update_navigation()
+		self.world_manager.fog_of_war_register_propagator(fow_sprite, location)
 
 
 ## Adds a unit to the world

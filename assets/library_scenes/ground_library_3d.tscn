@@ -38,10 +38,10 @@ size = Vector3(1, 0.5, 0.5)
 points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0.5, -0.1, -0.5, 0.5, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.1, 0.5, 0, 0.5)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_re7r1"]
-points = PackedVector3Array(-0.5, 0, -0.5, 0, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0.5, 0, 0.5, 0, 0.5, -0.25, 0, 0.25, 0.12, 0.5, -0.12)
+points = PackedVector3Array(-0.5, 0, -0.5, 0, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0.5, 0, 0.5, 0, 0.5)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_08sp6"]
-points = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0.5, 0, -0.5, 0.5, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.5, 0, 0.5, 0.5)
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1itn7"]
+points = PackedVector3Array(-0.5, 0, -0.5, 0.5, 0, -0.5, 0.5, 0, 0.5, 0, 0, 0.5, -0.5, 0, 0, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, -0.5, -0.5, 0, -0.5, -0.5, 0.5)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7i2ck"]
 points = PackedVector3Array(-0.5, 0, -0.5, 0, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0, -0.5, 0.5, 0, 0.5, 0, 0, 0.5)
@@ -113,6 +113,7 @@ shape = SubResource("BoxShape3D_ygrpk")
 
 [node name="terrain_ramp" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("7_3b84l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp"]
@@ -122,6 +123,7 @@ shape = SubResource("ConvexPolygonShape3D_3b84l")
 
 [node name="terrain_ramp_large" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("8_1itn7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large"]
@@ -131,6 +133,7 @@ shape = SubResource("ConvexPolygonShape3D_88xeo")
 
 [node name="terrain_ramp_large_detailed" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("9_re7r1")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_ramp_large_detailed"]
@@ -148,6 +151,7 @@ shape = SubResource("BoxShape3D_re7r1")
 
 [node name="terrain_side" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("10_u3yxi")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side"]
@@ -157,6 +161,7 @@ shape = SubResource("ConvexPolygonShape3D_3b84l")
 
 [node name="terrain_side_cliff" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("11_08sp6")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_cliff"]
@@ -179,15 +184,18 @@ shape = SubResource("ConvexPolygonShape3D_re7r1")
 
 [node name="terrain_side_corner_inner" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("13_o4stj")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_corner_inner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="terrain_side_corner_inner/StaticBody3D"]
-shape = SubResource("ConvexPolygonShape3D_08sp6")
+shape = SubResource("ConvexPolygonShape3D_1itn7")
 
 [node name="terrain_side_end" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("14_dlg4g")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="terrain_side_end"]
@@ -201,6 +209,7 @@ shape = SubResource("ConvexPolygonShape3D_7i2ck")
 
 [node name="terrain_side_end_mirror" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 mesh = ExtResource("15_1itn7")
 skeleton = NodePath("../terrain_side_end")
 
