@@ -18,6 +18,7 @@ config/icon="uid://bva3m1240mv2f"
 [autoload]
 
 EntityDatabase="*res://scenes/managers/entity_database.tscn"
+EntityNavigationServer="*res://scenes/managers/entity_path_server.tscn"
 
 [debug]
 
@@ -129,3 +130,10 @@ rotate_modifier={
 3d/physics_engine="Jolt Physics"
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
 3d/default_gravity_vector=Vector3(0, 0, 0)
+
+[rendering]
+
+lights_and_shadows/directional_shadow/size=8192
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
+lights_and_shadows/positional_shadow/atlas_size=8192

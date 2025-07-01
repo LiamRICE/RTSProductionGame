@@ -12,6 +12,11 @@ var current_path : PackedVector3Array
 var next_point : Vector3
 var path_index : int = 0
 @export var path_point_margin : float = 0.1
+var is_shift:bool = false
+var is_waiting_for_path:bool = false
+var has_pending_request:bool = false
+var is_queued_shift:bool = false
+var pending_target:Vector3
 
 ## Selection
 @onready var selection_sprite : Sprite3D = $SelectionSprite3D
@@ -27,7 +32,7 @@ func _ready():
 func spawn(location:Vector3, rally_point:Vector3) -> void:
 	self.global_position = location
 	self.basis = Basis.IDENTITY
-	set_navigation_path(rally_point)
+	call_deferred("set_navigation_path", rally_point)
 
 
 func _physics_process(delta: float) -> void:
@@ -46,34 +51,47 @@ func deselect():
 
 
 # order the unit to move to a location
-func set_navigation_path(location:Vector3, is_shift:bool = false):
+func set_navigation_path(location:Vector3, is_shift:bool = false) -> void:
 	"""
 	Function description stuff...
 	"""
-	var path:PackedVector3Array
 	# check that object is in tree
 	if is_inside_tree():
-		# fetch the world's navigation map
-		var map_RID:RID = NavigationServer3D.get_maps()[0]
-		# Fetch safe coordinates
-		var safe_start:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, global_position)
-		if is_shift:
-			if len(self.current_path) > 0:
-				safe_start = self.current_path[len(self.current_path)-1]
-		var safe_end:Vector3 = NavigationServer3D.map_get_closest_point(map_RID, location)
-		# caluclate the path
-		path = NavigationServer3D.map_get_path(map_RID, safe_start, safe_end, true)
-		# return the path
-	if is_shift:
+		## Check if a path is currently being fetched
+		if self.is_waiting_for_path:
+			## Store new request to process after current one finishes
+			self.pending_target = location
+			self.has_pending_request = true
+			self.is_queued_shift = is_shift
+		else:
+			self.is_shift = is_shift
+			self._request_path_async(location)
+
+func _request_path_async(location:Vector3) -> void:
+	self.is_waiting_for_path = true
+	self.has_pending_request = false
+	## Fetch start coordinates
+	var start:Vector3
+	if self.is_shift and self.current_path.size() > 0:
+		start = self.current_path[self.current_path.size() - 1]
+	else:
+		start = global_position
+	EntityNavigationServer.request_path(self, start, location)
+
+func _path_received(path: PackedVector3Array) -> void:
+	self.is_waiting_for_path = false
+	if self.is_shift:
 		self.current_path.append_array(path)
 	else:
-		self.current_path.clear()
-		self.current_path.append_array(path)
-		self.path_index = 0
+		self.current_path = path
 	
 	## Debug - TODO Maybe turn this into an effect
-	debug_render_unit_path(current_path)
+	debug_render_unit_path(self.current_path)
 
+	# If there's a buffered request, send it now
+	if self.has_pending_request:
+		self.is_shift = self.is_queued_shift
+		self._request_path_async(self.pending_target)
 
 func update_target_location(target_location:Vector3, is_shift:bool = false):
 	# raycast target location

@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, cull_disabled, depth_draw_always, shadows_disabled;
+render_mode unshaded, depth_draw_always, shadows_disabled, cull_back;
 
 uniform sampler2D heightmap : filter_nearest, repeat_disable;
 uniform sampler2D fog_noise : filter_linear, repeat_enable;
