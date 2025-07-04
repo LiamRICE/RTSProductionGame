@@ -32,3 +32,13 @@ collision_mask = 4
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00595093, 0.399033, -0.0187988)
 shape = SubResource("BoxShape3D_4hctu")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.225009, 0.32449, -0.527551)
+spot_range = 8.0
+spot_angle = 30.0
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.225, 0.324, -0.528)
+spot_range = 8.0
+spot_angle = 30.0

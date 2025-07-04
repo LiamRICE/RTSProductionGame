@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dkve5n5x16hga"]
+[gd_scene load_steps=20 format=3 uid="uid://dkve5n5x16hga"]
 
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
@@ -22,10 +22,21 @@ sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
 [sub_resource type="Environment" id="Environment_1bvp3"]
 background_mode = 2
 sky = SubResource("Sky_h2yge")
+ambient_light_source = 3
+reflected_light_source = 2
 tonemap_mode = 3
+ssr_enabled = true
 ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+glow_enabled = true
+fog_density = 0.005
+fog_height = -5.0
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_ycdy4"]
 
 [sub_resource type="Image" id="Image_ycdy4"]
 data = {
@@ -55,10 +66,12 @@ static_effects = NodePath("StaticEffects")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="LevelManager/EnvironmentManager"]
 environment = SubResource("Environment_1bvp3")
+camera_attributes = SubResource("CameraAttributesPhysical_ycdy4")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="LevelManager/EnvironmentManager"]
 transform = Transform3D(0.866025, 0.17101, -0.469846, 0, 0.939692, 0.34202, 0.5, -0.296198, 0.813798, 0, 5.3, 0)
 shadow_enabled = true
+shadow_bias = 0.015
 shadow_blur = 0.4
 directional_shadow_split_1 = 0.15
 directional_shadow_split_2 = 0.3

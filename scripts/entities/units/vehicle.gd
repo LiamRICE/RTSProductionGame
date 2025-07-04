@@ -40,7 +40,7 @@ func move(delta:float):
 	""" ROTATION """
 	
 	## Point unit towards the next path point
-	var relative_target:Vector3 = self.next_point - self.target_position
+	var relative_target:Vector3 = self.next_point - self.global_position
 	if not relative_target.is_zero_approx():
 		var target_quaternion = Quaternion(Basis.looking_at(relative_target))
 		self.quaternion = self.rotation_dynamics.update(delta, target_quaternion)
