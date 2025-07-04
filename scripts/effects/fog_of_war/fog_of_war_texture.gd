@@ -5,7 +5,7 @@ signal fog_of_war_updated ## Emited when the fog of war texture has changed
 signal _image_conversion_complete ## Emitted when the conversion from a texture to an image is completed
 
 ## Nodes for rendering the fog of war and tracking unit positions
-@onready var fog_of_way_view_container:SubViewportContainer = $FOWContainer
+@onready var fog_of_war_view_container:SubViewportContainer = $FOWContainer
 @onready var fog_of_war_viewport:SubViewport = %FOWViewport
 @onready var fog_of_war_camera:Camera2D = %FOWViewport/FOWCamera
 @onready var fog_of_war_sprite:Sprite2D = %FOWViewport/FOWTexture
@@ -18,6 +18,7 @@ var fog_of_war_viewport_image:Image
 ## Creates a new fog of war texture of the specified size
 func new_fog_of_war(texture_size:Vector2i) -> void:
 	fog_of_war_viewport.size = texture_size
+	self.fog_of_war_view_container.pivot_offset.y = fog_of_war_viewport.size.y ## Debug viewport positioning
 	
 	## Explicitly tell the camera to render to the subviewport
 	assert(fog_of_war_camera.get_viewport() == self.fog_of_war_viewport)
