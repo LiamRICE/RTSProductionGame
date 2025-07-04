@@ -16,6 +16,7 @@ var fow_visibility_time:float = 0
 const FogOfWarTexture:Script = preload("uid://hjkey36jrmgt")
 const FogOfWarMesh:Script = preload("uid://cwlxvuyy3e330")
 const MapGenerator:Script = preload("uid://dxvkb5diu86pt")
+const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 
 ## Terrain Generation
 @export var map_generator:MapGenerator
@@ -31,9 +32,10 @@ var fog_of_war_texture:FogOfWarTexture
 ## Navigation Data
 @export_group("Navigation")
 var source_geometry_data:NavigationMeshSourceGeometryData3D
-var navigation_mesh:NavigationMesh
 var navigation_map:RID
-var navigation_region:RID
+var navigation_cell_size:float = 0.1
+var navigation_cell_height:float = 0.1
+#var debug_navigation_shader:Shader = preload("uid://cjf4rhl5exh5t")
 
 @export var navigation_chunk_size:Vector2i = Vector2i(32, 32) ## The size of each navigation region. Must be a power of two.
 @export_flags_3d_navigation var navigation_layers:int = 1
@@ -113,8 +115,8 @@ func _initialise_navigation() -> void:
 		self.navigation_map = NavigationServer3D.get_maps()[0]
 	else:
 		self.navigation_map = NavigationServer3D.map_create()
-		NavigationServer3D.map_set_cell_size(self.navigation_map, 0.1)
-		NavigationServer3D.map_set_cell_height(self.navigation_map, 0.1)
+		NavigationServer3D.map_set_cell_size(self.navigation_map, self.navigation_cell_size)
+		NavigationServer3D.map_set_cell_height(self.navigation_map, self.navigation_cell_height)
 	
 	## Create the navigation chunks
 	self.navigation_chunks.resize((self.map_generator.size.x / self.navigation_chunk_size.x) * (self.map_generator.size.y / self.navigation_chunk_size.y))
@@ -122,7 +124,7 @@ func _initialise_navigation() -> void:
 	var index:int = 0
 	for x in range(-self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.navigation_chunk_size.x):
 		for z in range(-self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.navigation_chunk_size.y):
-			var chunk:NavigationChunk = NavigationChunk.new(Vector3(x, 0, z), self.navigation_map, self.navigation_chunk_size)
+			var chunk:NavigationChunk = NavigationChunk.new(Vector3(x, 0, z), self.navigation_map, self.navigation_chunk_size, self.navigation_cell_size, self.navigation_cell_height, $DebugNavRegions)
 			chunk.bake_completed.connect(self._bake_completed)
 			self.navigation_chunks[index] = chunk
 			index += 1
@@ -139,7 +141,7 @@ func update_navigation_map(location:Vector3 = Vector3.ZERO):
 
 ## Registers the building as a navigation obstacle and queues a rebake of the navigation mesh. Must be called after placing the building in it's final location.
 func register_navigation_obstacle(obstacle:Building) -> void:
-	print("Registering new obstacle")
+	print("Registering new obstacle") ## DEBUG
 	self.geom_parse.debug_timer_start() ## DEBUG
 	var vertices:PackedVector3Array = PackedVector3Array(obstacle.navigation_obstacle.vertices)
 	for index in range(vertices.size()):
@@ -160,7 +162,7 @@ func _parse_navigation_source_geometry() -> void:
 func _bake_navigation(location:Vector3 = Vector3.ZERO) -> void:
 	self.nav_calc.debug_timer_start() ## DEBUG
 	if location == Vector3.ZERO:
-		print("All chunks baking...")
+		print("All chunks baking...") ## DEBUG
 		for chunk in self.navigation_chunks:
 			chunk.update_navigation_map()
 	else:
@@ -170,7 +172,6 @@ func _bake_navigation(location:Vector3 = Vector3.ZERO) -> void:
 			for y in range(-4, 5, 8):
 				var loc:Vector2i = _position_to_navigation_chunk_position(location + Vector3(x, 0, y))
 				if not positions_array.has(loc): positions_array.append(loc)
-		print(positions_array)
 		## Update these chunks
 		for pos in positions_array:
 			self.navigation_chunks[pos.x * (self.map_generator.size.x / self.navigation_chunk_size.x) + pos.y].update_navigation_map()
@@ -205,20 +206,23 @@ class NavigationChunk:
 	var has_bake_update_queued:bool = false
 	## Debug
 	var debug_node:Node
+	var debug_region:NavigationRegion3D = NavigationRegion3D.new()
+	var debug_shader:Shader
+	var debug_material:ShaderMaterial = ShaderMaterial.new()
 	signal bake_completed
 	
-	func _init(position:Vector3, navigation_map:RID, chunk_size:Vector2i, debug_vis_node:Node = null) -> void:
+	func _init(position:Vector3, navigation_map:RID, chunk_size:Vector2i, cell_size:float, cell_height:float, debug_vis_node:Node = null, debug_shader:Shader = null) -> void:
 		self.position = position
 		self.region_rid = NavigationServer3D.region_create()
 		## Create the navigation mesh and adjust it's settings
 		self.navigation_mesh = NavigationMesh.new()
-		self.navigation_mesh.set_cell_height(0.1)
-		self.navigation_mesh.set_cell_size(0.1)
-		self.navigation_mesh.set_agent_radius(0.2)
+		self.navigation_mesh.set_cell_height(cell_height)
+		self.navigation_mesh.set_cell_size(cell_size)
+		self.navigation_mesh.set_agent_radius(cell_size * 2)
 		self.navigation_mesh.set_parsed_geometry_type(NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS)
 		self.navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
 		self.navigation_mesh.set_sample_partition_type(NavigationMesh.SAMPLE_PARTITION_WATERSHED)
-		self.navigation_mesh.set_agent_max_climb(0.1)
+		self.navigation_mesh.set_agent_max_climb(cell_size)
 		self.navigation_mesh.set_agent_max_slope(30)
 		self.navigation_mesh.set_edge_max_length(5)
 		self.navigation_mesh.set_edge_max_error(1.5)
@@ -234,6 +238,7 @@ class NavigationChunk:
 		## Set the region in the navigation server
 		NavigationServer3D.region_set_map(self.region_rid, navigation_map)
 		self.debug_node = debug_vis_node
+		self.debug_shader = debug_shader
 	
 	func update_navigation_map():
 		if self.is_baking:
@@ -252,11 +257,11 @@ class NavigationChunk:
 		
 		## Check is the debug vis node is added
 		if not self.debug_node == null:
-			var region:NavigationRegion3D = NavigationRegion3D.new()
-			region.navigation_mesh = self.navigation_mesh
-			region.enabled = false
-			self.debug_node.add_child(region)
-			region.owner = self.debug_node
+			self.debug_region.navigation_mesh = self.navigation_mesh
+			if self.debug_region.get_parent() == null:
+				self.debug_region.enabled = false
+				self.debug_node.add_child(self.debug_region)
+				self.debug_region.owner = self.debug_node
 		
 		self.bake_completed.emit() ## Debug
 		

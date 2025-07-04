@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0e134wq78250"]
+
+[ext_resource type="Script" uid="uid://dp8u4xn3ilhc4" path="res://scripts/test/smooth_rotation_tests.gd" id="1_svtp3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0avk4"]
+size = Vector3(1.23, 0.2, 0.5)
+
+[node name="Marker3D" type="Node3D" node_paths=PackedStringArray("basis_to_interpolate_to", "interpolated_object")]
+script = ExtResource("1_svtp3")
+basis_to_interpolate_to = NodePath("Marker3D")
+interpolated_object = NodePath("MeshInstance3D")
+use_slerp = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, -0.000141637, 0, 1, 0, 0.000141637, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_0avk4")
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 2)

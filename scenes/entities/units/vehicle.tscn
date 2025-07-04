@@ -9,6 +9,9 @@ size = Vector3(0.613342, 0.807037, 1.0376)
 
 [node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
 script = ExtResource("1_qm2ug")
+position_frequency = 0.5
+rotation_frequency = 0.5
+rotation_damping_coeficient = 0.8
 body = NodePath("StaticBody3D")
 entity_id = 2
 is_mobile = true

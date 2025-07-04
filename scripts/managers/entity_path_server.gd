@@ -13,8 +13,10 @@ var _requests:Array[Dictionary] = []
 var _mutex:Mutex = Mutex.new()
 
 func _ready() -> void:
+	print("Starting threaded EntityNavigationServer...")
 	await RenderingServer.frame_post_draw
-	self._nav_map_rid = NavigationServer3D.get_maps()[0]
+	if not NavigationServer3D.get_maps().is_empty():
+		self._nav_map_rid = NavigationServer3D.get_maps()[0]
 	
 	for i in MAX_THREADS:
 		var thread := Thread.new()
@@ -59,6 +61,7 @@ func _thread_function() -> void:
 		var unit:Unit = request["unit"]
 
 		var path: PackedVector3Array = NavigationServer3D.map_get_path(_nav_map_rid, start, end, true)
+		path = NavigationServer3D.simplify_path(path, 0.01)
 
 		call_deferred("_emit_path_ready", unit, path)
 
@@ -67,6 +70,7 @@ func _emit_path_ready(unit:Unit, path:PackedVector3Array) -> void:
 
 ## Thread must be disposed (or "joined"), for portability.
 func _exit_tree() -> void:
+	print("Safely closing threads...")
 	## Set exit condition to true.
 	self._mutex.lock()
 	self._exit_thread = true ## Protect with Mutex.
