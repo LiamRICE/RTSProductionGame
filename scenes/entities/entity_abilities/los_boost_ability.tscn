@@ -1,8 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://difvqa1gf048l"]
+[gd_scene load_steps=3 format=3 uid="uid://difvqa1gf048l"]
 
 [ext_resource type="Script" uid="uid://8upyfjoppoip" path="res://scripts/entities/entity_abilities/entity_active_stat_mod_ability.gd" id="1_puw4d"]
+[ext_resource type="Texture2D" uid="uid://bkt35c6lp5cax" path="res://assets/ui/interface/Instance.svg" id="2_fyuh6"]
 
 [node name="LosBoostAbility" type="Node"]
 script = ExtResource("1_puw4d")
-stat_to_modify = "sight"
+stat_to_modify = 6
+stat_mod_amount = 5.0
+ability_duration = 30.0
+ability_cooldown = 90.0
+ability_name = "Radar Sweep"
+ability_icon = ExtResource("2_fyuh6")
+ability_description = "Increases the unit's Line Of Sight by 5 units for 30 seconds."
+ability_tooltip = "Increases the unit's Line Of Sight by 5 units for 30 seconds."
 metadata/_custom_type_script = "uid://8upyfjoppoip"

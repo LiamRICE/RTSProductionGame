@@ -19,6 +19,7 @@ config/icon="uid://bva3m1240mv2f"
 
 EntityDatabase="*res://scenes/managers/entity_database.tscn"
 EntityNavigationServer="*res://scenes/managers/entity_path_server.tscn"
+GameSettings="*res://scenes/managers/game_settings.tscn"
 
 [debug]
 
@@ -147,4 +148,3 @@ environment/screen_space_reflection/roughness_quality=3
 environment/subsurface_scattering/subsurface_scattering_quality=3
 global_illumination/sdfgi/probe_ray_count=5
 global_illumination/sdfgi/frames_to_update_lights=1
-lights_and_shadows/positional_shadow/atlas_size=8192

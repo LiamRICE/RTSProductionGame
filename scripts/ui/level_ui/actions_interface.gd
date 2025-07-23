@@ -25,6 +25,10 @@ func _on_button_pressed(index:int) -> void:
 		for building in self.selection_list.contents:
 			building.queue_unit(index)
 			print("Queued unit")
+	if self.selection_list.contents[0] is Unit:
+		for unit in self.selection_list.contents:
+			unit.abilities[index - self.container_size.x].start_ability()
+			print("Used ability ", unit.abilities[index - self.container_size.x]._to_string())
 
 func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUtils.SelectionType) -> void:
 	## Assign Sub selection
@@ -35,6 +39,7 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 		UIStateUtils.SelectionType.NONE when self.selection_list.contents.size() != 0: ## Nothing is selected
 			for button in self.actions_container.button_list:
 				button.set_button_icon(null)
+				button.set_tooltip_text("")
 				button.set_disabled(true)
 				button.set_flat(true)
 		
@@ -42,17 +47,24 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 			if self.selection_type != UIStateUtils.SelectionType.NONE:
 				for button in self.actions_container.button_list:
 					button.set_button_icon(null)
+					button.set_tooltip_text("")
 					button.set_disabled(true)
 					button.set_flat(true)
 			entity = sub_selection.contents[0]
-			for index_2 in range(entity.abilities.size()):
-				print(entity.abilities[index_2])
+			for index in range(entity.abilities.size()):
+				var entity_ability:EntityAbility = entity.abilities[index]
+				self.actions_container.button_list[index + self.container_size.x].icon = entity_ability.ability_icon
+				self.actions_container.button_list[index + self.container_size.x].tooltip_text = entity_ability.ability_tooltip
+				self.actions_container.button_list[index + self.container_size.x].set_disabled(false)
+				self.actions_container.button_list[index + self.container_size.x].set_flat(false)
+				#print(entity.abilities[index])
 			
 		
 		UIStateUtils.SelectionType.BUILDINGS:
 			if self.selection_type != UIStateUtils.SelectionType.NONE:
 				for button in self.actions_container.button_list:
 					button.set_button_icon(null)
+					button.set_tooltip_text("")
 					button.set_disabled(true)
 					button.set_flat(true)
 			entity = sub_selection.contents[0]
@@ -60,6 +72,7 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 				for index in range(entity.building_units.size()):
 					var entity_resource:EntityResource = EntityDatabase.get_resource(entity.building_units[index])
 					self.actions_container.button_list[index].icon = entity_resource.ui_icon
+					self.actions_container.button_list[index].tooltip_text = entity_resource.ui_tooltip
 					self.actions_container.button_list[index].set_disabled(false)
 					self.actions_container.button_list[index].set_flat(false)
 			for index_2 in range(entity.abilities.size()):
@@ -69,6 +82,7 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 			if self.selection_type != UIStateUtils.SelectionType.NONE:
 				for button in self.actions_container.button_list:
 					button.set_button_icon(null)
+					button.set_tooltip_text("")
 					button.set_disabled(true)
 					button.set_flat(true)
 			## TODO - List all construction orders

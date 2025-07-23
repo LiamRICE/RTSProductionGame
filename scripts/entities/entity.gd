@@ -17,6 +17,7 @@ var fog_of_war_sprite:Sprite2D
 @export_group("Statistics")
 @export var entity_statistics:Dictionary[STATS, float]
 @export var current_health:float ## The current health the unit has
+@export var current_shield:float ## The current amount of shields the unit has
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by sight stat.
 @export var allegiance:int = 0
 
@@ -33,8 +34,12 @@ var fog_of_war_sprite:Sprite2D
 """ ENTITY METHODS """
 
 func _ready() -> void:
-	## Set unit health to max
+	## Fetch unit's statistics from the database
 	self.entity_statistics = EntityDatabase.get_stats(self.entity_id)
+	
+	## Set unit health to max
+	self.current_health = self.entity_statistics[STATS.HEALTH]
+	self.current_shield = self.entity_statistics[STATS.SHIELD]
 	
 	## Initialise abilities
 	for ability in self.abilities:
@@ -69,13 +74,17 @@ func _on_destroyed() -> void:
 
 """ ABILITY METHODS """
 
-## Triggered by an ability
-func _on_ability_stat_modification(stat:STATS, value_mod:float) -> void:
-	self.modify_stat(stat, value_mod)
+## Triggered by an ability that modifies an entity's statistic
+func ability_stat_modification(stat:STATS, modifier:float) -> void:
+	self.entity_statistics[stat] += modifier
+	if stat == STATS.SHIELD or stat == STATS.ATTACK_SPEED or stat == STATS.ATTACK_RANGE or stat == STATS.SIGHT:
+		self.update_offline_stat(stat)
 
-## Triggered by an ability
-func _on_ability_stat_override(stat:STATS, value:float) -> void:
-	self.update_stat(stat, value)
+## Triggered by an ability that overrides an entity's statistic
+func ability_stat_override(stat:STATS, value:float) -> void:
+	self.entity_statistics[stat] = value
+	if stat == STATS.SHIELD or stat == STATS.ATTACK_SPEED or stat == STATS.ATTACK_RANGE or stat == STATS.SIGHT:
+		self.update_offline_stat(stat)
 
 """ FOG OF WAR METHODS """
 
@@ -97,8 +106,13 @@ func update_visibility(position_2d:Vector2, fow_image:Image):
 
 """ STATS METHODS """
 
-func update_stat(stat:STATS, value:float) -> void:
-	self.entity_statistics[stat] = value
-
-func modify_stat(stat:STATS, modifier:float) -> void:
-	self.entity_statistics[stat] += modifier
+func update_offline_stat(stat:STATS) -> void:
+	match stat:
+		STATS.SHIELD:
+			pass
+		STATS.ATTACK_SPEED:
+			pass
+		STATS.SIGHT:
+			self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2 * GameSettings.fog_of_war_resolution
+		STATS.ATTACK_RANGE:
+			pass

@@ -99,7 +99,7 @@ size = Vector2i(256, 256)
 height = 8
 
 [node name="WorldTimer" type="Timer" parent="LevelManager/WorldManager"]
-wait_time = 0.1
+wait_time = 0.05
 autostart = true
 ignore_time_scale = true
 
