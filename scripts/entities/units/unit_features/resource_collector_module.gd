@@ -2,6 +2,8 @@ class_name ResourceCollectorModule extends Node
 
 const RESOURCE := preload("res://scripts/utilities/resource_utils.gd").RESOURCE
 const GATHER_STATE := preload("res://scripts/utilities/resource_utils.gd").GATHER_STATE
+const DROP_OFF_RANGE := preload("res://scripts/utilities/resource_utils.gd").DROP_OFF_RANGE
+const GATHER_DISTANCE := preload("res://scripts/utilities/resource_utils.gd").GATHER_DISTANCE
 
 @export var resource:Dictionary = {
 	"quantity":0,
@@ -39,6 +41,11 @@ func set_gathering_target(target:Resources, is_shift:bool = false):
 	self.resource.set("type", target.resource_type)
 	self.gather_state = GATHER_STATE.GATHERING
 	self.parent.set_navigation_path(target.global_transform.origin, is_shift)
+
+
+func clear_gathering_target():
+	self.resource.set("node", null)
+	self.gather_state = GATHER_STATE.NONE
 
 
 func gather(res:RESOURCE, gather_speed:float, resource_max:int, amount:int, delta:float) -> bool:
@@ -82,7 +89,7 @@ func go_gathering(delta:float):
 		var node:Resources = self.resource.get("node")
 		var distance:float = node.global_transform.origin.distance_to(self.parent.global_transform.origin)
 		# if within gathering distance
-		if distance <= 1:
+		if distance <= GATHER_DISTANCE:
 			# gather
 			var done:bool = self.gather(node.resource_type, self.parent.gather_speed, self.parent.max_res, self.parent.gather_amount, delta)
 			# if gather full -> set depot to null and drop off
@@ -114,7 +121,7 @@ func go_drop_off(delta:float):
 	# if depot exists
 	if self.depot != null:
 		# if within dropping distance
-		if self.depot.global_transform.origin.distance_to(self.parent.global_transform.origin) <= 1:
+		if self.depot.global_transform.origin.distance_to(self.parent.global_transform.origin) <= DROP_OFF_RANGE:
 			# drop_off
 			self.depot.drop_off(self.resource.get("quantity"), self.resource.get("type"))
 			# empty resources from container

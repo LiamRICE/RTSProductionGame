@@ -21,6 +21,7 @@ func update_target_location(target_location:Vector3, is_shift:bool = false):
 	# if raycast is a unit, set that unit as the target and stop when you're in range
 	# if raycast is not a unit, set that location as a target and stop at the target
 	# if raycast is a resource, start resource gathering loop (manage_gathering)
+	self.gatherer.clear_gathering_target()
 	set_navigation_path(target_location, is_shift)
 
 

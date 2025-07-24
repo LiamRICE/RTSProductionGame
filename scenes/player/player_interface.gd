@@ -175,13 +175,16 @@ func _input(_event:InputEvent) -> void:
 				
 				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 				if not camera_raycast_coords.is_zero_approx():
-					for unit in selected_entities.contents:
+					# TODO - spread out units
+					var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
+					for i in range(len(selected_entities.contents)):
+						var unit = selected_entities.contents[i]
+						var target_pos = spread_array[i]
 						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
 						if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
 							unit.set_gathering_target(target, is_shift)
 						else:
-						# TODO - spread out units
-							unit.update_target_location(camera_raycast_coords, is_shift)
+							unit.update_target_location(target_pos, is_shift)
 	
 	""" CONSTRUCTION STATES """
 	if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
