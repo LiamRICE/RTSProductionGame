@@ -132,33 +132,23 @@ rotate_modifier={
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
 3d/default_gravity_vector=Vector3(0, 0, 0)
 
-[renderendering]
-
-camera/depth_of_field/depth_of_field_bokeh_shapering=2
-
 [rendering]
 
-textures/canvas_textures/default_texture_filter=3
-lights_and_shadows/directional_shadow/size=8192
+lights_and_shadows/directional_shadow/size=1024
 lights_and_shadows/directional_shadow/size.mobile=512
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
 lights_and_shadows/directional_shadow/16_bits=false
-lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
-global_illumination/voxel_gi/quality=1
-textures/default_filters/anisotropic_filtering_level=4
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
+textures/default_filters/anisotropic_filtering_level=1
 camera/depth_of_field/depth_of_field_bokeh_shape=0
-camera/depth_of_field/depth_of_field_bokeh_quality=3
-environment/ssao/quality=4
-environment/ssil/quality=4
-anti_aliasing/quality/msaa_2d=3
-anti_aliasing/quality/msaa_3d=3
-scaling_3d/mode=2
-textures/decals/filter=5
-textures/light_projectors/filter=5
-environment/screen_space_reflection/roughness_quality=3
-environment/subsurface_scattering/subsurface_scattering_quality=3
-global_illumination/sdfgi/probe_ray_count=5
-global_illumination/sdfgi/frames_to_update_lights=0
-anti_aliasing/quality/screen_space_aa=1
-anti_aliasing/quality/use_taa=true
+camera/depth_of_field/depth_of_field_bokeh_quality=0
+environment/ssao/quality=0
+environment/ssil/quality=0
+environment/glow/upscale_mode=0
+environment/screen_space_reflection/roughness_quality=0
+environment/subsurface_scattering/subsurface_scattering_quality=0
+global_illumination/sdfgi/probe_ray_count=0
+global_illumination/sdfgi/frames_to_converge=0
+global_illumination/sdfgi/frames_to_update_lights=1
+environment/volumetric_fog/use_filter=0
 lights_and_shadows/positional_shadow/atlas_size=8192

@@ -1,13 +1,11 @@
 extends CanvasLayer
 
-
 # define signals
 signal return_from_singleplayer
 signal load_singleplayer_scene(game_scene:String)
 
 
 func _on_start_game_button_pressed() -> void:
-	# get_tree().change_scene_to_packed(load("uid://27y1lrejra6l"))
 	var game_scene = "uid://dkve5n5x16hga"
 	load_singleplayer_scene.emit(game_scene)
 

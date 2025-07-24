@@ -64,3 +64,13 @@ func _on_singleplayer_menu_load_singleplayer_scene(game_scene: String) -> void:
 
 func _on_loading_screen_scene_loaded() -> void:
 	menu_state = MenuState.SINGLEPLAYER_GAME
+
+
+func _on_multiplayer_menu_return_from_multiplayer() -> void:
+	change_screen(multiplayer_menu, main_menu)
+	menu_state = MenuState.MULTIPLAYER_MENU
+
+
+func _on_settings_menu_return_from_settings() -> void:
+	change_screen(settings_menu, main_menu)
+	menu_state = MenuState.MULTIPLAYER_MENU
