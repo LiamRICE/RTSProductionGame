@@ -29,24 +29,35 @@ static func raycast(object:Node3D, local_position:Vector3, direction:Vector3, ra
 
 
 static func get_unit_position_spread(unit_pos:Vector3, box_start_pos:Vector3, box_end_pos:Vector3, num_units:int) -> Array[Vector3]:
+	print("Calculating position for ", num_units, " units.")
 	var square_numbers = [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144]
 	var spread_array:Array[Vector3] = []
 	if box_start_pos == box_end_pos:
 		var get_square = 0
-		var width = 0
+		var width:float = 0
 		var done = false
 		var i = 0
 		while !done:
-			if num_units >= square_numbers[i]:
+			if num_units <= square_numbers[i]:
 				get_square = square_numbers[i]
 				width = i
 				done = true
 			i += 1
+		var new_vect:Vector3 = (box_start_pos - unit_pos)
+		var len:float = Vector3.ZERO.distance_to(new_vect)
+		# get position variables
+		print("Width: ", width)
+		var y_diff = new_vect / len
+		var x_diff = Vector3(y_diff.z, y_diff.y, -y_diff.x)
+		var position:Vector2 = Vector2(-(width-1)/2, 0)
 		for x in range(num_units):
-			var new_vect:Vector3 = (box_start_pos - unit_pos)
-			var len:float = Vector3.ZERO.distance_to(new_vect)
-			var next_pos:Vector3 = unit_pos + new_vect * (len - x) / len
+			var next_pos:Vector3 = box_start_pos + x_diff * position.x + y_diff * position.y
+			print(position)
 			spread_array.append(next_pos)
+			position.x += 1
+			if position.x >= width-1:
+				position.x = -(width-1)/2
+				position.y -= 1
 		return spread_array
 	else:
 		for i in range(num_units):
