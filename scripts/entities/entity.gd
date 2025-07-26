@@ -1,5 +1,7 @@
 class_name Entity extends Node3D
 
+signal received_damage(health:int)
+
 ## Constants
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
@@ -45,6 +47,8 @@ func receive_damage(dmg:float) -> void:
 	current_health -= dmg
 	if current_health <= 0:
 		self._on_destroyed()
+	else:
+		received_damage.emit(current_health)
 
 ## Function called when entity is selected.
 ## Returns true if the object is selectable. Other functionality can be added on top of this.
