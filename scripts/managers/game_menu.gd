@@ -42,6 +42,7 @@ func _on_main_menu_quit_button_pressed() -> void:
 
 
 func _on_main_menu_settings_button_pressed() -> void:
+	settings_menu.set_saved_settings()
 	change_screen(main_menu, settings_menu)
 	menu_state = MenuState.SETTINGS
 

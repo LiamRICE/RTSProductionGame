@@ -1,11 +1,12 @@
 extends CanvasLayer
 
+# import scripts
+const SettingsUtils:Script = preload("uid://dma7wmfdtuxlx")
+const LoadingUtils:Script = preload("uid://bcivgan8styu")
+
 # define signals
 signal return_from_settings
 
-# define constants
-const SAVE_PATH = "user/"
-const SAVE_FILE = "settings.json"
 
 var data_dict:Dictionary
 
@@ -17,7 +18,7 @@ var data_dict:Dictionary
 
 func get_width() -> int:
 	var size = settings_tab_container.size.x - 8
-	return size / 2
+	return size * 0.4
 
 
 func set_midpoint(width:int):
@@ -31,221 +32,163 @@ func set_midpoint(width:int):
 				component.split_offset = width
 
 
+func set_options(setting:String, options_button:OptionButton, values:Array[int], labels:Array[String]):
+	print("Setting ", setting)
+	options_button.clear()
+	# set options
+	for i in min(len(values), len(labels)):
+		options_button.add_item(labels[i], values[i])
+	# get the ID of the currently set item in settings
+	var setting_id = ProjectSettings.get_setting(setting)
+	for i in range(len(values)):
+		if values[i] == setting_id:
+			options_button.select(i)
+
+
+func set_options_bool(setting:String, options_toggle:CheckButton):
+	print("Setting ", setting)
+	var setting_value:bool = ProjectSettings.get_setting(setting)
+	options_toggle.button_pressed = setting_value
+
+
+func set_saved_settings():
+	# read settings file
+	var data_dict:Dictionary = LoadingUtils.load_json()
+	# set value for each setting
+	# Global
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton.select(data_dict.get("graphics_preset"))
+
+	# Textures
+	set_options("rendering/textures/default_filters/anisotropic_filtering_level", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4], ["Disabled (Fastest)", "2x (Fast)", "4x (Average)", "8x (Slow)", "16x (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2/RichTextLabel.tooltip_text = "Number of samples taken when rendering textures, higher is slower"
+	set_options("rendering/textures/decals/filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["Nearest (Fast)", "Linear (Fast)", "Nearest Mipmap (Fast)", "Linear Mipmap (Fast)", "Nearest Mipmap Anisotropic (Average)", "Linear Mipmap Anisotropic (Average)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3/RichTextLabel.tooltip_text = "The filtering level for Decals, anisotropic filtering performance is affected by the Anisotropic Filtering Level"
+	set_options("rendering/textures/light_projectors/filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["Nearest (Fast)", "Linear (Fast)", "Nearest Mipmap (Fast)", "Linear Mipmap (Fast)", "Nearest Mipmap Anisotropic (Average)", "Linear Mipmap Anisotropic (Average)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4/RichTextLabel.tooltip_text = "The filtering level for Light Projectors, anisotropic filtering performance is affected by the Anisotropic Filtering Level"
+	# Shadows
+	set_options("rendering/lights_and_shadows/directional_shadow/size", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5/GraphicsSettingsOptionButton, [256, 512, 1024, 2048, 4096, 8192], ["256 (Fastest)", "512", "1024", "2048", "4096", "8192 (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5/RichTextLabel.tooltip_text = "The directional shadow texture size, higher values have more shadow detail but will decrease performance"
+	set_options("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["Hard (Fastest)", "Soft Lowest (Faster)", "Soft Low (Fast)", "Soft Medium (Average)", "Soft High (Slow)", "Soft Ultra (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6/RichTextLabel.tooltip_text = "Determines the quality of the directional shadows and determines the details in the bounce lighting and soft shadows, better soft shadows will decrease performance"
+	set_options("rendering/lights_and_shadows/positional_shadow/atlas_size", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7/GraphicsSettingsOptionButton, [256, 512, 1024, 2048, 4096, 8192], ["256 (Fastest)", "512", "1024", "2048", "4096", "8192 (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7/RichTextLabel.tooltip_text = "The positional shadow texture size, higher values have more shadow detail but will decrease performance"
+	set_options("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["Hard (Fastest)", "Soft Lowest (Faster)", "Soft Low (Fast)", "Soft Medium (Average)", "Soft High (Slow)", "Soft Ultra (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8/RichTextLabel.tooltip_text = "Determines the quality of the positional shadows and determines the details in the bounce lighting and soft shadows, better soft shadows will decrease performance"
+	# Lighting
+	set_options_bool("rendering/global_illumination/gi/use_half_resolution", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9/GraphicsSettingsCheckButton)
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9/RichTextLabel.tooltip_text = "Half resolution reduces global illumination quality but increases performance"
+	set_options("rendering/global_illumination/voxel_gi/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10/GraphicsSettingsOptionButton, [0, 1], ["Low (Fast)", "High (Slow)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10/RichTextLabel.tooltip_text = "Increases the number of light cones used in global illumniation, which improves lighting but reduces performance"
+	set_options("rendering/global_illumination/sdfgi/probe_ray_count", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["8 (Fastest)", "16", "32", "64", "96", "128 (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11/RichTextLabel.tooltip_text = "Number of rays used for lighting, higher is slower"
+	set_options("rendering/global_illumination/sdfgi/frames_to_converge", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4, 5], ["5 (Low Quality, Better Latency)", "10", "15", "20", "25", "30 (High Quality, Worse Latency)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12/RichTextLabel.tooltip_text = "Higher value leads to less noisy lights, but takes longer to reach to the right value"
+	set_options("rendering/global_illumination/sdfgi/frames_to_update_lights", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4], ["1 (Slowest)", "2", "4", "8", "16 (Fastest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13/RichTextLabel.tooltip_text = "Number of frames between each light drawing, higher values lead to lights not being as fluid in motion but improves performance when large numbers of lights are present"
+	# Camera
+	set_options("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14/GraphicsSettingsOptionButton, [0, 1, 2], ["Box (Fastest)", "Hexagon", "Circle (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14/RichTextLabel.tooltip_text = "Circle bokeh is the most realistic, but reduces performance"
+	set_options("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15/GraphicsSettingsOptionButton, [0, 1, 2, 3], ["Very Low (Fastest)", "Low", "Medium", "High (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15/RichTextLabel.tooltip_text = "The quality level of the aforementioned bokeh effects, higher reduces performance"
+	# Environment
+	set_options("rendering/environment/ssao/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4], ["Very Low (Fastest)", "Low", "Medium", "High", "Ultra (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16/RichTextLabel.tooltip_text = "Higher will take more samples and result in better quality, but lower performance"
+	set_options("rendering/environment/ssil/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17/GraphicsSettingsOptionButton, [0, 1, 2, 3, 4], ["Very Low (Fastest)", "Low", "Medium", "High", "Ultra (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17/RichTextLabel.tooltip_text = "Higher will take more samples and result in better lighting quality, but lower performance"
+	set_options("rendering/environment/glow/upscale_mode", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18/GraphicsSettingsOptionButton, [0, 1], ["Linear (Fast)", "Bicubic (Slow)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18/RichTextLabel.tooltip_text = "The upscale mode used for glow, bicubic is smoother but decreases performance"
+	set_options("rendering/environment/screen_space_reflection/roughness_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19/GraphicsSettingsOptionButton, [0, 1, 2, 3], ["Disabled (Fastest)", "Low", "Medium", "High (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19/RichTextLabel.tooltip_text = "Higher quality improves the roughness of reflections, but decreases performance"
+	set_options("rendering/environment/subsurface_scattering/subsurface_scattering_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20/GraphicsSettingsOptionButton, [0, 1, 2, 3], ["Disabled (Fastest)", "Low", "Medium", "High (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20/RichTextLabel.tooltip_text = "Higher quality improves the subsurface scattering quality, but decreases performance"
+	set_options_bool("rendering/environment/volumetric_fog/use_filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21/GraphicsSettingsCheckButton)
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21/RichTextLabel.tooltip_text = "Improves the visuals of fog, but decreases performance"
+	# AA
+	set_options("rendering/anti_aliasing/quality/msaa_2d", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22/GraphicsSettingsOptionButton, [0, 1, 2, 3], ["Disabled (Fastest)", "2x", "4x", "8x (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22/RichTextLabel.tooltip_text = "Number of samples used in 2D Multi-Sampling Anti-Aliasing, higher increases visual sharpness but decreases performance"
+	set_options("rendering/anti_aliasing/quality/msaa_3d", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23/GraphicsSettingsOptionButton, [0, 1, 2, 3], ["Disabled (Fastest)", "2x", "4x", "8x (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23/RichTextLabel.tooltip_text = "Number of samples used in 3D Multi-Sampling Anti-Aliasing, higher increases visual sharpness but decreases performance"
+	set_options("rendering/anti_aliasing/quality/screen_space_aa", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24/GraphicsSettingsOptionButton, [0, 1], ["Disabled (Fastest)", "FXAA (Fast)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24/RichTextLabel.tooltip_text = "Applies FXAA to the screen, improving sharpness. Faster performance than MSAA but lower visual fidelity"
+	set_options_bool("rendering/anti_aliasing/quality/use_taa", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25/GraphicsSettingsCheckButton)
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25/RichTextLabel.tooltip_text = "If switched on, will use Temporal Anti-Aliasing which can improve temporal consistency, but can result in ghosting in some instances and reduces performance"
+	# Scaling
+	set_options("rendering/scaling_3d/mode", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26/GraphicsSettingsOptionButton, [0, 1, 2], ["Bilinear (Fastest)", "FSR 1.0 (Fast)", "FSR 2.2 (Slow)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26/RichTextLabel.tooltip_text = "Will use FSR for supersampling, can improve visual fidelity but lowers performance"
+	# Occlusion
+	set_options("rendering/occlusion_culling/bvh_build_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27/GraphicsSettingsOptionButton, [0, 1, 2], ["Low (Fastest)", "Medium", "High (Slowest)"])
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27/RichTextLabel.tooltip_text = "Higher values improve the accuracy of occlusion but reduces performance"
+
+
+func save_current():
+	# Textures
+	ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/textures/decals/filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/textures/light_projectors/filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4/GraphicsSettingsOptionButton.get_selected_id())
+	# Shadows
+	ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8/GraphicsSettingsOptionButton.get_selected_id())
+	# Lighting
+	ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9/GraphicsSettingsCheckButton.button_pressed)
+	ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13/GraphicsSettingsOptionButton.get_selected_id())
+	# Camera
+	ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15/GraphicsSettingsOptionButton.get_selected_id())
+	# Environment
+	ProjectSettings.set_setting("rendering/environment/ssao/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/environment/ssil/quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21/GraphicsSettingsCheckButton.button_pressed)
+	# AA
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24/GraphicsSettingsOptionButton.get_selected_id())
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25/GraphicsSettingsCheckButton.button_pressed)
+	# Scaling
+	ProjectSettings.set_setting("rendering/scaling_3d/mode", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26/GraphicsSettingsOptionButton.get_selected_id())
+	# Occlusion
+	ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27/GraphicsSettingsOptionButton.get_selected_id())
+	# Save Settings
+	#ProjectSettings.save_custom("player_settings.godot")
+	ProjectSettings.save()
+
+
 func _ready() -> void:
 	set_midpoint(get_width())
-	load_json()
-	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsSettingsOptionButton.select(data_dict.get("graphics_preset"))
+	set_saved_settings()
 
 
 func _on_return_button_pressed() -> void:
 	return_from_settings.emit()
 
 
-func default_setting(setting:int):
-	if setting == 0:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 0)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 0)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 0)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 0)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 0)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 256)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 0)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 0)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 512)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", true)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 2)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 0)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 0)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 0)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 0)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", false)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 0)
-		ProjectSettings.set_setting("rendering", 0)
-		ProjectSettings.set_setting("rendering", 0)
-	if setting == 1:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 0)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 0)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 1)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 1)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 1)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 512)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 1)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 1)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 1024)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", true)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 1)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 0)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 0)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 0)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 0)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 0)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", false)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 0)
-	if setting == 2:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 1)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 1)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 2)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 2)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 2)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 1024)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 2)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 2)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 2048)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", false)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 0)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 1)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 1)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 0)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 1)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 1)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 1)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 1)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 1)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 1)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 1)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", false)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 1)
-	if setting == 3:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 1)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 2)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 3)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 3)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 3)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 2048)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 3)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 3)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 2048)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", false)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 1)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 2)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 2)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 0)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 1)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 2)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 2)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 2)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 1)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 1)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 1)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 0)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 2)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 2)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", false)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 1)
-	if setting == 4:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 2)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 3)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 3)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 4)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 4)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 4096)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 4)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 4)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 4096)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", false)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 1)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 3)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 3)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 0)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 2)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 2)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 3)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 3)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 1)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 2)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 2)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 2)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 2)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", true)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 2)
-	if setting == 5:
-		ProjectSettings.set_setting("rendering/occlusion_culling/bvh_build_quality", 2)
-		ProjectSettings.set_setting("rendering/textures/canvas_textures/default_texture_filter", 3)
-		ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", 4)
-		ProjectSettings.set_setting("rendering/textures/decals/filter", 5)
-		ProjectSettings.set_setting("rendering/textures/light_projectors/filter", 5)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/size", 8192)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", 5)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", 5)
-		ProjectSettings.set_setting("rendering/lights_and_shadows/positional_shadow/atlas_size", 8192)
-		ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", false)
-		ProjectSettings.set_setting("rendering/global_illumination/voxel_gi/quality", 1)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/probe_ray_count", 5)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_converge", 5)
-		ProjectSettings.set_setting("rendering/global_illumination/sdfgi/frames_to_update_lights", 0)
-		ProjectSettings.set_setting("renderendering/camera/depth_of_field/depth_of_field_bokeh_shapering", 2)
-		ProjectSettings.set_setting("rendering/camera/depth_of_field/depth_of_field_bokeh_quality", 3)
-		ProjectSettings.set_setting("rendering/environment/ssao/quality", 4)
-		ProjectSettings.set_setting("rendering/environment/ssil/quality", 4)
-		ProjectSettings.set_setting("rendering/environment/glow/upscale_mode", 1)
-		ProjectSettings.set_setting("rendering/environment/screen_space_reflection/roughness_quality", 3)
-		ProjectSettings.set_setting("rendering/environment/subsurface_scattering/subsurface_scattering_quality", 3)
-		ProjectSettings.set_setting("rendering/environment/volumetric_fog/use_filter", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", 3)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", 3)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/screen_space_aa", 1)
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", true)
-		ProjectSettings.set_setting("rendering/scaling_3d/mode", 2)
-	#ProjectSettings.save_custom("player_settings.godot")
-	ProjectSettings.save()
-
-
 func _on_confirm_button_pressed() -> void:
-	save_json()
-	default_setting($VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsSettingsOptionButton.get_selected_id())
-
-
-func save_json():
-	data_dict = {
-		"graphics_preset":$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsSettingsOptionButton.get_selected_id()
+	var data_dict:Dictionary = {
+		"graphics_preset":$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton.get_selected_id()
 	}
-	print("Saving data to JSON file :", data_dict)
-	if not DirAccess.dir_exists_absolute(SAVE_PATH):
-		DirAccess.make_dir_absolute(SAVE_PATH)
-	var file = FileAccess.open(SAVE_PATH+SAVE_FILE, FileAccess.WRITE)
-	var json_text = JSON.stringify(data_dict, "\t")
-	file.store_string(json_text)
-
-
-func load_json():
-	print("Loading data from from JSON file")
-  
-	if FileAccess.file_exists(SAVE_PATH+SAVE_FILE):
-		var file = FileAccess.open(SAVE_PATH+SAVE_FILE, FileAccess.READ)
-
-		var json_string = file.get_as_text()
-		var json = JSON.new()
-		var result = json.parse(json_string)
-		if result != OK:
-			print("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
-			return
-
-		data_dict = json.data
+	LoadingUtils.save_json(data_dict)
+	var preset:int = $VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton.get_selected_id()
+	if preset == 6:
+		save_current()
 	else:
-		print("No save file to load!")
+		SettingsUtils.default_setting(preset)
+		set_saved_settings()
+
+
+func _on_graphics_settings_option_button_item_selected(index: int) -> void:
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton.selected = 6
+
+
+func _on_graphics_settings_check_button_pressed() -> void:
+	$VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton.selected = 6
+
+
+func _on_graphics_preset_option_button_item_selected(index: int) -> void:
+	pass # Replace with function body.
