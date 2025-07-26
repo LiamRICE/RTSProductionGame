@@ -424,7 +424,7 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22"]
 layout_mode = 2
-text = "Volumetric Fog"
+text = "MSAA 2D"
 fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
@@ -437,7 +437,7 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23"]
 layout_mode = 2
-text = "Volumetric Fog"
+text = "MSAA 3D"
 fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
@@ -450,7 +450,7 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24"]
 layout_mode = 2
-text = "Volumetric Fog"
+text = "FXAA"
 fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
@@ -463,7 +463,7 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25"]
 layout_mode = 2
-text = "Volumetric Fog"
+text = "Use TAA"
 fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
