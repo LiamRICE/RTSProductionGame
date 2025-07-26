@@ -2,6 +2,7 @@ class_name Vehicle extends Unit
 
 @export var current_speed : float = 0 # m/s
 @onready var healthbar = $Healthbar
+@onready var weapon_module = $WeaponModule
 
 
 func _ready():
@@ -9,7 +10,7 @@ func _ready():
 	super._ready()
 	self.healthbar.initialise_healthbar(entity_statistics.get(0), entity_statistics.get(0), 75)
 	self.current_speed = 0
-	
+
 
 func move(delta:float):
 	## Check if path is empty, stop moving
@@ -56,6 +57,11 @@ func move(delta:float):
 		## slerp with amount increasing to 1 as angle approaches zero
 		##var weight : float = (delta / rotation_speed) / (angle + (delta / rotation_speed))
 		#self.global_basis = self.global_basis.slerp(target_basis, ease(rotation_speed * delta, 2.0)).orthonormalized()
+
+
+func set_attack_target(unit:Entity):
+	weapon_module.on_target(true)
+	weapon_module.fire()
 
 
 func _on_received_damage(health: int) -> void:

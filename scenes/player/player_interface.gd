@@ -167,6 +167,15 @@ func _input(_event:InputEvent) -> void:
 		if raycast_result.get("collider") != null:
 			if not raycast_result.get("collider").is_in_group("navigation_map"):
 				target = raycast_result.get("collider").get_parent()
+				if "allegiance" in target:
+					print("Entity detected")
+					if target.allegiance != self.player_team:
+						print("Enemy detected")
+						if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
+							for unit in selected_entities.contents:
+								if "set_attack_target" in unit:
+									unit.set_attack_target(target)
+					
 			# check if is in group unit and is enemy -> assign as target
 			# check if on resource and unit has gatherer node -> assign as resource node
 			_mouse_right_click = true
