@@ -41,14 +41,20 @@ func _ready() -> void:
 	## Initialise abilities
 	for ability in self.abilities:
 		ability.init_ability(self)
+	
+	## Initialise health
+	self.current_health = self.entity_statistics.get(0)
+	print("Starting health = ", self.current_health)
 
-## Function called when entity takes damage
-func receive_damage(dmg:float) -> void:
+## Function called when entity takes damage - returns true if the unit is destroyed
+func receive_damage(dmg:float) -> bool:
 	current_health -= dmg
 	if current_health <= 0:
 		self._on_destroyed()
+		return true
 	else:
 		received_damage.emit(current_health)
+		return false
 
 ## Function called when entity is selected.
 ## Returns true if the object is selectable. Other functionality can be added on top of this.
@@ -66,7 +72,8 @@ func _update_allegiance(new_allegiance:int) -> void:
 func _on_destroyed() -> void:
 	## Remove FOW effect nodes
 	self.remove_from_group("fog_of_war_propagators")
-	self.fog_of_war_sprite.queue_free()
+	if self.fog_of_war_sprite != null:
+		self.fog_of_war_sprite.queue_free()
 	
 	## Remove unit
 	self.queue_free()

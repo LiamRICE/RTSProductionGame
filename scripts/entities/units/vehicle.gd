@@ -70,4 +70,5 @@ func set_attack_position(pos:Vector3):
 
 
 func _on_received_damage(health: int) -> void:
+	print("Set healthbar to ", health, " out of ", self.entity_statistics.get(0))
 	self.healthbar.set_hp(health)

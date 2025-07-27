@@ -92,14 +92,30 @@ func reload():
 
 func _on_burst_timer_timeout() -> void:
 	for i in self.weapon_type.shots_per_burst:
-		print("Bang!")
 		if is_target:
 			# TODO - FIRE WEAPON
 			# TODO - trigger fire animation
 			# check if hit
 			if randf() <= self.weapon_type.accuracy:
-				# trigger hit on the target
-				self.target_unit.receive_damage(self.weapon_type.damage)
+				print("Hit!")
+				# trigger hit on the target if target exists
+				if "receive_damage" in self.target_unit:
+					if self.target_unit.receive_damage(self.weapon_type.damage):
+						# remove target and de-aggro if target is destroyed
+						self.is_firing = false
+						self.is_target = false
+						self.is_on_target = false
+						self.is_aimed = false
+						self.target_unit = null
+				else:
+					# remove target and de-aggro if target is destroyed
+					self.is_firing = false
+					self.is_target = false
+					self.is_on_target = false
+					self.is_aimed = false
+					self.target_unit = null
+			else:
+				print("Miss...")
 		else:
 			pass
 			# TODO - if shooting at position, trigger explosion within Circular Area Probable
@@ -108,6 +124,10 @@ func _on_burst_timer_timeout() -> void:
 		if self.number_of_bursts > 0:
 			self.burst_timer.start(self.weapon_type.time_between_bursts)
 		else:
+			if not self.is_target:
+				self.is_firing = false
+				self.is_on_target = false
+				self.is_aimed = false
 			self.reload()
 
 

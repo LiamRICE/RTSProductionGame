@@ -110,14 +110,15 @@ terrain_node = NodePath("../MapGenerator")
 
 [node name="ResourceNodeMetal" parent="LevelManager/WorldManager/Resources" instance=ExtResource("3_4c57u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 2)
+resource_amount = 100
 
 [node name="ResourceNodeMetal2" parent="LevelManager/WorldManager/Resources" instance=ExtResource("3_4c57u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.245, 1.5, 0.618)
-resource_amount = 10
+resource_amount = 100
 
 [node name="ResourceNodeMetal3" parent="LevelManager/WorldManager/Resources" instance=ExtResource("3_4c57u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.932, 1.5, 1.135)
-resource_amount = 10
+resource_amount = 100
 
 [node name="DebugNavRegions" type="Node" parent="LevelManager/WorldManager"]
 
