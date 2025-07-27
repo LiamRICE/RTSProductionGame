@@ -60,7 +60,12 @@ func move(delta:float):
 
 
 func set_attack_target(unit:Entity):
-	weapon_module.on_target(true)
+	weapon_module.on_target(unit, true)
+	weapon_module.fire()
+
+
+func set_attack_position(pos:Vector3):
+	weapon_module.on_position(pos, true)
 	weapon_module.fire()
 
 

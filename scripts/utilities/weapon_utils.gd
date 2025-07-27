@@ -40,3 +40,21 @@ enum AmunitionType{
 	SMART_EXPLOSIVE,
 	ENERGY,
 }
+
+
+enum ShotType{
+	EXPLOSIVE,
+	KINETIC,
+}
+
+enum DamageType{
+	EXPLOSIVE,
+	KINETIC,
+	HEAT,
+}
+
+enum FireMode{
+	POSITION,
+	TARGET,
+	TARGET_AND_POSITION,
+}

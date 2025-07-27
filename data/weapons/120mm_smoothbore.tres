@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponType" load_steps=2 format=3 uid="uid://cw7mcwcuit1d"]
+
+[ext_resource type="Script" uid="uid://bjk7lrehwgy5q" path="res://scripts/utilities/weapon_objects/weapon_type.gd" id="1_u7d6a"]
+
+[resource]
+script = ExtResource("1_u7d6a")
+weapon_effect = 0
+shot_type = 1
+damage_type = 1
+fire_mode = 1
+clip_size = 1
+num_reloads = 20
+reload_time = 3.0
+shots_per_burst = 1
+time_between_bursts = 0.0
+aim_time = 1.0
+damage = 15.0
+accuracy = 0.8
+range = 20.0
+ammunition_type = 0
+rearm_time = 5.0
+ui_description = ""
+ui_tooltip = ""
+metadata/_custom_type_script = "uid://bjk7lrehwgy5q"
