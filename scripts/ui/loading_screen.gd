@@ -21,8 +21,8 @@ func load_scene():
 
 
 func _process(delta: float) -> void:
-	var progress = []
 	if next_scene != "":
+		var progress = []
 		ResourceLoader.load_threaded_get_status(next_scene, progress)
 		progress_bar.value = progress[0]*100
 		
@@ -30,6 +30,7 @@ func _process(delta: float) -> void:
 			scene_loaded.emit()
 			var packed_scene = ResourceLoader.load_threaded_get(next_scene)
 			get_tree().change_scene_to_packed(packed_scene)
+			next_scene = ""
 
 
 func set_load_scene(path:String):

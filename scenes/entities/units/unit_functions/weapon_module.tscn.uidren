@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://c47w2hkkdi3c6"]
+
+[ext_resource type="Script" uid="uid://cf2sximtyl6rb" path="res://scripts/entities/weapons/weapon_module.gd" id="1_y7x8s"]
+
+[node name="WeaponModule" type="Node3D"]
+script = ExtResource("1_y7x8s")
+
+[node name="BurstTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AimTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="RearmTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="BurstTimer" to="." method="_on_burst_timer_timeout"]
+[connection signal="timeout" from="AimTimer" to="." method="_on_aim_timer_timeout"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="RearmTimer" to="." method="_on_rearm_timer_timeout"]

@@ -7,6 +7,7 @@ viewport_path = NodePath("SubViewport")
 
 [node name="Healthbar" type="Sprite3D"]
 modulate = Color(0, 0.670588, 0.117647, 1)
+billboard = 1
 texture = SubResource("ViewportTexture_wlcvk")
 script = ExtResource("1_wlcvk")
 

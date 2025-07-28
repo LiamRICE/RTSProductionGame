@@ -1,10 +1,6 @@
 extends Node
 
 
-
-
-
-
 static func default_setting(setting:int):
 	# Set default values (low settings)
 	# Occlusion
