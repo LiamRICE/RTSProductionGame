@@ -1,6 +1,9 @@
 extends Node
 
+# constants
+const ACCURACY_LIST:Array[float] = [0, 0.5, 0.75, 1]
 
+# enumerations
 enum WeaponType{
 	# large calibre direct fire
 	GUN,
@@ -32,7 +35,6 @@ enum WeaponType{
 	AREA_DRONE,
 }
 
-
 enum AmunitionType{
 	SOLID,
 	SMART_SOLID,
@@ -40,7 +42,6 @@ enum AmunitionType{
 	SMART_EXPLOSIVE,
 	ENERGY,
 }
-
 
 enum ShotType{
 	EXPLOSIVE,

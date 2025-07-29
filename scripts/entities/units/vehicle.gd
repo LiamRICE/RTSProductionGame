@@ -60,13 +60,13 @@ func move(delta:float):
 
 
 func set_attack_target(unit:Entity):
-	weapon_module.on_target(unit, true)
-	weapon_module.fire()
+	weapon_module.set_on_target(unit, true)
+	weapon_module.set_action_fire()
 
 
 func set_attack_position(pos:Vector3):
-	weapon_module.on_position(pos, true)
-	weapon_module.fire()
+	weapon_module.set_on_position(pos, true)
+	weapon_module.set_action_fire()
 
 
 func _on_received_damage(health: int) -> void:

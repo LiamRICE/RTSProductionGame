@@ -46,16 +46,6 @@ func _ready() -> void:
 	self.current_health = self.entity_statistics.get(0)
 	print("Starting health = ", self.current_health)
 
-## Function called when entity takes damage - returns true if the unit is destroyed
-func receive_damage(dmg:float) -> bool:
-	current_health -= dmg
-	if current_health <= 0:
-		self._on_destroyed()
-		return true
-	else:
-		received_damage.emit(current_health)
-		return false
-
 ## Function called when entity is selected.
 ## Returns true if the object is selectable. Other functionality can be added on top of this.
 func select() -> bool:
@@ -67,6 +57,25 @@ func deselect() -> void:
 ## Updates the allegiance of entities and executes any code required on an allegiance change
 func _update_allegiance(new_allegiance:int) -> void:
 	self.allegiance = new_allegiance
+
+""" COMBAT METHODS """
+
+## Function called when entity takes damage - returns true if the unit is destroyed
+func receive_damage(dmg:float) -> bool:
+	current_health -= dmg
+	if current_health <= 0:
+		self._on_destroyed()
+		return true
+	else:
+		received_damage.emit(current_health)
+		return false
+
+func is_hit(accuracy:float) -> bool:
+	# TODO - update accuracy based on this unit's cover, etc...
+	if randf() <= accuracy:
+		return true
+	else:
+		return false
 
 ## Code to execute when unit is destroyed
 func _on_destroyed() -> void:

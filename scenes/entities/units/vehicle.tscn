@@ -8,7 +8,7 @@
 [ext_resource type="Resource" uid="uid://cw7mcwcuit1d" path="res://data/weapons/120mm_smoothbore.tres" id="6_upnrm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
-size = Vector3(0.613342, 0.807037, 1.0376)
+size = Vector3(0.26225, 0.1, 0.156026)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_hxc5x"]
 viewport_path = NodePath("SubViewport")
@@ -27,33 +27,66 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.1
 visible = false
 texture = ExtResource("2_6twp8")
 
-[node name="Model" type="MeshInstance3D" parent="."]
+[node name="Models" type="Node3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="Model" type="MeshInstance3D" parent="Models"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 mesh = ExtResource("3_3bsjp")
+skeleton = NodePath("../..")
+
+[node name="Model2" type="MeshInstance3D" parent="Models"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.993803, 0, 0.457642)
+mesh = ExtResource("3_3bsjp")
+skeleton = NodePath("../..")
+
+[node name="Model3" type="MeshInstance3D" parent="Models"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1.17338, 0, 0.242616)
+mesh = ExtResource("3_3bsjp")
+skeleton = NodePath("../..")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 collision_layer = 4
 collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00595093, 0.399033, -0.0187988)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00729223, 0.05, 0.0202572)
 shape = SubResource("BoxShape3D_4hctu")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.225009, 0.32449, -0.527551)
+[node name="Effects" type="Node3D" parent="."]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Effects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00101944, 0.0254912, -0.0653454)
 spot_range = 8.0
 spot_angle = 30.0
 
-[node name="SpotLight3D2" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.225, 0.324, -0.528)
+[node name="SpotLight3D2" type="SpotLight3D" parent="Effects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117039, 0.0233219, -0.0407697)
+spot_range = 8.0
+spot_angle = 30.0
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="Effects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0998714, 0.0254912, -0.0168494)
 spot_range = 8.0
 spot_angle = 30.0
 
 [node name="Healthbar" parent="." instance=ExtResource("4_wmkho")]
-offset = Vector2(0, 100)
+offset = Vector2(0, 50)
 texture = SubResource("ViewportTexture_hxc5x")
 
-[node name="WeaponModule" parent="." instance=ExtResource("5_hxc5x")]
+[node name="WeaponModule" parent="." node_paths=PackedStringArray("weapon_positions") instance=ExtResource("5_hxc5x")]
 weapon_type = ExtResource("6_upnrm")
+weapon_positions = NodePath("../WeaponPositions")
+
+[node name="WeaponPositions" type="Node3D" parent="."]
+
+[node name="Marker3D" type="Marker3D" parent="WeaponPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.120091, 0.0749529, 0)
+
+[node name="Marker3D2" type="Marker3D" parent="WeaponPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0760508, -0.0144662)
+
+[node name="Marker3D3" type="Marker3D" parent="WeaponPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0912815, 0.0732351, 0.0380476)
 
 [connection signal="received_damage" from="." to="." method="_on_received_damage"]
