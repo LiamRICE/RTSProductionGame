@@ -1,25 +1,22 @@
-[gd_resource type="Resource" script_class="WeaponType" load_steps=2 format=3 uid="uid://cw7mcwcuit1d"]
+[gd_resource type="Resource" script_class="WeaponType" load_steps=4 format=3 uid="uid://cw7mcwcuit1d"]
 
+[ext_resource type="Script" uid="uid://cny7ab3x7x2d1" path="res://scripts/utilities/weapon_objects/ammunition_type.gd" id="1_rgmvs"]
 [ext_resource type="Script" uid="uid://bjk7lrehwgy5q" path="res://scripts/utilities/weapon_objects/weapon_type.gd" id="1_u7d6a"]
+[ext_resource type="Resource" uid="uid://bwneu3skbopab" path="res://data/ammunition/120mm_ke_shell.tres" id="2_1ckdn"]
 
 [resource]
 script = ExtResource("1_u7d6a")
 weapon_effect = 0
-shot_type = 1
-damage_type = 1
-fire_mode = 1
+fire_mode = 2
 clip_size = 1
 num_reloads = 20
 reload_time = 3.0
 shots_per_burst = 1
 time_between_bursts = 0.0
 aim_time = 1.0
-damage = 80.0
 accuracy = 0.8
 circular_area_probable = 0.0
 range = 20.0
-ammunition_type = 0
+ammunition_types = Array[ExtResource("1_rgmvs")]([ExtResource("2_1ckdn")])
 rearm_time = 5.0
-ui_description = ""
-ui_tooltip = ""
 metadata/_custom_type_script = "uid://bjk7lrehwgy5q"

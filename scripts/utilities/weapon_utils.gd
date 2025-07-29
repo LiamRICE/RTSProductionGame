@@ -35,7 +35,7 @@ enum WeaponType{
 	AREA_DRONE,
 }
 
-enum AmunitionType{
+enum AmmoType{
 	SOLID,
 	SMART_SOLID,
 	EXPLOSIVE,
@@ -44,8 +44,8 @@ enum AmunitionType{
 }
 
 enum ShotType{
-	EXPLOSIVE,
-	KINETIC,
+	AREA_OF_EFFECT,
+	SINGLE,
 }
 
 enum DamageType{

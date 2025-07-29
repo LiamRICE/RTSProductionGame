@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AmmunitionType" load_steps=2 format=3 uid="uid://bwneu3skbopab"]
+
+[ext_resource type="Script" uid="uid://cny7ab3x7x2d1" path="res://scripts/utilities/weapon_objects/ammunition_type.gd" id="1_cts50"]
+
+[resource]
+script = ExtResource("1_cts50")
+ammo_type = 0
+damage = 40.0
+shot_type = 1
+damage_type = 2
+ui_description = ""
+ui_tooltip = ""
+metadata/_custom_type_script = "uid://cny7ab3x7x2d1"
