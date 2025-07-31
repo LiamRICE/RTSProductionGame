@@ -116,13 +116,13 @@ func update_gatherers():
 	var rare_metal_count:int = 0
 	for unit:ResourceCollectorUnit in all_gatherers:
 		if unit.allegiance == self.allegiance:
-			if unit.gatherer.resource.get("type") == RESOURCE.FOOD:
+			if unit.collector_module.resource.get("type") == RESOURCE.FOOD:
 				food_count += 1
-			if unit.gatherer.resource.get("type") == RESOURCE.MATERIAL:
+			if unit.collector_module.resource.get("type") == RESOURCE.MATERIAL:
 				material_count += 1
-			if unit.gatherer.resource.get("type") == RESOURCE.METAL:
+			if unit.collector_module.resource.get("type") == RESOURCE.METAL:
 				metal_count += 1
-			if unit.gatherer.resource.get("type") == RESOURCE.RARE_METAL:
+			if unit.collector_module.resource.get("type") == RESOURCE.RARE_METAL:
 				rare_metal_count += 1
 	self.food_gatherers = food_count
 	self.materials_gatherers = material_count
