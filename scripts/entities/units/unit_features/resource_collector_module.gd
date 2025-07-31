@@ -23,13 +23,16 @@ var counter = 1
 
 func manage_gathering(delta:float):
 	# print("Gather state = ", self.gather_state)
-	if self.gather_state == GATHER_STATE.NONE:
-		# just do the normal moving
-		self.parent.move(delta)
-	elif self.gather_state == GATHER_STATE.GATHERING:
-		self.go_gathering(delta)
-	elif self.gather_state == GATHER_STATE.DROPPING:
-		self.go_drop_off(delta)
+	match self.gather_state:
+		GATHER_STATE.NONE:
+			## Move
+			self.parent.move(delta)
+		GATHER_STATE.GATHERING:
+			## Go gathering
+			self.go_gathering(delta)
+		GATHER_STATE.DROPPING:
+			## Go to drop off point
+			self.go_drop_off(delta)
 
 
 func set_gathering_target(target:Resources, is_shift:bool = false):
