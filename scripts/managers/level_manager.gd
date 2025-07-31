@@ -4,6 +4,7 @@ extends Node
 
 ## Constants
 const WorldManager:Script = preload("uid://djyeu4i21c28o")
+const UIManager:Script = preload("uid://brcxb50tcwui4")
 const EnvironmentManager:Script = preload("uid://dl1m8wjdgtkai")
 const PlayerManager:Script = preload("uid://bi34cw4c6gv1n")
 const PlayerInterface:Script = preload("uid://crs777xecsrt4")
@@ -12,6 +13,7 @@ const PlayerInterface:Script = preload("uid://crs777xecsrt4")
 @onready var environment_manager:EnvironmentManager = %EnvironmentManager
 @onready var world_manager:WorldManager = %WorldManager
 @onready var player_manager:PlayerManager = %PlayerManager
+@onready var ui_manager:UIManager = %UIManager
 @onready var player_interface:PlayerInterface = %UIManager/PlayerInterface
 
 
@@ -74,3 +76,8 @@ func add_unit(unit:Unit, location:Vector3, rally_point:Vector3=location) -> void
 		
 		## Assign the unit to trigger a path mesh update on the environment effects
 		unit.path_updated.connect(self.environment_manager.add_mesh_path)
+		
+		## Connect active location abilities to the player interface
+		for ability in unit.abilities:
+			if ability is EntityActiveLocationAbility:
+				ability.location_ability_fired.connect(self.player_interface.add_ability_to_queue)

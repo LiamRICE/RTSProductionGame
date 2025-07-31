@@ -53,7 +53,7 @@ image = SubResource("Image_ycdy4")
 [node name="GameManager" type="Node"]
 
 [node name="Marker3D" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 3.42879, 5)
 
 [node name="LevelManager" type="Node" parent="."]
 unique_name_in_owner = true

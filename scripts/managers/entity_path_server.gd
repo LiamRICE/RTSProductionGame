@@ -4,6 +4,7 @@ extends Node
 var _nav_map_rid:RID
 
 ## Constants
+const MoveOrder:Script = preload("uid://b0p06e5ob6jd3")
 const MAX_THREADS:int = 4
 
 ## Internal variables
@@ -23,9 +24,9 @@ func _ready() -> void:
 		_thread_pool.append(thread)
 		thread.start(self._thread_function, Thread.PRIORITY_LOW)
 
-func request_path(unit:Unit, start:Vector3, end:Vector3) -> void:
+func request_path(order:MoveOrder, start:Vector3, end:Vector3) -> void:
 	var request: Dictionary = {
-		"unit": unit,
+		"order": order,
 		"start": start,
 		"end": end
 	}
@@ -58,15 +59,15 @@ func _thread_function() -> void:
 
 		var start:Vector3 = request["start"]
 		var end:Vector3 = request["end"]
-		var unit:Unit = request["unit"]
+		var order:MoveOrder = request["order"]
 
 		var path: PackedVector3Array = NavigationServer3D.map_get_path(_nav_map_rid, start, end, true)
 		path = NavigationServer3D.simplify_path(path, 0.01)
 
-		call_deferred("_emit_path_ready", unit, path)
+		call_deferred("_emit_path_ready", order, path)
 
-func _emit_path_ready(unit:Unit, path:PackedVector3Array) -> void:
-	unit._path_received(path)
+func _emit_path_ready(order:MoveOrder, path:PackedVector3Array) -> void:
+	order._path_received(path)
 
 ## Thread must be disposed (or "joined"), for portability.
 func _exit_tree() -> void:

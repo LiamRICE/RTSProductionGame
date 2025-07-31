@@ -30,3 +30,7 @@ func reset_ability() -> void: pass
 ## To string override
 func _to_string() -> String:
 	return self.ability_name
+
+## Checks if two abilities are the same. Abilities are the same if they have the same name
+func equals(ability:EntityAbility) -> bool:
+	return self.ability_name == ability.ability_name

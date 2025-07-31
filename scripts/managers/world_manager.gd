@@ -61,6 +61,9 @@ func _ready() -> void:
 	## Fog of war
 	self.fog_of_war_texture = self.fog_of_war_mesh.fog_of_war_texture
 	self.fog_of_war_texture.fog_of_war_updated.connect(self._update_visibility)
+	
+	## Entity updates
+	EventBus.on_entity_destroyed.connect(fog_of_war_remove_propagator)
 
 ##----------------##
 ##-- FOG OF WAR --##
@@ -95,8 +98,9 @@ func fog_of_war_register_propagator(fow_sprite:Sprite2D, world_position:Vector3)
 	self.fog_of_war_texture.register_entity_sprite(fow_sprite, position_2d)
 
 ## Removes the sprite from the FoW system and frees it
-func fog_of_war_remove_propagator(fow_sprite:Sprite2D) -> void:
-	self.fog_of_war_texture.remove_entity_sprite(fow_sprite)
+func fog_of_war_remove_propagator(entity:Entity) -> void:
+	if entity.is_in_group("fog_of_war_propagators"):
+		self.fog_of_war_texture.remove_entity_sprite(entity.fog_of_war_sprite)
 
 func _get_fow_position_update_time() -> float: ## Performance monitor debug
 	return self.fow_position_update_time

@@ -1,5 +1,8 @@
 extends HBoxContainer
 
+## Signals
+signal on_ability_location_needed(selection:Selection, ability_index:int)
+
 ## Loading script classes
 const UIStateUtils := preload("uid://cs16g08ckh1rw")
 const ActionsContainer:Script = preload("uid://cqkd5l78qvysq")
@@ -15,7 +18,7 @@ var selection_type:UIStateUtils.SelectionType = UIStateUtils.SelectionType.NONE
 
 ## Info bar methods
 func _ready() -> void:
-	self.actions_container.init(container_size, _on_button_pressed)
+	self.actions_container.init(container_size, _on_button_pressed, _on_ability_button_pressed)
 
 
 ## Executed when a button is pressed
@@ -23,11 +26,16 @@ func _on_button_pressed(index:int) -> void:
 	## TODO - execute button's effect on object
 	if self.selection_list.contents[0] is ProductionBuilding:
 		for building in self.selection_list.contents:
-			building.queue_unit(index)
+			building.queue_unit(index - self.container_size.x)
 			print("Queued unit")
-	if self.selection_list.contents[0] is Unit:
-		for unit in self.selection_list.contents:
-			unit.abilities[index - self.container_size.x].start_ability()
+
+func _on_ability_button_pressed(ability:EntityAbility, index:int) -> void:
+	for unit in self.selection_list.contents:
+		if ability is EntityActiveLocationAbility:
+			print("Ability is a location dependant ability")
+			unit.abilities[index].fire_ability()
+		else:
+			unit.abilities[index - self.container_size.x * 2].start_ability()
 			print("Used ability ", unit.abilities[index - self.container_size.x]._to_string())
 
 func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUtils.SelectionType) -> void:
@@ -53,11 +61,17 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 			entity = sub_selection.contents[0]
 			for index in range(entity.abilities.size()):
 				var entity_ability:EntityAbility = entity.abilities[index]
-				self.actions_container.button_list[index + self.container_size.x].icon = entity_ability.ability_icon
-				self.actions_container.button_list[index + self.container_size.x].tooltip_text = entity_ability.ability_tooltip
-				self.actions_container.button_list[index + self.container_size.x].set_disabled(false)
-				self.actions_container.button_list[index + self.container_size.x].set_flat(false)
-				#print(entity.abilities[index])
+				if entity_ability is EntityPassiveAbility:
+					self.actions_container.button_list[index + self.container_size.x * 2].icon = entity_ability.ability_icon
+					self.actions_container.button_list[index + self.container_size.x * 2].tooltip_text = entity_ability.ability_tooltip
+					self.actions_container.button_list[index + self.container_size.x * 2].set_disabled(true)
+					self.actions_container.button_list[index + self.container_size.x * 2].set_flat(false)
+				else:
+					self.actions_container.button_list[index + self.container_size.x * 2].icon = entity_ability.ability_icon
+					self.actions_container.button_list[index + self.container_size.x * 2].tooltip_text = entity_ability.ability_tooltip
+					self.actions_container.button_list[index + self.container_size.x * 2].set_disabled(false)
+					self.actions_container.button_list[index + self.container_size.x * 2].set_flat(false)
+					#print(entity.abilities[index])
 			
 		
 		UIStateUtils.SelectionType.BUILDINGS:
@@ -71,10 +85,10 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 			if entity is ProductionBuilding:
 				for index in range(entity.building_units.size()):
 					var entity_resource:EntityResource = EntityDatabase.get_resource(entity.building_units[index])
-					self.actions_container.button_list[index].icon = entity_resource.ui_icon
-					self.actions_container.button_list[index].tooltip_text = entity_resource.ui_tooltip
-					self.actions_container.button_list[index].set_disabled(false)
-					self.actions_container.button_list[index].set_flat(false)
+					self.actions_container.button_list[index + self.container_size.x].icon = entity_resource.ui_icon
+					self.actions_container.button_list[index + self.container_size.x].tooltip_text = entity_resource.ui_tooltip
+					self.actions_container.button_list[index + self.container_size.x].set_disabled(false)
+					self.actions_container.button_list[index + self.container_size.x].set_flat(false)
 			for index_2 in range(entity.abilities.size()):
 				print(entity.abilities[index_2])
 		
@@ -88,6 +102,6 @@ func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUt
 			## TODO - List all construction orders
 			pass
 
-	## Get the selection's first item
+	## Assign the sub selection to be the current selection
 	self.selection_list = sub_selection
 	self.selection_type = selection_type

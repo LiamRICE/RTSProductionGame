@@ -38,7 +38,7 @@ func set_gathering_target(target:Resources, is_shift:bool = false):
 	self.resource.set("node", target)
 	self.resource.set("type", target.resource_type)
 	self.gather_state = GATHER_STATE.GATHERING
-	self.parent.set_navigation_path(target.global_transform.origin, is_shift)
+	#self.parent.set_navigation_path(target.global_transform.origin, is_shift)
 
 
 func gather(res:RESOURCE, gather_speed:float, resource_max:int, amount:int, delta:float) -> bool:

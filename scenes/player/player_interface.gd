@@ -46,12 +46,15 @@ var constructing_building:Building
 var num_deployments:int = 0
 var mouse_state:UIStateUtils.MouseState = UIStateUtils.MouseState.DEFAULT
 
-## Internal Variables
+## Selection Variables
 var _mouse_left_click:bool = false
 var _dragged_rect_left:Rect2
 var _mouse_right_click:bool = false
 var _is_constructing:bool = false
 var is_on_ui:bool = false
+
+## Ability Variables
+var ability_array:Array[EntityActiveLocationAbility]
 
 ## Constants
 const MIN_SELECT_SQUARED:float = 81
@@ -133,17 +136,16 @@ func _input(event:InputEvent) -> void:
 	""" SELECTION STATES """
 	if event is InputEventMouseButton: ## On mouse click and release
 		## Handle Left click
-		print(self.state)
 		if event.button_index == MouseButton.MOUSE_BUTTON_LEFT:
-			self._mouse_left_click = event.is_pressed() ## Set the mouse left click being held or not
 			match self.state:
-				UIStateUtils.ClickState.DEFAULT, UIStateUtils.ClickState.SELECTED: ## When the mouse is in the default state or has units selected
-					if event.is_pressed() and not self.ui_manager.is_on_ui: ## If LMB is pressed
+				UIStateUtils.ClickState.DEFAULT, UIStateUtils.ClickState.SELECTED when not self.ui_manager.is_on_ui: ## When the mouse is in the default state or has units selected
+					if event.is_pressed(): ## If LMB is pressed
 						state = UIStateUtils.ClickState.SELECTING ## Update state machine
 						## Updates the dragged rect start position
 						_dragged_rect_left.position = get_global_mouse_position()
 						ui_selection_patch.position = _dragged_rect_left.position
 						_mouse_left_click = true
+						print("Clicked")
 					elif not event.is_pressed(): ## If LMB is released
 						print("Released while in default or selected state")
 				
@@ -161,16 +163,18 @@ func _input(event:InputEvent) -> void:
 					if self.constructing_building.is_placement_valid():
 						state = UIStateUtils.ClickState.DEFAULT
 						var camera :Camera3D = get_viewport().get_camera_3d()
-						var mouse_position :Vector2 = get_viewport().get_mouse_position()
-						var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+						var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, event.position)
 						self.remove_child(self.constructing_building)
 						self.level_manager.add_building(self.constructing_building, click_position)
 						## TODO - Debug, make allegiance based on player interface
 					else:
 						print("Invalid placement ! Object intersects placement blocker.")
 				
-				UIStateUtils.ClickState.ABILITY: ## When the mouse has an ability waiting to have a location or unit selected on the map
-					print("Left Ability")
+				UIStateUtils.ClickState.ABILITY when not self.ui_manager.is_on_ui: ## When the mouse has an ability waiting to have a location or unit selected on the map
+					## TODO start ability at the location clicked
+					if event.is_pressed():
+						self.set_ability_location(event.position)
+						print("Left Ability")
 					
 		## Handle Right click
 		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
@@ -182,7 +186,6 @@ func _input(event:InputEvent) -> void:
 				UIStateUtils.ClickState.SELECTED when not self.ui_manager.is_on_ui:
 					if event.is_pressed():
 						self._give_move_order()
-					print("Right Selected")
 				UIStateUtils.ClickState.CONSTRUCTING:
 					if event.is_pressed():
 						state = UIStateUtils.ClickState.DEFAULT
@@ -190,6 +193,9 @@ func _input(event:InputEvent) -> void:
 						self.remove_child(self.constructing_building)
 						self.constructing_building = null
 				UIStateUtils.ClickState.ABILITY:
+					## TODO cancel ability mode
+					if event.is_pressed():
+						self.state = UIStateUtils.ClickState.SELECTED
 					print("Right Ability")
 	
 	# Runs once at the start of each selection rect, if the state is DEFAULT
@@ -257,6 +263,9 @@ func _input(event:InputEvent) -> void:
 		#else:
 			#print("Invalid placement ! Object intersects placement blocker.")
 
+
+""" SELECTION CODE """
+
 ## Assigns a move order to all units currently in the selection
 func _give_move_order() -> void:
 	var camera :Camera3D = get_viewport().get_camera_3d()
@@ -280,7 +289,10 @@ func _give_move_order() -> void:
 						unit.set_gathering_target(target, is_shift)
 					else:
 					# TODO - spread out units
-						unit.update_target_location(camera_raycast_coords, is_shift)
+						#unit.update_target_location(camera_raycast_coords, is_shift)
+						var move_order:MoveOrder = MoveOrder.new()
+						move_order.execute(unit, is_shift, camera_raycast_coords)
+						unit.add_order(move_order, is_shift)
 
 func cast_selection() -> bool:
 	# Clears the selection
@@ -333,6 +345,45 @@ func cast_selection() -> bool:
 	else:
 		return true
 
+## Modifies the size of the selection rectangle based on current position
+func update_ui_selection_rect() -> void:
+	# Gives the UI rect the same size as the dragged rect (absoluted since a NinePatchRect can't have a negative size)
+	self.ui_selection_patch.size = abs(self._dragged_rect_left.size)
+	# Negative scaling since NinePatchRect only allows for positive sizes
+	# Scale the nine patch rect X axis by -1 to enable dragging left
+	if self._dragged_rect_left.size.x < 0:
+		self.ui_selection_patch.scale.x = -1
+	else:
+		self.ui_selection_patch.scale.x = 1
+	# Scale the nine patch rect Y axis by -1 to enable dragging up
+	if self._dragged_rect_left.size.y < 0:
+		self.ui_selection_patch.scale.y = -1
+	else:
+		self.ui_selection_patch.scale.y = 1
+
+""" ABILITIES CODE """
+
+## Set the mouse state to ability and stores the array of abilities to use
+func add_ability_to_queue(ability:EntityActiveLocationAbility) -> void:
+	if self.ability_array.size() == 0:
+		self.ability_array.push_back(ability)
+		self.state = UIStateUtils.ClickState.ABILITY
+		print(self.ability_array.size())
+	elif ability.equals(self.ability_array[0]):
+		self.ability_array.push_back(ability)
+		print(self.ability_array.size())
+	else:
+		self.ability_array.resize(1)
+		self.ability_array[0] = ability
+
+func set_ability_location(screen_position:Vector2) -> void:
+	var click_position :Vector3 = camera_operations.global_position_from_raycast(self.player_camera, screen_position)
+	
+	var ability:EntityActiveLocationAbility = self.ability_array.pop_front()
+	if self.ability_array.size() == 0:
+		self.state = UIStateUtils.ClickState.SELECTED
+	print(self.ability_array.size())
+	ability.start_ability_at_location(click_position)
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
@@ -356,21 +407,8 @@ func _process(_delta:float) -> void:
 		self.constructing_building.global_position = self.camera_operations.global_position_from_raycast(self.player_camera, mouse_position) + Vector3(0, 0.05, 0)
 		self.constructing_building.is_placement_valid()
 
-## Modifies the size of the selection rectangle based on current position
-func update_ui_selection_rect() -> void:
-	# Gives the UI rect the same size as the dragged rect (absoluted since a NinePatchRect can't have a negative size)
-	self.ui_selection_patch.size = abs(self._dragged_rect_left.size)
-	# Negative scaling since NinePatchRect only allows for positive sizes
-	# Scale the nine patch rect X axis by -1 to enable dragging left
-	if self._dragged_rect_left.size.x < 0:
-		self.ui_selection_patch.scale.x = -1
-	else:
-		self.ui_selection_patch.scale.x = 1
-	# Scale the nine patch rect Y axis by -1 to enable dragging up
-	if self._dragged_rect_left.size.y < 0:
-		self.ui_selection_patch.scale.y = -1
-	else:
-		self.ui_selection_patch.scale.y = 1
+
+""" DEBUG/UTILITY """
 
 ## Add building
 func _on_deploy_unit_button_pressed():
