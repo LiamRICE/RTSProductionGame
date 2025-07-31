@@ -64,18 +64,15 @@ func _ready() -> void:
 	self.current_shield = self.entity_statistics[STATS.SHIELD]
 	
 	## Initialise orders
-	self.active_order = self.default_order.new()
+	self.active_order = self.default_order.new(self)
 	
 	## Start abilities
 	for ability in self.abilities:
 		ability.init_ability(self)
 
 func _physics_process(delta) -> void:
-	print("Active Order : ", self.active_order)
 	## Execute current order
 	self.active_order.process(self, delta)
-	if self.active_order is MoveOrder:
-		print(active_order._target_position)
 
 ## Function called when entity takes damage
 func receive_damage(dmg:float) -> void:
@@ -105,9 +102,10 @@ func _on_destroyed() -> void:
 
 """ MANAGE ORDERS """
 
-func add_order(order:Order, is_shift:bool) -> void:
+## Adds the defined order to this entity. The is_queued flag determines if the order should be appended to the end of the order queue or executed immediately.
+func add_order(order:Order, is_queued:bool = false) -> void:
 	## Add order to queue or overwrite queue with new order
-	if is_shift:
+	if is_queued:
 		self.order_queue.push_back(order)
 		if self.is_default_order:
 			self.is_default_order = false
@@ -116,26 +114,27 @@ func add_order(order:Order, is_shift:bool) -> void:
 		self.order_queue.resize(1)
 		self.order_queue[0] = order
 		self.active_order.abort()
+		self.is_default_order = false
 
+## Called when the current order aborts. This is usually because another order has received priority from the queue.
 func _order_aborted() -> void:
-	print("Current order was aborted")
 	self.active_order = self.order_queue.pop_front()
 	if self.active_order == null:
-		self.active_order = self.default_order.new()
+		self.active_order = self.default_order.new(self)
 		self.is_default_order = true
 
+## Called when the current order has been completed. The entity pops the next order from the queue or goes to it's idle order.
 func _order_completed() -> void:
-	print("Current order was completed")
 	self.active_order = self.order_queue.pop_front()
 	if self.active_order == null:
-		self.active_order = self.default_order.new()
+		self.active_order = self.default_order.new(self)
 		self.is_default_order = true
 
+## Called when the current order fails. The entity then pops the next order from the queue or goes to it's idle order.
 func _order_failed() -> void:
-	print("Current order failed")
 	self.active_order = self.order_queue.pop_front()
 	if self.active_order == null:
-		self.active_order = self.default_order.new()
+		self.active_order = self.default_order.new(self)
 		self.is_default_order = true
 
 """ ABILITY METHODS """

@@ -6,7 +6,6 @@
 [node name="EntityPassiveStatModAbility" type="Node"]
 script = ExtResource("1_xyxmg")
 stat_to_modify = 7
-stat_mod_amount = 10.0
 ability_name = "Repulsor Overclocking"
 ability_icon = ExtResource("2_45232")
 ability_description = "A permanent speed increase"

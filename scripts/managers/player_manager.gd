@@ -38,6 +38,9 @@ var gatherers_counter:float = 0.05
 
 func _ready() -> void:
 	self.food = 500
+	self.materials = 500
+	self.metals = 500
+	self.rare_metals = 200
 	
 	self.ui_update_timer.wait_time = self.refresh_rate_gatherers
 	self.ui_update_timer.timeout.connect(self.update_gatherers)

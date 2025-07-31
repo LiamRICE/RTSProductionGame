@@ -75,7 +75,7 @@ func add_unit(unit:Unit, location:Vector3, rally_point:Vector3=location) -> void
 		world_manager.fog_of_war_register_propagator(fow_sprite, location)
 		
 		## Assign the unit to trigger a path mesh update on the environment effects
-		unit.path_updated.connect(self.environment_manager.add_mesh_path)
+		#unit.path_updated.connect(self.environment_manager.add_mesh_path)
 		
 		## Connect active location abilities to the player interface
 		for ability in unit.abilities:

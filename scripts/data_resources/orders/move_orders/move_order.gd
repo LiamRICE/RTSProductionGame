@@ -1,3 +1,4 @@
+## An object containing movement logic for units and buildings. This moves the unit's global position to the target location.
 class_name MoveOrder extends Order
 
 ## Internal variables
@@ -7,9 +8,10 @@ var _is_new_path:bool = false
 var _next_point : Vector3
 var _target_position:Vector3
 var _path_index : int = 0
-var _path_point_margin : float = 0.1
+const _path_point_margin:float = 0.02
 
-func execute(entity:Entity, queue_order:bool, location:Vector3 = Vector3.INF) -> void:
+func _init(entity:Entity, queue_order:bool = false, location:Vector3 = Vector3.INF) -> void:
+	super._init(entity, queue_order)
 	self._request_path_async(entity, queue_order, location)
 
 func process(entity:Entity, delta:float) -> void:
@@ -24,22 +26,16 @@ func process(entity:Entity, delta:float) -> void:
 		## Debug - TODO Maybe turn this into an effect
 		EventBus.on_entity_move.emit(entity, self._path)
 	
-	## Check if path is empty, stop moving
-	if entity.global_position.is_equal_approx(self._target_position) and self._path.is_empty():
-		self._order_completed()
-		return
-	
 	""" UPDATE PATH """
 	## Increment next path point if current point has been reached
-	if self._target_position.distance_to(self._next_point) <= self._path_point_margin:
+	var has_arrived_at_destination:bool = false
+	if self._target_position.is_equal_approx(self._next_point):
 		self._path_index += 1
 		if self._path_index >= self._path.size():
-			self._path.clear()
-			self._path_index = 0
-	## Set the next point to navigate to
-	if self._path.is_empty():
-		self._next_point = self._target_position
-	else:
+			self._path_index -= 1
+			if entity.global_position.distance_squared_to(self._target_position) < self._path_point_margin:
+				has_arrived_at_destination = true
+		## Set the next point to navigate to
 		self._next_point = self._path[self._path_index]
 	
 	""" POSITION """
@@ -55,24 +51,28 @@ func process(entity:Entity, delta:float) -> void:
 	if not relative_target.is_zero_approx():
 		var target_quaternion = Quaternion(Basis.looking_at(relative_target))
 		entity.quaternion = entity.rotation_dynamics.update(delta, target_quaternion)
+	
+	if has_arrived_at_destination:
+		self._order_completed()
 
 ## Calls the EntityNavigationServer and queues a path request
 func _request_path_async(entity:Entity, queue_order:bool, location:Vector3) -> void:
-	var start:Vector3
+	var start:Vector3 = entity.global_position
 	if queue_order:
 		var order:Order
-		for i in range(0, entity.order_queue.size(), -1):
-			order = entity.order_queue[i]
-			if order is MoveOrder:
-				start = order._path[order._path.size() - 1]
-				break
-	else:
-		start = entity.global_position
+		if entity.order_queue.size() > 0:
+			for i in range(entity.order_queue.size()-1, -1, -1):
+				order = entity.order_queue[i]
+				if order is MoveOrder:
+					start = order._path[order._path.size() - 1]
+					break
+		elif entity.active_order is MoveOrder:
+			start = entity.active_order._path[entity.active_order._path.size() - 1]
 	## Query the entity navigation server
 	EntityNavigationServer.request_path(self, start, location)
 
 ## Called when the path is received back from the EntityNavigationServer
-func _path_received(path: PackedVector3Array) -> void:
+func _path_received(path:PackedVector3Array) -> void:
 	## Check path has data (paths generated before Navmesh sync can be empty as can 0 distance paths)
 	if path.is_empty():
 		self._order_failed()
@@ -83,9 +83,7 @@ func _path_received(path: PackedVector3Array) -> void:
 	## Inform the update loop that it has received data
 	self._has_received_path = true
 	self._is_new_path = true
-	
-	print(self)
 
 
 func _to_string() -> String:
-	return "Move Order along " + str(self._path)
+	return "Move Order " + str(self._path)
