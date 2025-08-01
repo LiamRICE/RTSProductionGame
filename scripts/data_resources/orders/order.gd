@@ -9,11 +9,16 @@ signal order_aborted
 var should_abort:bool = false
 
 ## Virtual function to call when starting the order.
-func _init(entity:Entity, _queue_order:bool = false) -> void:
+func _init(entity:Entity, _queue_order:bool = false, operation:Operation = null) -> void:
 	## Add order signal connections
-	self.order_aborted.connect(entity._order_aborted)
-	self.order_completed.connect(entity._order_completed)
-	self.order_failed.connect(entity._order_failed)
+	if operation == null:
+		self.order_aborted.connect(entity._order_aborted)
+		self.order_completed.connect(entity._order_completed)
+		self.order_failed.connect(entity._order_failed)
+	else:
+		self.order_aborted.connect(operation._order_aborted)
+		self.order_completed.connect(operation._order_completed)
+		self.order_failed.connect(operation._order_failed)
 
 ## Runs the logic for the order every physics frame. Must stop the process when should_abort is true.
 func process(_entity:Entity, _delta:float) -> void:

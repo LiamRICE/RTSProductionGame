@@ -19,6 +19,7 @@ func _init_player_manager():
 		printerr("Warning! No player manager found! Check the SceneTree for 'GameManager/LevelManager/PlayerManager'.")
 
 
-func drop_off(amount:int, type:RESOURCE):
-	print("Units dropped off ", amount, " of type ", type)
-	self.player_manager.add_resource(amount, type)
+func drop_off(amount:Dictionary[RESOURCE, int]):
+	print("Units dropped off ", amount.values(), " of type ", amount.keys())
+	for type in amount:
+		self.player_manager.add_resource(amount[type], type)

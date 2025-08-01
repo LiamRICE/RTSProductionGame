@@ -290,7 +290,7 @@ func _give_move_order() -> void:
 					else:
 					# TODO - spread out units
 						#unit.update_target_location(camera_raycast_coords, is_shift)
-						var move_order:MoveOrder = MoveOrder.new(unit, is_shift, camera_raycast_coords)
+						var move_order:MoveOrder = MoveOrder.new(unit, is_shift, null, camera_raycast_coords)
 						unit.add_order(move_order, is_shift)
 
 func cast_selection() -> bool:

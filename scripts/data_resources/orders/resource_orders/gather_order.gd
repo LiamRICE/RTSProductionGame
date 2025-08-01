@@ -11,11 +11,9 @@ var _max_amount:float = 0
 var _resource_gathered:Dictionary[RESOURCE, int]
 var _counter:float = 1
 
-func _init(entity:Entity, queue_order:bool = false, target:Resources = null) -> void:
-	super._init(entity, queue_order)
+func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, target:Resources = null) -> void:
+	super._init(entity, queue_order, operation)
 	self._target = target
-	## Check target is available and close enough, else fail
-	
 	## Get the entity's stats
 	self._gather_speed = entity.entity_statistics[entity.STATS.GATHER_SPEED]
 	self._gather_amount = entity.entity_statistics[entity.STATS.GATHER_AMOUNT]
@@ -27,7 +25,7 @@ func process(entity:Entity, delta:float) -> void:
 	## Check target is still available
 	if self._target == null:
 		self._order_failed() ## Exit out of this and search for new resource to mine
-	elif self._target.is_queued_for_deletion():
+	elif self._target.is_queued_for_deletion() or self._target.is_awaiting_deletion:
 		self._order_failed()
 	
 	if entity.global_position.distance_squared_to(self._target.global_position) < 1:

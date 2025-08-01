@@ -32,7 +32,7 @@ func _ready():
 func spawn(location:Vector3, rally_point:Vector3) -> void:
 	self.global_position = location
 	self.basis = Basis.IDENTITY
-	var order:MoveOrder = MoveOrder.new(self, false, rally_point)
+	var order:MoveOrder = MoveOrder.new(self, false, null, rally_point)
 	self.add_order(order)
 	
 	## Animation initialisation

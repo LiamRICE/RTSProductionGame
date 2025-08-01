@@ -10,6 +10,6 @@ var player_manager:PlayerManager
 @export var depot_module:DepotModule
 
 ## Required for depot functionality
-func drop_off(amount:int, type:RESOURCE):
+func drop_off(amount:Dictionary[RESOURCE, int]):
 	print("Dropping off")
-	self.depot_module.drop_off(amount, type)
+	self.depot_module.drop_off(amount)

@@ -10,8 +10,8 @@ var _target_position:Vector3
 var _path_index : int = 0
 const _path_point_margin:float = 0.02
 
-func _init(entity:Entity, queue_order:bool = false, location:Vector3 = Vector3.INF) -> void:
-	super._init(entity, queue_order)
+func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, location:Vector3 = Vector3.INF) -> void:
+	super._init(entity, queue_order, operation)
 	self._request_path_async(entity, queue_order, location)
 
 func process(entity:Entity, delta:float) -> void:

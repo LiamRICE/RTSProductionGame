@@ -45,6 +45,7 @@ var rotation_dynamics:QuaternionSecondOrderDynamics
 @export var is_damageable:bool = true
 @export var is_selectable:bool = true
 @export var is_mobile:bool = false
+var is_awaiting_deletion:bool = false
 
 ## Entity internal orders
 var order_queue:Array[Order] = []
@@ -92,11 +93,12 @@ func deselect() -> void:
 func _update_allegiance(new_allegiance:int) -> void:
 	self.allegiance = new_allegiance
 
-## Code to execute when unit is destroyed
+## Code to execute when entity is destroyed
 func _on_destroyed() -> void:
 	## Inform the event bus of imminent death
+	self.is_awaiting_deletion = true
 	EventBus.on_entity_destroyed.emit(self)
-	## Remove unit
+	## Remove entity or play a death animation which deletes the entity at the end of it
 	self.queue_free()
 
 
