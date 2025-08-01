@@ -38,15 +38,19 @@ func process(entity:Entity, delta:float) -> void:
 	
 	## While gathering, if target no longer available (gather failed), reroute to next closest and gather from it
 	if self._state == GATHER_STATE.GATHERING and self._active_order == null:
-		## Find next closest resource node and go mine from it
-		var closest_resource_node:Resources = _get_closest_resource_node_of_type(self._entity, self._resource_type_target)
-		if closest_resource_node == null:
-			print("No more resources to mine. Gathering operation halted.")
-			self._order_failed()
-			return
-		var move:MoveOrder = MoveOrder.new(self._entity, false, self, closest_resource_node.global_position)
+		## Check if the mined resource node is still present
+		if self._resource_target == null:
+			## Find next closest resource node and go mine from it
+			var closest_resource_node:Resources = _get_closest_resource_node_of_type(self._entity, self._resource_type_target)
+			if closest_resource_node == null:
+				print("No more resources to mine. Gathering operation halted.")
+				self._order_failed()
+				return
+			self._resource_target = closest_resource_node
+		
+		var move:MoveOrder = MoveOrder.new(self._entity, false, self, self._resource_target.global_position)
 		self.add_order(move, false)
-		var gather:GatherOrder = GatherOrder.new(self._entity, true, self, closest_resource_node)
+		var gather:GatherOrder = GatherOrder.new(self._entity, true, self, self._resource_target)
 		self.add_order(gather, true)
 	
 	## If resource storage full (gather successful), give move command to depot, depot dropoff, check the target is still present
