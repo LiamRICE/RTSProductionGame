@@ -16,7 +16,10 @@ entity_statistics = Dictionary[int, float]({
 7: 6.0,
 8: 3.0,
 9: 20.0,
-10: 180.0
+10: 180.0,
+11: 0.0,
+12: 0.0,
+13: 0.0
 })
 production_cost = Dictionary[int, float]({
 1: 25.0,

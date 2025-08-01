@@ -1,22 +1,16 @@
 class_name DepositOrder extends Order
 
 ## Constants
-const RESOURCE := preload("res://scripts/utilities/resource_utils.gd").RESOURCE
+const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 
 ## Internal variables
-var _target:DepotBuilding = null
-var _resource_gathered:Dictionary[RESOURCE, int]
+var _target:Entity = null
 
 
-func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, target:DepotBuilding = null) -> void:
+func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, target:Entity = null) -> void:
 	super._init(entity, queue_order, operation)
+	assert(target.has_node("DepotModule"))
 	self._target = target
-	## Check target is available and close enough, else fail
-	
-	## Get the entity's stats
-	self._gather_speed = entity.entity_statistics[entity.STATS.GATHER_SPEED]
-	self._gather_amount = entity.entity_statistics[entity.STATS.GATHER_AMOUNT]
-	self._max_amount = entity.entity_statistics[entity.STATS.MAX_RESOURCE]
 
 func process(entity:Entity, delta:float) -> void:
 	super.process(entity, delta)
@@ -24,17 +18,20 @@ func process(entity:Entity, delta:float) -> void:
 	## Check target is still available
 	if self._target == null:
 		self._order_failed() ## Exit out of this and search for new resource to mine
+		return
 	elif self._target.is_queued_for_deletion() or self._target.is_awaiting_deletion:
 		self._order_failed()
+		return
 	
-	if entity.global_position.distance_squared_to(self._target.global_position) < 1:
-		self._deposit_resources()
+	if entity.global_position.distance_squared_to(self._target.global_position) < 4:
+		self._deposit_resources(entity)
 	else:
 		self._order_failed()
 
 
-func _deposit_resources() -> void:
-	self._target.drop_off(self._resource_gathered)
+func _deposit_resources(entity:Entity) -> void:
+	entity = entity as ResourceCollectorUnit
+	self._target.drop_off(entity.inventory_module.deliver())
 	## Signal that the order was successfully completed
 	self._order_completed()
 	

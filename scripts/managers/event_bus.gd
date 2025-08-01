@@ -3,6 +3,13 @@ extends Node
 ## Constants
 const RESOURCE := preload("res://scripts/utilities/resource_utils.gd").RESOURCE
 
+
+""" STARTUP SIGNALS """
+
+## Navigation
+signal on_navigation_map_created(map_rid:RID)
+
+
 """ ENTITY SIGNALS """
 
 ## Order signals

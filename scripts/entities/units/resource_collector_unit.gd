@@ -1,11 +1,12 @@
-class_name ResourceCollectorUnit extends Infantry
+class_name ResourceCollectorUnit extends Unit
 
-@onready var collector_module = $ResourceCollectorModule
-@onready var healthbar = $Healthbar
+## Constants
+const InventoryModule:Script = preload("uid://boci3e8npvh1a")
+const Healthbar:Script = preload("uid://45nawhpn2sjv")
 
-@export var gather_speed:float = 0.
-@export var max_res:int = 10
-@export var gather_amount:int = 1
+## Internal nodes
+@onready var inventory_module:InventoryModule = $InventoryModule
+@onready var healthbar:Healthbar = $Healthbar
 
 
 func _ready():
@@ -13,21 +14,11 @@ func _ready():
 	super._ready()
 	healthbar.initialise_healthbar(entity_statistics.get(0), entity_statistics.get(0), 50)
 
-
-func _physics_process(delta: float) -> void:
-	self.collector_module.manage_gathering(delta)
-
-
-func set_gathering_target(target:Resources, is_shift:bool = false):
-	self.collector_module.set_gathering_target(target, is_shift)
-
-
 func _get(property:StringName) -> Variant:
 	if property == "type":
-		return collector_module.resource["type"]
+		return inventory_module.resource["type"]
 	else:
 		return null
-
 
 func _on_received_damage(health:int) -> void:
 	healthbar.set_hp(health)

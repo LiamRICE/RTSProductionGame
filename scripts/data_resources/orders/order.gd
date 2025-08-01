@@ -16,9 +16,9 @@ func _init(entity:Entity, _queue_order:bool = false, operation:Operation = null)
 		self.order_completed.connect(entity._order_completed)
 		self.order_failed.connect(entity._order_failed)
 	else:
-		self.order_aborted.connect(operation._order_aborted)
-		self.order_completed.connect(operation._order_completed)
-		self.order_failed.connect(operation._order_failed)
+		self.order_aborted.connect(operation._on_order_aborted)
+		self.order_completed.connect(operation._on_order_completed)
+		self.order_failed.connect(operation._on_order_failed)
 
 ## Runs the logic for the order every physics frame. Must stop the process when should_abort is true.
 func process(_entity:Entity, _delta:float) -> void:

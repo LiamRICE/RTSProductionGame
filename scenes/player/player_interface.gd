@@ -292,12 +292,15 @@ func _give_move_order(shift_pressed:bool) -> void:
 					var unit = selected_entities.contents[i]
 					var target_pos = spread_array[i]
 					if target != null and unit is ResourceCollectorUnit and target.is_in_group("resource"):
-						pass
 						#unit.set_gathering_target(target, shift_pressed)
+						var gather_op:GatherOperation = GatherOperation.new(unit, shift_pressed, null, target)
+						unit.add_order(gather_op, shift_pressed)
+						print("Gathereing order given")
 					else:
 						#unit.update_target_location(target_pos, shift_pressed)
 						var move_order:MoveOrder = MoveOrder.new(unit, shift_pressed, null, target_pos)
 						unit.add_order(move_order, shift_pressed)
+						print("Move order given")
 
 func cast_selection() -> bool:
 	# Clears the selection
