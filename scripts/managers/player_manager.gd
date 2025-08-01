@@ -118,7 +118,7 @@ func update_gatherers():
 	var nanotech_count:int = 0
 	var fuel_count:int = 0
 	for unit:ResourceCollectorUnit in all_gatherers:
-		if unit.gatherer.resource.get("node") != null:
+		if unit.collector_module.resource.get("node") != null:
 			if unit.allegiance == self.allegiance:
 				if unit.collector_module.resource.get("node").resource_type == RESOURCE.FOOD:
 					food_count += 1

@@ -185,7 +185,7 @@ func _input(event:InputEvent) -> void:
 					print("Right Selecting")
 				UIStateUtils.ClickState.SELECTED when not self.ui_manager.is_on_ui:
 					if event.is_pressed():
-						self._give_move_order()
+						self._give_move_order(event.shift_pressed)
 				UIStateUtils.ClickState.CONSTRUCTING:
 					if event.is_pressed():
 						state = UIStateUtils.ClickState.DEFAULT
@@ -236,60 +236,68 @@ func _input(event:InputEvent) -> void:
 				#
 				#var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 				#if not camera_raycast_coords.is_zero_approx():
-					#for unit in selected_entities.contents:
+					## TODO - spread out units
+					#var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
+					#for i in range(len(selected_entities.contents)):
+						#var unit = selected_entities.contents[i]
+						#var target_pos = spread_array[i]
 						#var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
 						#if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
 							#unit.set_gathering_target(target, is_shift)
 						#else:
-						## TODO - spread out units
-							#unit.update_target_location(camera_raycast_coords, is_shift)
+							#unit.update_target_location(target_pos, is_shift)
 	
-	if Input.is_action_just_pressed("mouse_right_click") and state == UIStateUtils.ClickState.SELECTED and not self.ui_manager.is_on_ui:
-		var camera :Camera3D = get_viewport().get_camera_3d()
-		# cast to check location
-		var raycast_result = cast_ray(camera)
-		var target:Entity
-		if raycast_result.get("collider") != null:
-			if not raycast_result.get("collider").is_in_group("navigation_map"):
-				target = raycast_result.get("collider").get_parent()
-			# check if is in group unit and is enemy -> assign as target
-			# check if on resource and unit has gatherer node -> assign as resource node
-			_mouse_right_click = true
-			if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
-				var mouse_position :Vector2 = get_viewport().get_mouse_position()
-				
-				var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-				if not camera_raycast_coords.is_zero_approx():
-					# TODO - spread out units
-					var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
-					for i in range(len(selected_entities.contents)):
-						var unit = selected_entities.contents[i]
-						var target_pos = spread_array[i]
-						var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
-						if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
-							unit.set_gathering_target(target, is_shift)
-						else:
-							unit.update_target_location(target_pos, is_shift)
-	
-	""" CONSTRUCTION STATES """
-	if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
-		state = UIStateUtils.ClickState.DEFAULT
-		self._is_constructing = false
-		self.remove_child(self.constructing_building)
-		self.constructing_building = null
-	
-	if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING and not self.ui_manager.is_on_ui:
-		if self.constructing_building.is_placement_valid():
-			state = UIStateUtils.ClickState.DEFAULT
-			var camera :Camera3D = get_viewport().get_camera_3d()
-			var mouse_position :Vector2 = get_viewport().get_mouse_position()
-			var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-			self.remove_child(self.constructing_building)
-			self.level_manager.add_building(self.constructing_building, click_position)
-			## TODO - Debug, make allegiance based on player interface
-		else:
-			print("Invalid placement ! Object intersects placement blocker.")
+	#""" CONSTRUCTION STATES """
+	#if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
+		#state = UIStateUtils.ClickState.DEFAULT
+		#self._is_constructing = false
+		#self.remove_child(self.constructing_building)
+		#self.constructing_building = null
+	#
+	#if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING and not self.ui_manager.is_on_ui:
+		#if self.constructing_building.is_placement_valid():
+			#state = UIStateUtils.ClickState.DEFAULT
+			#var camera :Camera3D = get_viewport().get_camera_3d()
+			#var mouse_position :Vector2 = get_viewport().get_mouse_position()
+			#var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+			#self.remove_child(self.constructing_building)
+			#self.level_manager.add_building(self.constructing_building, click_position)
+			### TODO - Debug, make allegiance based on player interface
+		#else:
+			#print("Invalid placement ! Object intersects placement blocker.")
 
+
+""" SELECTION CODE """
+
+## Assigns a move order to all units currently in the selection
+func _give_move_order(shift_pressed:bool) -> void:
+	var camera :Camera3D = get_viewport().get_camera_3d()
+	# cast to check location
+	var raycast_result = cast_ray(camera)
+	var target:Entity
+	if raycast_result.get("collider") != null:
+		if not raycast_result.get("collider").is_in_group("navigation_map"):
+			target = raycast_result.get("collider").get_parent()
+		## check if is in group unit and is enemy -> assign as target
+		## check if on resource and unit has gatherer node -> assign as resource node
+		_mouse_right_click = true
+		if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
+			var mouse_position :Vector2 = get_viewport().get_mouse_position()
+			
+			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
+			if not camera_raycast_coords == Vector3.ZERO:
+				# TODO - spread out units
+				var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
+				for i in range(len(selected_entities.contents)):
+					var unit = selected_entities.contents[i]
+					var target_pos = spread_array[i]
+					if target != null and unit is ResourceCollectorUnit and target.is_in_group("resource"):
+						pass
+						#unit.set_gathering_target(target, shift_pressed)
+					else:
+						#unit.update_target_location(target_pos, shift_pressed)
+						var move_order:MoveOrder = MoveOrder.new(unit, shift_pressed, null, target_pos)
+						unit.add_order(move_order, shift_pressed)
 
 func cast_selection() -> bool:
 	# Clears the selection
@@ -451,8 +459,7 @@ func _on_enemy_unit_pressed():
 	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	var vehicle:Vehicle = vehicle_scene.instantiate()
 	vehicle.allegiance = self.player_team - 1
-	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(4, 0, 0))
-	vehicle.update_target_location(Vector3(-12, 0, -12), true)
+	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(-12, 0, -12))
 
 
 func _on_build_depot_pressed() -> void:
