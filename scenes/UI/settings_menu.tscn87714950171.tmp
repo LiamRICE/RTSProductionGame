@@ -1,0 +1,108 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmgmcqhtvjb7s"]
+
+[ext_resource type="Script" uid="uid://cc3aa1v5d3lea" path="res://scripts/ui/settings_menu.gd" id="1_dvq1v"]
+
+[node name="SettingsMenu" type="CanvasLayer"]
+script = ExtResource("1_dvq1v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(400, 800)
+layout_mode = 2
+size_flags_horizontal = 4
+tab_alignment = 1
+current_tab = 1
+
+[node name="Game" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 0
+
+[node name="VerticalGameContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Game"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Graphics" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 1
+
+[node name="VerticalGraphicsContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Graphics"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/TabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+text = "Basic Settings"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer" type="SplitContainer" parent="VBoxContainer/TabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/TabContainer/Graphics/VerticalGraphicsContainer/SplitContainer"]
+layout_mode = 2
+text = "This is a label"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/TabContainer/Graphics/VerticalGraphicsContainer/SplitContainer"]
+layout_mode = 2
+selected = 0
+item_count = 6
+popup/item_0/text = "Lowest"
+popup/item_0/id = 0
+popup/item_1/text = "Low"
+popup/item_1/id = 1
+popup/item_2/text = "Medium"
+popup/item_2/id = 2
+popup/item_3/text = "High"
+popup/item_3/id = 3
+popup/item_4/text = "Insane"
+popup/item_4/id = 4
+popup/item_5/text = "Ludicrous"
+popup/item_5/id = 5
+
+[node name="Sound" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 2
+
+[node name="VerticalSoundContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Sound"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Back"
+
+[connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
+[connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

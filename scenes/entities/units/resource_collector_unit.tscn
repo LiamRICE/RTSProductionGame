@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://ditvkcv1wolek"]
+[gd_scene load_steps=8 format=3 uid="uid://ditvkcv1wolek"]
 
 [ext_resource type="Script" uid="uid://b3534gvpb4lug" path="res://scripts/entities/units/resource_collector_unit.gd" id="1_ubpkj"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_c3eiw"]
 [ext_resource type="ArrayMesh" uid="uid://tey2nup14j4s" path="res://assets/kenney_space/astronautA.obj" id="3_xtrm0"]
 [ext_resource type="PackedScene" uid="uid://c1ku6ido7lle5" path="res://scenes/entities/units/unit_functions/resource_collector_module.tscn" id="4_du1o4"]
+[ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/healthbar.tscn" id="5_slmj4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1m3al"]
 size = Vector3(0.491333, 0.829468, 0.36554)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_472qh"]
+viewport_path = NodePath("SubViewport")
 
 [node name="ResourceCollectorUnit" type="Node3D" node_paths=PackedStringArray("body") groups=["resource_gatherer", "units"]]
 script = ExtResource("1_ubpkj")
@@ -17,7 +21,7 @@ allegiance = 1
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.1, 0)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.15, 0)
 visible = false
 texture = ExtResource("2_c3eiw")
 
@@ -34,3 +38,9 @@ collision_mask = 4
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0170288, 0.40033, 0.0344543)
 shape = SubResource("BoxShape3D_1m3al")
+
+[node name="Healthbar" parent="." instance=ExtResource("5_slmj4")]
+offset = Vector2(0, 100)
+texture = SubResource("ViewportTexture_472qh")
+
+[connection signal="received_damage" from="." to="." method="_on_received_damage"]

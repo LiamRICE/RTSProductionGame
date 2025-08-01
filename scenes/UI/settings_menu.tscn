@@ -4,3 +4,574 @@
 
 [node name="SettingsMenu" type="CanvasLayer"]
 script = ExtResource("1_dvq1v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SettingsTabContainer" type="TabContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 600)
+layout_mode = 2
+size_flags_horizontal = 4
+tab_alignment = 1
+current_tab = 1
+
+[node name="Game" type="ScrollContainer" parent="VBoxContainer/SettingsTabContainer"]
+visible = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 0
+
+[node name="VerticalGameContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabContainer/Game"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Graphics" type="ScrollContainer" parent="VBoxContainer/SettingsTabContainer"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 1
+
+[node name="VerticalGraphicsContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabContainer/Graphics"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GroupTitleMarginContainer1" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer1"]
+layout_mode = 2
+text = "Basic Settings"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer"]
+layout_mode = 2
+text = "Graphics Preset"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsPresetOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer"]
+layout_mode = 2
+selected = 0
+item_count = 7
+popup/item_0/text = "Lowest"
+popup/item_0/id = 0
+popup/item_1/text = "Low"
+popup/item_1/id = 1
+popup/item_2/text = "Medium"
+popup/item_2/id = 2
+popup/item_3/text = "High"
+popup/item_3/id = 3
+popup/item_4/text = "Insane"
+popup/item_4/id = 4
+popup/item_5/text = "Ludicrous"
+popup/item_5/id = 5
+popup/item_6/text = "Custom"
+popup/item_6/id = 6
+
+[node name="GroupTitleMarginContainer2" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer2"]
+layout_mode = 2
+text = "Textures"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer2" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2"]
+layout_mode = 2
+text = "Anisotropic Filtering Level"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2"]
+layout_mode = 2
+
+[node name="SplitContainer3" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3"]
+layout_mode = 2
+text = "Decal Filter"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3"]
+layout_mode = 2
+
+[node name="SplitContainer4" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4"]
+layout_mode = 2
+text = "Light Filter"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer3" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer3"]
+layout_mode = 2
+text = "Shadows"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer5" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5"]
+layout_mode = 2
+text = "Directional Shadow Resolution"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5"]
+layout_mode = 2
+
+[node name="SplitContainer6" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6"]
+layout_mode = 2
+text = "Directional Shadow Quality"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6"]
+layout_mode = 2
+
+[node name="SplitContainer7" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7"]
+layout_mode = 2
+text = "Positional Shadow Resolution"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7"]
+layout_mode = 2
+
+[node name="SplitContainer8" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8"]
+layout_mode = 2
+text = "Positional Shadow Quality"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer4" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer4"]
+layout_mode = 2
+text = "Lighting"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer9" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9"]
+layout_mode = 2
+text = "Use Half Resolution"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsCheckButton" type="CheckButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9"]
+layout_mode = 2
+
+[node name="SplitContainer10" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10"]
+layout_mode = 2
+text = "Global Illumination Quality"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10"]
+layout_mode = 2
+
+[node name="SplitContainer11" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11"]
+layout_mode = 2
+text = "Ray Probe Count"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11"]
+layout_mode = 2
+
+[node name="SplitContainer12" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12"]
+layout_mode = 2
+text = "Frames to Converge"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12"]
+layout_mode = 2
+
+[node name="SplitContainer13" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13"]
+layout_mode = 2
+text = "Frames to Update Lights"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer5" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer5"]
+layout_mode = 2
+text = "Camera"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer14" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14"]
+layout_mode = 2
+text = "Bokeh Shape"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14"]
+layout_mode = 2
+
+[node name="SplitContainer15" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15"]
+layout_mode = 2
+text = "Bokeh Quality"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer6" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer6"]
+layout_mode = 2
+text = "Environemnt"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer16" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16"]
+layout_mode = 2
+text = "SSAO"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16"]
+layout_mode = 2
+
+[node name="SplitContainer17" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17"]
+layout_mode = 2
+text = "SSIL"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17"]
+layout_mode = 2
+
+[node name="SplitContainer18" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18"]
+layout_mode = 2
+text = "Glow Upscale Mode"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18"]
+layout_mode = 2
+
+[node name="SplitContainer19" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19"]
+layout_mode = 2
+text = "Screen Space Reflection"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19"]
+layout_mode = 2
+
+[node name="SplitContainer20" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20"]
+layout_mode = 2
+text = "Subsurface Scattering"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20"]
+layout_mode = 2
+
+[node name="SplitContainer21" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21"]
+layout_mode = 2
+text = "Volumetric Fog"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsCheckButton" type="CheckButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer7" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer7"]
+layout_mode = 2
+text = "Anti-Aliasing"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer22" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22"]
+layout_mode = 2
+text = "MSAA 2D"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22"]
+layout_mode = 2
+
+[node name="SplitContainer23" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23"]
+layout_mode = 2
+text = "MSAA 3D"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23"]
+layout_mode = 2
+
+[node name="SplitContainer24" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24"]
+layout_mode = 2
+text = "FXAA"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24"]
+layout_mode = 2
+
+[node name="SplitContainer25" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25"]
+layout_mode = 2
+text = "Use TAA"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsCheckButton" type="CheckButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer8" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer8"]
+layout_mode = 2
+text = "Scaling"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer26" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26"]
+layout_mode = 2
+text = "Sharpening Method"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26"]
+layout_mode = 2
+
+[node name="GroupTitleMarginContainer9" type="MarginContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GroupTitle1" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/GroupTitleMarginContainer9"]
+layout_mode = 2
+text = "Occlusion"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SplitContainer27" type="SplitContainer" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27"]
+layout_mode = 2
+text = "Occlusion Quality"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="GraphicsSettingsOptionButton" type="OptionButton" parent="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27"]
+layout_mode = 2
+
+[node name="Sound" type="ScrollContainer" parent="VBoxContainer/SettingsTabContainer"]
+visible = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+metadata/_tab_index = 2
+
+[node name="VerticalSoundContainer" type="VBoxContainer" parent="VBoxContainer/SettingsTabContainer/Sound"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Confirm"
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Back"
+
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer/GraphicsPresetOptionButton" to="." method="_on_graphics_preset_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer2/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer3/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer4/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer5/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer6/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer7/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer8/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer9/GraphicsSettingsCheckButton" to="." method="_on_graphics_settings_check_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer10/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer11/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer12/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer13/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer14/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer15/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer16/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer17/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer18/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer19/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer20/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer21/GraphicsSettingsCheckButton" to="." method="_on_graphics_settings_check_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer22/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer23/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer24/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer25/GraphicsSettingsCheckButton" to="." method="_on_graphics_settings_check_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer26/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/SettingsTabContainer/Graphics/VerticalGraphicsContainer/SplitContainer27/GraphicsSettingsOptionButton" to="." method="_on_graphics_settings_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

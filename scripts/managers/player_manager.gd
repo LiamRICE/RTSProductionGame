@@ -48,7 +48,7 @@ func _ready() -> void:
 	self.update_resources_ui()
 
 
-func add_resource(type:RESOURCE, amount:int):
+func add_resource(amount:int, type:RESOURCE):
 	match type:
 		RESOURCE.FOOD: self.food += amount
 		RESOURCE.MATERIAL: self.materials += amount
@@ -58,7 +58,6 @@ func add_resource(type:RESOURCE, amount:int):
 		RESOURCE.COMPUTER: self.computers += amount
 		RESOURCE.NANOTECH: self.nanotech += amount
 		RESOURCE.FUEL: self.fuel += amount
-	print(amount, type)
 	# update resources UI every time you modify the amount of resources in the stockpile
 	update_resources_ui()
 
@@ -114,20 +113,37 @@ func update_gatherers():
 	var material_count:int = 0
 	var metal_count:int = 0
 	var rare_metal_count:int = 0
+	var composites_count:int = 0
+	var computer_count:int = 0
+	var nanotech_count:int = 0
+	var fuel_count:int = 0
 	for unit:ResourceCollectorUnit in all_gatherers:
-		if unit.allegiance == self.allegiance:
-			if unit.collector_module.resource.get("type") == RESOURCE.FOOD:
-				food_count += 1
-			if unit.collector_module.resource.get("type") == RESOURCE.MATERIAL:
-				material_count += 1
-			if unit.collector_module.resource.get("type") == RESOURCE.METAL:
-				metal_count += 1
-			if unit.collector_module.resource.get("type") == RESOURCE.RARE_METAL:
-				rare_metal_count += 1
+		if unit.gatherer.resource.get("node") != null:
+			if unit.allegiance == self.allegiance:
+				if unit.collector_module.resource.get("node").resource_type == RESOURCE.FOOD:
+					food_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.MATERIAL:
+					material_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.METAL:
+					metal_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.RARE_METAL:
+					rare_metal_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.COMPOSITE:
+					composites_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.COMPUTER:
+					computer_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.NANOTECH:
+					nanotech_count += 1
+				elif unit.collector_module.resource.get("node").resource_type == RESOURCE.FUEL:
+					fuel_count += 1
 	self.food_gatherers = food_count
 	self.materials_gatherers = material_count
 	self.metals_gatherers = metal_count
 	self.rare_metals_gatherers = rare_metal_count
+	self.composites_gatherers = composites_count
+	self.computers_gatherers = computer_count
+	self.nanotech_gatherers = nanotech_count
+	self.fuel_gatherers = fuel_count
 	
 	## Update UI
 	self.update_gatherer_ui()

@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://27y1lrejra6l"]
+
+[ext_resource type="Script" uid="uid://dloc5o8o0cpp4" path="res://scripts/ui/loading_screen.gd" id="1_35dpi"]
+
+[node name="LoadingScreen" type="CanvasLayer"]
+script = ExtResource("1_35dpi")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(600, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -27.5
+offset_right = 2.0
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "Loading..."
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MessageTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="MessageTimer" to="." method="_on_message_timer_timeout"]

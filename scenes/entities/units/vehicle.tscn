@@ -6,9 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://difvqa1gf048l" path="res://scenes/entities/entity_abilities/los_boost_ability.tscn" id="4_wmkho"]
 [ext_resource type="PackedScene" uid="uid://c4vpmkc4s16a3" path="res://scenes/entities/entity_abilities/passive_speed_upgrade.tscn" id="5_hxc5x"]
 [ext_resource type="PackedScene" uid="uid://cgw823uohrtyq" path="res://scenes/entities/entity_abilities/throw_grenade.tscn" id="5_upnrm"]
+[ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/healthbar.tscn" id="4_wmkho"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.613342, 0.807037, 1.0376)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hxc5x"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hxc5x"]
+viewport_path = NodePath("SubViewport")
 
 [node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body", "abilities") groups=["units"]]
 script = ExtResource("1_qm2ug")
@@ -18,7 +25,7 @@ abilities = [NodePath("LosBoostAbility"), NodePath("ThrowGrenade"), NodePath("En
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
 visible = false
 texture = ExtResource("2_6twp8")
 
@@ -41,3 +48,9 @@ ability_cooldown = 9.0
 [node name="ThrowGrenade" parent="." instance=ExtResource("5_upnrm")]
 
 [node name="EntityPassiveStatModAbility" parent="." instance=ExtResource("5_hxc5x")]
+
+[node name="Healthbar" parent="." instance=ExtResource("4_wmkho")]
+offset = Vector2(0, 100)
+texture = SubResource("ViewportTexture_hxc5x")
+
+[connection signal="received_damage" from="." to="." method="_on_received_damage"]

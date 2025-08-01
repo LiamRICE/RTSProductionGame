@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqgx8be6uxhou"]
+
+[ext_resource type="Script" uid="uid://45nawhpn2sjv" path="res://scripts/common/healthbar.gd" id="1_wlcvk"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_wlcvk"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Healthbar" type="Sprite3D"]
+modulate = Color(0, 0.670588, 0.117647, 1)
+texture = SubResource("ViewportTexture_wlcvk")
+script = ExtResource("1_wlcvk")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(100, 10)
+
+[node name="ProgressBar" type="ProgressBar" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+value = 100.0
+show_percentage = false

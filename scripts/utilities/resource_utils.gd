@@ -1,5 +1,7 @@
 extends RefCounted
 
+const DROP_OFF_RANGE:float = 2
+const GATHER_DISTANCE:float = 1
 
 enum RESOURCE {
 	NONE,
