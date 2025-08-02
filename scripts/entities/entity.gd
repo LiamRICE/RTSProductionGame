@@ -77,14 +77,6 @@ func _physics_process(delta) -> void:
 	## Execute current order
 	self.active_order.process(self, delta)
 
-## Function called when entity takes damage
-func receive_damage(dmg:float) -> void:
-	current_health -= dmg
-	if current_health <= 0:
-		self._on_destroyed()
-	else:
-		received_damage.emit(current_health)
-
 ## Function called when entity is selected.
 ## Returns true if the object is selectable. Other functionality can be added on top of this.
 func select() -> bool:
