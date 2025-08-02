@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://xejesn3s5jis"]
+[gd_scene load_steps=15 format=3 uid="uid://xejesn3s5jis"]
 
 [ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/entities/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://difvqa1gf048l" path="res://scenes/entities/entity_abilities/los_boost_ability.tscn" id="4_o0odg"]
 [ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/healthbar.tscn" id="4_wmkho"]
 [ext_resource type="PackedScene" uid="uid://c47w2hkkdi3c6" path="res://scenes/entities/units/unit_functions/weapon_module.tscn" id="5_hxc5x"]
+[ext_resource type="Script" uid="uid://cugxq57c2yjgq" path="res://scripts/entities/entity_abilities/entity_passive_stat_mod_ability.gd" id="5_le5uv"]
+[ext_resource type="PackedScene" uid="uid://cgw823uohrtyq" path="res://scenes/entities/entity_abilities/throw_grenade.tscn" id="6_5lvtk"]
+[ext_resource type="Texture2D" uid="uid://dhop3ma85mls" path="res://assets/ui/interface/GuiOptionArrow.svg" id="6_dm276"]
 [ext_resource type="Resource" uid="uid://cw7mcwcuit1d" path="res://data/weapons/120mm_smoothbore.tres" id="6_upnrm"]
 [ext_resource type="Script" uid="uid://cny7ab3x7x2d1" path="res://scripts/utilities/weapon_objects/ammunition_type.gd" id="7_txwoa"]
 [ext_resource type="Resource" uid="uid://bwneu3skbopab" path="res://data/ammunition/120mm_ke_shell.tres" id="8_813ds"]
@@ -20,7 +23,7 @@ viewport_path = NodePath("SubViewport")
 script = ExtResource("1_qm2ug")
 body = NodePath("StaticBody3D")
 entity_id = 2
-abilities = [NodePath("LosBoostAbility"), NodePath("ThrowGrenade"), NodePath("EntityPassiveStatModAbility")]
+abilities = [NodePath("LosBoostAbility"), NodePath("EntityPassiveStatModAbility"), NodePath("ThrowGrenade")]
 is_mobile = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]
@@ -56,9 +59,16 @@ shape = SubResource("BoxShape3D_4hctu")
 
 [node name="LosBoostAbility" parent="." instance=ExtResource("4_o0odg")]
 
-[node name="ThrowGrenade" parent="." instance=ExtResource("5_upnrm")]
+[node name="EntityPassiveStatModAbility" type="Node" parent="."]
+script = ExtResource("5_le5uv")
+stat_to_modify = 2
+stat_mod_amount = 10.0
+ability_name = "Reactive Armour"
+ability_icon = ExtResource("6_dm276")
+ability_description = "Extra armour packed onto the vehicle"
+metadata/_custom_type_script = "uid://cugxq57c2yjgq"
 
-[node name="EntityPassiveStatModAbility" parent="." instance=ExtResource("5_hxc5x")]
+[node name="ThrowGrenade" parent="." instance=ExtResource("6_5lvtk")]
 
 [node name="Healthbar" parent="." instance=ExtResource("4_wmkho")]
 offset = Vector2(0, 50)

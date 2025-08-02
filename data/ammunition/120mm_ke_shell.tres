@@ -11,6 +11,7 @@ ammo_type = 0
 damage = 40.0
 shot_type = 1
 damage_type = 2
+explosion_radius = 0.0
 ui_description = ""
 ui_tooltip = ""
 metadata/_custom_type_script = "uid://cny7ab3x7x2d1"
