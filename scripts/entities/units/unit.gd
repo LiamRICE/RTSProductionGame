@@ -45,6 +45,7 @@ func _ready():
 	
 	TEAM = allegiance
 
+
 func spawn(location:Vector3, rally_point:Vector3) -> void:
 	self.global_position = location
 	self.basis = Basis.IDENTITY

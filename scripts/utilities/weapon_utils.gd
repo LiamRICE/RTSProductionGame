@@ -4,7 +4,7 @@ extends Node
 const ACCURACY_LIST:Array[float] = [0, 0.5, 0.75, 1]
 
 # enumerations
-enum WeaponType{
+enum WeaponCategory{
 	# large calibre direct fire
 	GUN,
 	AUTOCANNON,
@@ -52,6 +52,7 @@ enum DamageType{
 	EXPLOSIVE,
 	KINETIC,
 	HEAT,
+	NO_DAMAGE,
 }
 
 enum FireMode{

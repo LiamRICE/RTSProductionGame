@@ -4,6 +4,9 @@
 
 [resource]
 script = ExtResource("1_cts50")
+ammo_name = "120mm KE Shell"
+shots_in_clip = 1
+num_clips = 21
 ammo_type = 0
 damage = 40.0
 shot_type = 1

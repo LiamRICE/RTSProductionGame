@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://xejesn3s5jis"]
+[gd_scene load_steps=11 format=3 uid="uid://xejesn3s5jis"]
 
 [ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/entities/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/healthbar.tscn" id="4_wmkho"]
 [ext_resource type="PackedScene" uid="uid://c47w2hkkdi3c6" path="res://scenes/entities/units/unit_functions/weapon_module.tscn" id="5_hxc5x"]
 [ext_resource type="Resource" uid="uid://cw7mcwcuit1d" path="res://data/weapons/120mm_smoothbore.tres" id="6_upnrm"]
+[ext_resource type="Script" uid="uid://cny7ab3x7x2d1" path="res://scripts/utilities/weapon_objects/ammunition_type.gd" id="7_txwoa"]
+[ext_resource type="Resource" uid="uid://bwneu3skbopab" path="res://data/ammunition/120mm_ke_shell.tres" id="8_813ds"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.26225, 0.1, 0.156026)
@@ -76,6 +78,7 @@ texture = SubResource("ViewportTexture_hxc5x")
 
 [node name="WeaponModule" parent="." node_paths=PackedStringArray("weapon_positions") instance=ExtResource("5_hxc5x")]
 weapon_type = ExtResource("6_upnrm")
+_ammunition_types = Array[ExtResource("7_txwoa")]([ExtResource("8_813ds")])
 weapon_positions = NodePath("../WeaponPositions")
 
 [node name="WeaponPositions" type="Node3D" parent="."]

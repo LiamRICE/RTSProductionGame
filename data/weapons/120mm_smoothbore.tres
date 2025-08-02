@@ -6,7 +6,9 @@
 
 [resource]
 script = ExtResource("1_u7d6a")
+weapon_name = "120mm Smoothbore"
 weapon_effect = 0
+weapon_type = 0
 fire_mode = 2
 clip_size = 1
 num_reloads = 20
@@ -19,4 +21,6 @@ circular_area_probable = 0.0
 range = 20.0
 ammunition_types = Array[ExtResource("1_rgmvs")]([ExtResource("2_1ckdn")])
 rearm_time = 5.0
+ui_description = ""
+ui_tooltip = ""
 metadata/_custom_type_script = "uid://bjk7lrehwgy5q"

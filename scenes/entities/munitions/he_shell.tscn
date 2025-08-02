@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0yuub3wk4q0b"]
+
+[ext_resource type="Script" uid="uid://bk4hloxyfsrlm" path="res://scripts/entities/weapons/he_shell.gd" id="1_7lqde"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_adqso"]
+
+[node name="HEShell" type="CSGSphere3D"]
+radius = 0.01
+script = ExtResource("1_7lqde")
+
+[node name="Area3D" type="Area3D" parent="."]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_adqso")
