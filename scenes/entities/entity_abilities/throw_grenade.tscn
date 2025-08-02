@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgw823uohrtyq"]
+
+[ext_resource type="Script" uid="uid://d3jao5bx1dysc" path="res://scripts/entities/entity_abilities/entity_active_location_ability.gd" id="1_4ughi"]
+[ext_resource type="Texture2D" uid="uid://dcncnk1d5h43d" path="res://assets/ui/icons/mouse/target_round_b.png" id="2_6ddhp"]
+
+[node name="ThrowGrenade" type="Node"]
+script = ExtResource("1_4ughi")
+ability_duration = 5.0
+ability_cooldown = 60.0
+ability_name = "Throw Grenade"
+ability_icon = ExtResource("2_6ddhp")
+ability_description = "Throws a grenade at a specific location."
+metadata/_custom_type_script = "uid://d3jao5bx1dysc"

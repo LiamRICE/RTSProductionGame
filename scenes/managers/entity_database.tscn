@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bkxlxlcq1slku"]
+[gd_scene load_steps=25 format=3 uid="uid://bkxlxlcq1slku"]
 
 [ext_resource type="Script" uid="uid://j57275ar8ce7" path="res://scripts/managers/entity_database.gd" id="1_eoec7"]
 [ext_resource type="Script" uid="uid://e2gcdi7ep8g0" path="res://scripts/data_resources/data_ref.gd" id="2_v6l60"]
@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/entities/buildings/turret_gun.tscn" id="12_8dxqe"]
 [ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="15_od80n"]
 
-[sub_resource type="Resource" id="Resource_1fgul"]
+[sub_resource type="Resource" id="Resource_34qml"]
 script = ExtResource("15_od80n")
 entity_statistics = Dictionary[int, float]({
 0: 0.0,
@@ -38,42 +38,45 @@ ui_description = ""
 ui_tooltip = ""
 metadata/_custom_type_script = "uid://cmh45u84mi2lo"
 
-[sub_resource type="Resource" id="Resource_n6tmr"]
+[sub_resource type="PackedScene" id="PackedScene_w0rog"]
+
+[sub_resource type="Resource" id="Resource_1fgul"]
 script = ExtResource("2_v6l60")
-resource = SubResource("Resource_1fgul")
+scene = SubResource("PackedScene_w0rog")
+resource = SubResource("Resource_34qml")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_10miw"]
+[sub_resource type="Resource" id="Resource_qmxdq"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("4_g3vnj")
 resource = ExtResource("3_dwruv")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_34qml"]
+[sub_resource type="Resource" id="Resource_od80n"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("6_qmxdq")
 resource = ExtResource("5_8dxqe")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_w0rog"]
+[sub_resource type="Resource" id="Resource_x44mm"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("8_x44mm")
 resource = ExtResource("7_od80n")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_x44mm"]
+[sub_resource type="Resource" id="Resource_gnbni"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("10_od80n")
 resource = ExtResource("9_qmxdq")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_gnbni"]
+[sub_resource type="Resource" id="Resource_7sch4"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("10_7sch4")
 resource = ExtResource("9_gnbni")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
-[sub_resource type="Resource" id="Resource_7sch4"]
+[sub_resource type="Resource" id="Resource_10miw"]
 script = ExtResource("2_v6l60")
 scene = ExtResource("12_8dxqe")
 resource = ExtResource("11_g3vnj")
@@ -81,12 +84,12 @@ metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
 [node name="EntityDatabase" type="Node"]
 script = ExtResource("1_eoec7")
-db = Dictionary[int, ExtResource("2_v6l60")]({
-0: SubResource("Resource_n6tmr"),
-2: SubResource("Resource_10miw"),
-3: SubResource("Resource_34qml"),
-4: SubResource("Resource_w0rog"),
-5: SubResource("Resource_x44mm"),
-6: SubResource("Resource_gnbni"),
-7: SubResource("Resource_7sch4")
+entity_db = Dictionary[int, ExtResource("2_v6l60")]({
+0: SubResource("Resource_1fgul"),
+2: SubResource("Resource_qmxdq"),
+3: SubResource("Resource_od80n"),
+4: SubResource("Resource_x44mm"),
+5: SubResource("Resource_gnbni"),
+6: SubResource("Resource_7sch4"),
+7: SubResource("Resource_10miw")
 })

@@ -38,6 +38,9 @@ var gatherers_counter:float = 0.05
 
 func _ready() -> void:
 	self.food = 500
+	self.materials = 500
+	self.metals = 500
+	self.rare_metals = 200
 	
 	self.ui_update_timer.wait_time = self.refresh_rate_gatherers
 	self.ui_update_timer.timeout.connect(self.update_gatherers)
@@ -114,25 +117,26 @@ func update_gatherers():
 	var computer_count:int = 0
 	var nanotech_count:int = 0
 	var fuel_count:int = 0
-	for unit:ResourceCollectorUnit in all_gatherers:
-		if unit.gatherer.resource.get("node") != null:
-			if unit.allegiance == self.allegiance:
-				if unit.gatherer.resource.get("node").resource_type == RESOURCE.FOOD:
-					food_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.MATERIAL:
-					material_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.METAL:
-					metal_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.RARE_METAL:
-					rare_metal_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.COMPOSITE:
-					composites_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.COMPUTER:
-					computer_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.NANOTECH:
-					nanotech_count += 1
-				elif unit.gatherer.resource.get("node").resource_type == RESOURCE.FUEL:
-					fuel_count += 1
+	## TODO read signal when a unit subscribes as a resource gatherer
+	#for unit:ResourceCollectorUnit in all_gatherers:
+		#if unit.inventory_module.resource.get("node") != null:
+			#if unit.allegiance == self.allegiance:
+				#if unit.inventory_module.resource.get("node").resource_type == RESOURCE.FOOD:
+					#food_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.MATERIAL:
+					#material_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.METAL:
+					#metal_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.RARE_METAL:
+					#rare_metal_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.COMPOSITE:
+					#composites_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.COMPUTER:
+					#computer_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.NANOTECH:
+					#nanotech_count += 1
+				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.FUEL:
+					#fuel_count += 1
 	self.food_gatherers = food_count
 	self.materials_gatherers = material_count
 	self.metals_gatherers = metal_count

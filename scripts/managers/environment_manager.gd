@@ -9,6 +9,9 @@ const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 ## Internal data
 var data:Dictionary[Entity, MeshInstance3D] = {}
 
+func _ready() -> void:
+	EventBus.on_entity_move.connect(add_mesh_path)
+
 func add_mesh_path(entity:Entity, path:PackedVector3Array) -> void:
 	if self.data.has(entity):
 		self.data[entity].free()

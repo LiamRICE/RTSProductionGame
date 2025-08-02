@@ -1,4 +1,4 @@
-extends Resource
+extends RefCounted
 
 var contents:Array[Entity]
 

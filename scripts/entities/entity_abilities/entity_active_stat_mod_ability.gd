@@ -12,18 +12,20 @@ func init_ability(parent_entity:Entity) -> void:
 	super.init_ability(parent_entity)
 
 ## Called when an ability is activated. This function should start the "process ability" function
-func start_ability() -> void:
-	super.start_ability()
-	print("Ability activated on ", self.get_parent())
-
-## Called every frame once start_ability has been called until the ability times out
-func process_ability(delta:float) -> void:
-	super.process_ability(delta)
+func start_ability() -> bool:
+	if super.start_ability():
+		self.entity.ability_stat_modification(self.stat_to_modify, self.stat_mod_amount)
+		print("Ability ", self.ability_name, " activated on ", self.get_parent())
+		return true
+	return false
 
 ## Called when the ability stops being active
 func stop_ability() -> void:
 	super.stop_ability()
+	print("Ability stopped")
+	self.entity.ability_stat_modification(self.stat_to_modify, -self.stat_mod_amount)
 
 ## Called when ability is reset to it's ready to activate state
 func reset_ability() -> void:
+	print("Ability cooldown over")
 	super.reset_ability()

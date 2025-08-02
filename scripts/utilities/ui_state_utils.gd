@@ -5,7 +5,8 @@ enum ClickState {
 	DEFAULT,
 	SELECTING,
 	SELECTED,
-	CONSTRUCTING
+	CONSTRUCTING,
+	ABILITY
 }
 enum SelectionType {
 	NONE,

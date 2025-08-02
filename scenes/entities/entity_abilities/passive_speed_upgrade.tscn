@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4vpmkc4s16a3"]
+
+[ext_resource type="Script" uid="uid://cugxq57c2yjgq" path="res://scripts/entities/entity_abilities/entity_passive_stat_mod_ability.gd" id="1_xyxmg"]
+[ext_resource type="Texture2D" uid="uid://bva3m1240mv2f" path="res://icon.svg" id="2_45232"]
+
+[node name="EntityPassiveStatModAbility" type="Node"]
+script = ExtResource("1_xyxmg")
+stat_to_modify = 7
+ability_name = "Repulsor Overclocking"
+ability_icon = ExtResource("2_45232")
+ability_description = "A permanent speed increase"
+ability_tooltip = "Gives the unit a permanent +10 to speed."
+metadata/_custom_type_script = "uid://cugxq57c2yjgq"

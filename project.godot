@@ -19,6 +19,8 @@ config/icon="uid://bva3m1240mv2f"
 
 EntityDatabase="*res://scenes/managers/entity_database.tscn"
 EntityNavigationServer="*res://scenes/managers/entity_path_server.tscn"
+GameSettings="*res://scenes/managers/game_settings.tscn"
+EventBus="*res://scenes/managers/event_bus.tscn"
 
 [debug]
 

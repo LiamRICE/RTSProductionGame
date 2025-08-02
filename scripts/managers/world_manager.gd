@@ -27,7 +27,6 @@ const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
 ## Fog Of War Data
 var fog_of_war_texture:FogOfWarTexture
 @export var fog_of_war_mesh:FogOfWarMesh
-@export var fog_of_war_resolution:int = 4 ## Resolution of the fog of war in pixels per metre
 
 ## Navigation Data
 @export_group("Navigation")
@@ -62,13 +61,16 @@ func _ready() -> void:
 	## Fog of war
 	self.fog_of_war_texture = self.fog_of_war_mesh.fog_of_war_texture
 	self.fog_of_war_texture.fog_of_war_updated.connect(self._update_visibility)
+	
+	## Entity updates
+	EventBus.on_entity_destroyed.connect(fog_of_war_remove_propagator)
 
 ##----------------##
 ##-- FOG OF WAR --##
 ##----------------##
 
 func _initialise_fog_of_war(texture_size:Vector2i) -> void:
-	texture_size = (texture_size + Vector2i.ONE) * self.fog_of_war_resolution
+	texture_size = (texture_size + Vector2i.ONE) * GameSettings.fog_of_war_resolution
 	self.fog_of_war_mesh._initialise_fog_of_war(texture_size)
 	
 	## Initialise navigation after the first frame has been processed
@@ -89,13 +91,16 @@ func _update_visibility() -> void:
 			entity.update_visibility(self.fog_of_war_mesh.world_3d_to_world_2d(entity.position), self.fog_of_war_texture.fog_of_war_viewport_image)
 	self.fow_visibility_time = self.fow_visibility_update.debug_timer_stop()
 
+## Register a sprite as a FoW propagator
 func fog_of_war_register_propagator(fow_sprite:Sprite2D, world_position:Vector3) -> void:
-	fow_sprite.scale *= self.fog_of_war_resolution
+	fow_sprite.scale *= GameSettings.fog_of_war_resolution
 	var position_2d:Vector2 = self.fog_of_war_mesh.world_3d_to_world_2d(world_position)
 	self.fog_of_war_texture.register_entity_sprite(fow_sprite, position_2d)
 
-func fog_of_war_remove_propagator(fow_sprite:Sprite2D) -> void:
-	self.fog_of_war_texture.remove_entity_sprite(fow_sprite)
+## Removes the sprite from the FoW system and frees it
+func fog_of_war_remove_propagator(entity:Entity) -> void:
+	if entity.is_in_group("fog_of_war_propagators"):
+		self.fog_of_war_texture.remove_entity_sprite(entity.fog_of_war_sprite)
 
 func _get_fow_position_update_time() -> float: ## Performance monitor debug
 	return self.fow_position_update_time
