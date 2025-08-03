@@ -23,6 +23,7 @@ func get_stats(id:ENTITY_ID) -> Dictionary[STATS, float]:
 func get_entity_name(id:ENTITY_ID) -> String:
 	return entity_db[id].resource.name
 
+## Returns a dictionary containing the amount of each resource it costs the build the queried entity.
 func get_production_cost(id:ENTITY_ID) -> Dictionary[RESOURCE, float]:
 	return entity_db[id].resource.production_cost.duplicate()
 

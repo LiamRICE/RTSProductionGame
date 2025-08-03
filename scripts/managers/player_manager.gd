@@ -42,6 +42,9 @@ func _ready() -> void:
 	self.metals = 500
 	self.rare_metals = 200
 	
+	## Connect to signals from the event bus
+	EventBus.on_resource_spent.connect(self.spend_resources)
+	
 	self.ui_update_timer.wait_time = self.refresh_rate_gatherers
 	self.ui_update_timer.timeout.connect(self.update_gatherers)
 	
@@ -98,13 +101,13 @@ func check_resource(type:RESOURCE, amount:int) -> bool:
 	return is_valid
 
 
-func spend_resources(amount:Dictionary[RESOURCE, float]) -> bool:
+func spend_resources(amount:Dictionary[RESOURCE, float], callback:Callable) -> void:
 	if check_resources(amount):
 		for i in range(amount.size()):
 			remove_resource(amount.keys()[i], amount.values()[i])
-		return true
+		callback.call(true)
 	else:
-		return false
+		callback.call(true)
 
 
 func update_gatherers():

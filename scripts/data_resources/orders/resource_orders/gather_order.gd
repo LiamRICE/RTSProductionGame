@@ -44,7 +44,6 @@ func _gather_resource(entity:Entity, type:RESOURCE, delta:float) -> void:
 		## to collect all the amount without branching
 		for i in range(roundi(self._gather_amount)):
 			exists = self._target.harvest(1)
-			entity = entity as ResourceCollectorUnit
 			ret = entity.inventory_module.store(type, 1)
 			if not exists:
 				break

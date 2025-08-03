@@ -283,7 +283,6 @@ func _give_move_order(shift_pressed:bool) -> void:
 		_mouse_right_click = true
 		if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 			var mouse_position :Vector2 = get_viewport().get_mouse_position()
-			
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			if not camera_raycast_coords == Vector3.ZERO:
 				# TODO - spread out units
@@ -292,12 +291,10 @@ func _give_move_order(shift_pressed:bool) -> void:
 					var unit = selected_entities.contents[i]
 					var target_pos = spread_array[i]
 					if target != null and unit is ResourceCollectorUnit and target.is_in_group("resource"):
-						#unit.set_gathering_target(target, shift_pressed)
 						var gather_op:GatherOperation = GatherOperation.new(unit, shift_pressed, null, target)
 						unit.add_order(gather_op, shift_pressed)
 						print("Gathereing order given")
 					else:
-						#unit.update_target_location(target_pos, shift_pressed)
 						var move_order:MoveOrder = MoveOrder.new(unit, shift_pressed, null, target_pos)
 						unit.add_order(move_order, shift_pressed)
 						print("Move order given")

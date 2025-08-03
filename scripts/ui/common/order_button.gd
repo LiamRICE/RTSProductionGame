@@ -1,10 +1,13 @@
 class_name OrderButton extends Button
 
 ## Signals
-signal pressed_order(order:Order, index:int)
+signal pressed_order(order:Script)
 
 ## Properties
-var order:Order = null
+var order:Script = null
+
+func _init(order:Script = null) -> void:
+	self.order = order
 
 ## Connects itself to the signal emitting it's index on ready
 func _ready() -> void:
@@ -14,7 +17,7 @@ func _ready() -> void:
 
 ## Emits a signal when pressed
 func _on_pressed() -> void:
-	self.pressed_index.emit(self.order, self.order_index)
+	self.pressed_order.emit(self.order)
 
-func set_order(order:Order) -> void:
+func set_order(order:Script) -> void:
 	self.order = order

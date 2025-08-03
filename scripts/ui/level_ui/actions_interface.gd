@@ -18,25 +18,16 @@ var selection_type:UIStateUtils.SelectionType = UIStateUtils.SelectionType.NONE
 
 ## Info bar methods
 func _ready() -> void:
-	self.actions_container.init(container_size, _on_button_pressed, _on_ability_button_pressed)
+	self.actions_container.init(container_size, _on_button_pressed)
 
 
 ## Executed when a button is pressed
-func _on_button_pressed(index:int) -> void:
+func _on_button_pressed(order:Script) -> void:
 	## TODO - execute button's effect on object
 	if self.selection_list.contents[0] is ProductionBuilding:
 		for building in self.selection_list.contents:
-			building.queue_unit(index - self.container_size.x)
+			#building.queue_unit(index - self.container_size.x)
 			print("Queued unit")
-
-func _on_ability_button_pressed(ability:EntityAbility, index:int) -> void:
-	for unit in self.selection_list.contents:
-		if ability is EntityActiveLocationAbility:
-			print("Ability is a location dependant ability")
-			unit.abilities[index].fire_ability()
-		else:
-			unit.abilities[index - self.container_size.x * 2].start_ability()
-			print("Used ability ", unit.abilities[index - self.container_size.x]._to_string())
 
 func _on_sub_selection_changed(sub_selection:Selection, selection_type:UIStateUtils.SelectionType) -> void:
 	## Assign Sub selection

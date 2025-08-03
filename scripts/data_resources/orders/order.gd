@@ -9,7 +9,7 @@ signal order_aborted
 var should_abort:bool = false
 
 ## Virtual function to call when starting the order.
-func _init(entity:Entity, _queue_order:bool = false, operation:Operation = null) -> void:
+func _init(entity:Entity, queue_order:bool = false, operation:Operation = null) -> void:
 	## Add order signal connections
 	if operation == null:
 		self.order_aborted.connect(entity._order_aborted)
