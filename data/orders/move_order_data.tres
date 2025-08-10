@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OrderData" load_steps=4 format=3 uid="uid://dv3c6rhxudak"]
+
+[ext_resource type="Script" uid="uid://b0p06e5ob6jd3" path="res://scripts/data_resources/orders/move_orders/move_order.gd" id="1_hsupq"]
+[ext_resource type="Texture2D" uid="uid://btvf5i72km5am" path="res://assets/ui/icons/orders/icon_follower.png" id="2_o11lg"]
+[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="3_x54e3"]
+
+[resource]
+script = ExtResource("3_x54e3")
+order = ExtResource("1_hsupq")
+order_icon = ExtResource("2_o11lg")
+order_tooltip = "Move to the designated position."
+order_request = 2
+metadata/_custom_type_script = "uid://dcirvncucn0yg"

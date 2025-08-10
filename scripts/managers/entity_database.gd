@@ -7,7 +7,7 @@ const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Database
 @export var entity_db:Dictionary[ENTITY_ID, DataRef]
-@export var order_db:Dictionary[int, Script]
+@export var move_orders:Array[OrderData]
 
 """ DATABASE METHODS """
 
@@ -35,6 +35,6 @@ func get_ui_info(id:ENTITY_ID) -> Array:
 	var ref:DataRef = entity_db[id]
 	return [ref.resource.name, ref.resource.ui_description, ref.resource.ui_tooltip, ref.resource.ui_icon]
 
-## Returns an instance of the order at the index supplied
-func get_order(index:int) -> Order:
-	return order_db[index].new()
+## Returns the script of the order at the index supplied
+func get_move_order(index:int) -> OrderData:
+	return self.move_orders[index]

@@ -86,7 +86,7 @@ func mouse_state_update():
 	var camera :Camera3D = get_viewport().get_camera_3d()
 	var current_state:UIStateUtils.MouseState = mouse_state
 	# cast to check location
-	var raycast_result = cast_ray(camera)
+	var raycast_result = cast_ray(camera, get_viewport().get_mouse_position())
 	var target:Entity
 	if raycast_result.get("collider") != null:
 		if raycast_result.get("collider").is_in_group("navigation_map"):
@@ -181,23 +181,17 @@ func _input(event:InputEvent) -> void:
 					## TODO start ability at the location clicked
 					if event.is_pressed():
 						match self._ui_order_request:
-							ORDER_REQUEST.NONE:
-								pass
-							ORDER_REQUEST.ENTITY_ID:
-								pass
 							ORDER_REQUEST.POSITION:
-								pass
+								var res:bool = self._dispatch_order_position(event.position)
+								if res: self.state = UIStateUtils.ClickState.SELECTED
 							ORDER_REQUEST.DIRECTION:
-								pass
-							ORDER_REQUEST.ENEMY_TARGET:
-								pass
-							ORDER_REQUEST.ALLIED_TARGET:
-								pass
-							ORDER_REQUEST.NEUTRAL_TARGET:
-								pass
-							ORDER_REQUEST.RESOURCE_TARGET:
-								pass
-						self._dispatch_order_position(event.position)
+								print("NOT IMPLEMENTED")
+							ORDER_REQUEST.ENEMY_TARGET, ORDER_REQUEST.ALLIED_TARGET, ORDER_REQUEST.NEUTRAL_TARGET, ORDER_REQUEST.RESOURCE_TARGET:
+								var res:bool = self._dispatch_order_entity(event.position, self._ui_order_request)
+								if res: self.state = UIStateUtils.ClickState.SELECTED
+							_:
+								assert(false, "Order not actionable from Player Interface")
+								self.state = UIStateUtils.ClickState.SELECTED
 					
 		## Handle Right click
 		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
@@ -208,7 +202,7 @@ func _input(event:InputEvent) -> void:
 					print("Right Selecting")
 				UIStateUtils.ClickState.SELECTED when not self.ui_manager.is_on_ui:
 					if event.is_pressed():
-						self._give_move_order(event.shift_pressed)
+						self._give_move_order(event.position, event.shift_pressed)
 				UIStateUtils.ClickState.CONSTRUCTING:
 					if event.is_pressed():
 						state = UIStateUtils.ClickState.DEFAULT
@@ -225,10 +219,10 @@ func _input(event:InputEvent) -> void:
 """ SELECTION CODE """
 
 ## Assigns a move order to all units currently in the selection
-func _give_move_order(shift_pressed:bool) -> void:
+func _give_move_order(screen_position:Vector2, shift_pressed:bool) -> void:
 	var camera :Camera3D = self.get_viewport().get_camera_3d()
 	# cast to check location
-	var raycast_result = cast_ray(camera)
+	var raycast_result = cast_ray(camera, screen_position)
 	var target:Entity
 	if raycast_result["collider"] != null:
 		if not raycast_result["collider"].is_in_group("navigation_map"):
@@ -321,7 +315,7 @@ func update_ui_selection_rect() -> void:
 	else:
 		self.ui_selection_patch.scale.y = 1
 
-""" ABILITIES CODE """
+""" ORDERS CODE """
 
 ## Called when the UI dispatches an order on a sub-selection of entities
 func _on_entities_ui_order_dispatch(selection:Selection, order:Script, index:int, order_request:ORDER_REQUEST) -> void:
@@ -344,12 +338,37 @@ func _on_entities_ui_order_dispatch(selection:Selection, order:Script, index:int
 			self._ui_order_index = index
 			self._ui_order_request = order_request
 
-func _dispatch_order_position(screen_position:Vector2) -> void:
+## Assigns a move order to the current UI selection
+func _dispatch_order_position(screen_position:Vector2) -> bool:
+	var shift:bool = Input.is_key_pressed(KEY_SHIFT)
 	var world_position = camera_operations.global_position_from_raycast(self.get_viewport().get_camera_3d(), screen_position)
+	if world_position == Vector3.ZERO:
+		return false
 	print(self._ui_order.get_global_name(), " dispatched at position ", world_position)
+	var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(self._ui_order_selection.contents[0].global_position, world_position, world_position, self._ui_order_selection.contents.size())
+	for index in range(self._ui_order_selection.contents.size()):
+		var new_order:Order = self._ui_order.new(self._ui_order_selection.contents[index], shift, null, spread_array[index])
+		self._ui_order_selection.contents[index].add_order(new_order, shift)
+	return true
 
-func _dispatch_order() -> void:
-	print(self._ui_order.get_global_name(), " dispatched")
+func _dispatch_order_entity(screen_position:Vector2, type:ORDER_REQUEST) -> bool:
+	var shift:bool = Input.is_key_pressed(KEY_SHIFT)
+	var results:Dictionary = self.cast_ray(get_viewport().get_camera_3d(), screen_position)
+	var collider:Node = results["collider"]
+	if collider != null:
+		if not collider.is_in_group("navigation_map"):
+			var target:Entity = collider.get_parent()
+			match type:
+				ORDER_REQUEST.ENEMY_TARGET: print("NOT IMPLEMENTED")
+				ORDER_REQUEST.ALLIED_TARGET: print("NOT IMPLEMENTED")
+				ORDER_REQUEST.NEUTRAL_TARGET: print("NOT IMPLEMENTED")
+				ORDER_REQUEST.RESOURCE_TARGET:
+					if target.is_in_group("resource"):
+						for entity in self._ui_order_selection.contents:
+							var new_order:Order = self._ui_order.new(entity, shift, null, target)
+							entity.add_order(new_order, shift)
+						return true
+	return false
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:
@@ -393,11 +412,10 @@ func _on_barracks_added():
 	self.add_child(self.constructing_building)
 
 
-func cast_ray(camera:Camera3D) -> Dictionary:
-	var mouse_pos = get_viewport().get_mouse_position()
+func cast_ray(camera:Camera3D, screen_coord:Vector2) -> Dictionary:
 	var ray_length = 100
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * ray_length
+	var from = camera.project_ray_origin(screen_coord)
+	var to = from + camera.project_ray_normal(screen_coord) * ray_length
 	var space = camera.get_world_3d().direct_space_state
 	var ray_query = PhysicsRayQueryParameters3D.new()
 	ray_query.from = from

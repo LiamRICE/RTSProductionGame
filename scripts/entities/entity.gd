@@ -40,21 +40,16 @@ var target_position:Vector3 ## The commanded linear position along the path
 var position_dynamics:Vector3SecondOrderDynamics
 var rotation_dynamics:QuaternionSecondOrderDynamics
 
-## Abilities
-@export_group("Abilities")
-@export var abilities:Array[EntityAbility]
-
 ## Legal Orders
 @export_group("Entity Orders")
-@export var entity_move_orders:Dictionary[Script, ORDER_REQUEST]
-@export var entity_common_orders:Dictionary[Script, ORDER_REQUEST]
-@export var entity_specific_orders:Dictionary[Script, ORDER_REQUEST]
+@export var entity_specific_orders:Array[OrderData] ## Specific entity abilities and orders
 
 ## Common Entity states
 @export_group("States")
 @export var is_damageable:bool = true
 @export var is_selectable:bool = true
 @export var is_mobile:bool = false
+@export var is_military:bool = false
 var is_awaiting_deletion:bool = false
 
 ## Entity internal orders
@@ -76,10 +71,6 @@ func _ready() -> void:
 	
 	## Initialise orders
 	self.active_order = self.default_order.new(self)
-	
-	## Start abilities
-	for ability in self.abilities:
-		ability.init_ability(self)
 
 func _physics_process(delta) -> void:
 	## Execute current order
@@ -153,18 +144,9 @@ func _order_failed() -> void:
 
 """ ABILITY METHODS """
 
-## Triggered by an ability that modifies an entity's statistic
-func ability_stat_modification(stat:STATS, modifier:float) -> void:
-	self.entity_statistics[stat] += modifier
-	if stat == STATS.SHIELD or stat == STATS.ATTACK_SPEED or stat == STATS.ATTACK_RANGE or stat == STATS.SIGHT:
-		self.update_offline_stat(stat)
-
-## Triggered by an ability that overrides an entity's statistic
-func ability_stat_override(stat:STATS, value:float) -> void:
-	self.entity_statistics[stat] = value
-	if stat == STATS.SHIELD or stat == STATS.ATTACK_SPEED or stat == STATS.ATTACK_RANGE or stat == STATS.SIGHT:
-		self.update_offline_stat(stat)
-
+## Returns the orders that this unit can do split up per line in the UI
+func get_entity_orders() -> Array[OrderData]:
+	return self.entity_specific_orders
 
 """ FOG OF WAR METHODS """
 
