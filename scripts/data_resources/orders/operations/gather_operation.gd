@@ -11,7 +11,6 @@ enum GATHER_STATE {
 ## Internal variables
 var _resource_target:Resources
 var _resource_type_target:RESOURCE
-var _resources_gathered:Dictionary[RESOURCE, int]
 var _state:GATHER_STATE = GATHER_STATE.GATHERING
 
 
@@ -41,13 +40,17 @@ func process(entity:Entity, delta:float) -> void:
 		## Find next closest resource node and go mine from it
 		var closest_resource_node:Resources = _get_closest_resource_node_of_type(self._entity, self._resource_type_target)
 		if closest_resource_node == null:
-			print("No more resources to mine. Gathering operation halted.")
-			self._order_failed()
-			return
-		var move:MoveOrder = MoveOrder.new(self._entity, false, self, closest_resource_node.global_position)
-		self.add_order(move, false)
-		var gather:GatherOrder = GatherOrder.new(self._entity, true, self, closest_resource_node)
-		self.add_order(gather, true)
+			if entity.get_node("InventoryModule")._current_inventory_count == 0:
+				print("No more resources to mine. Halting gethering operation.")
+				self._order_failed()
+				return
+			print("No more resources to mine. Gathering returning to depot.")
+			self._state = GATHER_STATE.DROPPING
+		else:
+			var move:MoveOrder = MoveOrder.new(self._entity, false, self, closest_resource_node.global_position)
+			self.add_order(move, false)
+			var gather:GatherOrder = GatherOrder.new(self._entity, true, self, closest_resource_node)
+			self.add_order(gather, true)
 	
 	## If resource storage full (gather successful), give move command to depot, depot dropoff, check the target is still present
 	if self._state == GATHER_STATE.DROPPING and self._active_order == null:
@@ -138,3 +141,7 @@ func _get_closest_resource_node_of_type(entity:Entity, type:RESOURCE) -> Resourc
 		return closest
 	else:
 		return null
+
+## Returns the resource type targeted by this entity
+func get_current_resource_target() -> RESOURCE:
+	return self._resource_type_target

@@ -12,6 +12,7 @@ const UIStateUtils:Script = preload("uid://cs16g08ckh1rw")
 const camera_operations:Script = preload("uid://chhtn0cum8l6r")
 const CommonUtils:Script = preload("uid://dnagpvnlsrxbi")
 const Selection:Script = preload("uid://cj0c8liafc0fd")
+const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 
 ## Mouse images
 var mouse_default:Texture2D = preload("res://assets/ui/icons/mouse/pointer_scifi_b.png")
@@ -53,6 +54,12 @@ var _mouse_right_click:bool = false
 var _is_constructing:bool = false
 var is_on_ui:bool = false
 
+## UI command variables
+var _ui_order_request:ORDER_REQUEST
+var _ui_order_index:int
+var _ui_order:Script
+var _ui_order_selection:Selection
+
 ## Ability Variables
 var ability_array:Array[EntityActiveLocationAbility]
 
@@ -67,6 +74,7 @@ func _ready():
 	# Initialise the interface for the start of the game
 	initialise_interface()
 	initialise_state_machine()
+	initialise_event_signals()
 
 
 func _physics_process(delta:float):
@@ -119,18 +127,17 @@ func mouse_update():
 		Input.set_custom_mouse_cursor(mouse_repair, Input.CURSOR_ARROW, Vector2(16, 16))
 	elif self.mouse_state == UIStateUtils.MouseState.ENEMY:
 		Input.set_custom_mouse_cursor(mouse_enemy, Input.CURSOR_CROSS, Vector2(32, 32))
-	
-
 
 func initialise_interface() -> void:
 	# Defaults the selection rectangle in the UI to invisible
 	ui_selection_patch.visible = false
 
-
 func initialise_state_machine():
 	# Initialises the state machine for the user interface
 	state = UIStateUtils.ClickState.DEFAULT
 
+func initialise_event_signals() -> void:
+	EventBus.on_ui_order_dispatch.connect(self._on_entities_ui_order_dispatch)
 
 func _input(event:InputEvent) -> void:
 	""" SELECTION STATES """
@@ -142,8 +149,8 @@ func _input(event:InputEvent) -> void:
 					if event.is_pressed(): ## If LMB is pressed
 						state = UIStateUtils.ClickState.SELECTING ## Update state machine
 						## Updates the dragged rect start position
-						_dragged_rect_left.position = get_global_mouse_position()
-						ui_selection_patch.position = _dragged_rect_left.position
+						_dragged_rect_left.position = event.position
+						ui_selection_patch.position = event.position
 						_mouse_left_click = true
 						print("Clicked")
 					elif not event.is_pressed(): ## If LMB is released
@@ -170,11 +177,27 @@ func _input(event:InputEvent) -> void:
 					else:
 						print("Invalid placement ! Object intersects placement blocker.")
 				
-				UIStateUtils.ClickState.ABILITY when not self.ui_manager.is_on_ui: ## When the mouse has an ability waiting to have a location or unit selected on the map
+				UIStateUtils.ClickState.ORDER when not self.ui_manager.is_on_ui: ## When the mouse has an ability waiting to have a location or unit selected on the map
 					## TODO start ability at the location clicked
 					if event.is_pressed():
-						self.set_ability_location(event.position)
-						print("Left Ability")
+						match self._ui_order_request:
+							ORDER_REQUEST.NONE:
+								pass
+							ORDER_REQUEST.ENTITY_ID:
+								pass
+							ORDER_REQUEST.POSITION:
+								pass
+							ORDER_REQUEST.DIRECTION:
+								pass
+							ORDER_REQUEST.ENEMY_TARGET:
+								pass
+							ORDER_REQUEST.ALLIED_TARGET:
+								pass
+							ORDER_REQUEST.NEUTRAL_TARGET:
+								pass
+							ORDER_REQUEST.RESOURCE_TARGET:
+								pass
+						self._dispatch_order_position(event.position)
 					
 		## Handle Right click
 		if event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
@@ -192,92 +215,24 @@ func _input(event:InputEvent) -> void:
 						self._is_constructing = false
 						self.remove_child(self.constructing_building)
 						self.constructing_building = null
-				UIStateUtils.ClickState.ABILITY:
+				UIStateUtils.ClickState.ORDER:
 					## TODO cancel ability mode
 					if event.is_pressed():
 						self.state = UIStateUtils.ClickState.SELECTED
 					print("Right Ability")
-	
-	# Runs once at the start of each selection rect, if the state is DEFAULT
-	#if Input.is_action_just_pressed("mouse_left_click") and (state == UIStateUtils.ClickState.DEFAULT or state == UIStateUtils.ClickState.SELECTED) and not self.ui_manager.is_on_ui:
-		## Update state machine
-		#state = UIStateUtils.ClickState.SELECTING
-		## Updates the dragged rect start position
-		#_dragged_rect_left.position = get_global_mouse_position()
-		#ui_selection_patch.position = _dragged_rect_left.position
-		#_mouse_left_click = true
-		
-	# Runs once at the end of each selection rect
-	#if Input.is_action_just_released("mouse_left_click") and state == UIStateUtils.ClickState.SELECTING:
-		## Hides the UI selection patch
-		#_mouse_left_click = false
-		#ui_selection_patch.visible = false
-		## Casts the selection and adds any units into the selection
-		#var success = cast_selection()
-		## Update state machine
-		#if success:
-			#state = UIStateUtils.ClickState.SELECTED
-		#else:
-			#state = UIStateUtils.ClickState.DEFAULT
-	
-	#if Input.is_action_just_pressed("mouse_right_click") and state == UIStateUtils.ClickState.SELECTED and not self.ui_manager.is_on_ui:
-		#var camera :Camera3D = get_viewport().get_camera_3d()
-		## cast to check location
-		#var raycast_result = cast_ray(camera)
-		#var target:Entity
-		#if raycast_result.get("collider") != null:
-			#if not raycast_result.get("collider").is_in_group("navigation_map"):
-				#target = raycast_result.get("collider").get_parent()
-			## check if is in group unit and is enemy -> assign as target
-			## check if on resource and unit has gatherer node -> assign as resource node
-			#_mouse_right_click = true
-			#if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
-				#var mouse_position :Vector2 = get_viewport().get_mouse_position()
-				#
-				#var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-				#if not camera_raycast_coords.is_zero_approx():
-					## TODO - spread out units
-					#var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
-					#for i in range(len(selected_entities.contents)):
-						#var unit = selected_entities.contents[i]
-						#var target_pos = spread_array[i]
-						#var is_shift:bool = Input.is_key_pressed(KEY_SHIFT)
-						#if target != null and unit.has_method("set_gathering_target") and target.is_in_group("resource"):
-							#unit.set_gathering_target(target, is_shift)
-						#else:
-							#unit.update_target_location(target_pos, is_shift)
-	
-	#""" CONSTRUCTION STATES """
-	#if Input.is_action_pressed("mouse_right_click") and state == UIStateUtils.ClickState.CONSTRUCTING:
-		#state = UIStateUtils.ClickState.DEFAULT
-		#self._is_constructing = false
-		#self.remove_child(self.constructing_building)
-		#self.constructing_building = null
-	#
-	#if Input.is_action_pressed("mouse_left_click") and state == UIStateUtils.ClickState.CONSTRUCTING and not self.ui_manager.is_on_ui:
-		#if self.constructing_building.is_placement_valid():
-			#state = UIStateUtils.ClickState.DEFAULT
-			#var camera :Camera3D = get_viewport().get_camera_3d()
-			#var mouse_position :Vector2 = get_viewport().get_mouse_position()
-			#var click_position :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
-			#self.remove_child(self.constructing_building)
-			#self.level_manager.add_building(self.constructing_building, click_position)
-			### TODO - Debug, make allegiance based on player interface
-		#else:
-			#print("Invalid placement ! Object intersects placement blocker.")
 
 
 """ SELECTION CODE """
 
 ## Assigns a move order to all units currently in the selection
 func _give_move_order(shift_pressed:bool) -> void:
-	var camera :Camera3D = get_viewport().get_camera_3d()
+	var camera :Camera3D = self.get_viewport().get_camera_3d()
 	# cast to check location
 	var raycast_result = cast_ray(camera)
 	var target:Entity
-	if raycast_result.get("collider") != null:
-		if not raycast_result.get("collider").is_in_group("navigation_map"):
-			target = raycast_result.get("collider").get_parent()
+	if raycast_result["collider"] != null:
+		if not raycast_result["collider"].is_in_group("navigation_map"):
+			target = raycast_result["collider"].get_parent()
 		## check if is in group unit and is enemy -> assign as target
 		## check if on resource and unit has gatherer node -> assign as resource node
 		_mouse_right_click = true
@@ -368,27 +323,33 @@ func update_ui_selection_rect() -> void:
 
 """ ABILITIES CODE """
 
-## Set the mouse state to ability and stores the array of abilities to use
-func add_ability_to_queue(ability:EntityActiveLocationAbility) -> void:
-	if self.ability_array.size() == 0:
-		self.ability_array.push_back(ability)
-		self.state = UIStateUtils.ClickState.ABILITY
-		print(self.ability_array.size())
-	elif ability.equals(self.ability_array[0]):
-		self.ability_array.push_back(ability)
-		print(self.ability_array.size())
-	else:
-		self.ability_array.resize(1)
-		self.ability_array[0] = ability
+## Called when the UI dispatches an order on a sub-selection of entities
+func _on_entities_ui_order_dispatch(selection:Selection, order:Script, index:int, order_request:ORDER_REQUEST) -> void:
+	var shift:bool = Input.is_key_pressed(KEY_SHIFT)
+	match order_request:
+		ORDER_REQUEST.NONE:
+			print(order.get_global_name(), " dispatched to ", selection.contents)
+			for entity in selection.contents:
+				var new_order:Order = order.new(entity, shift)
+				entity.add_order(new_order, shift)
+		ORDER_REQUEST.ENTITY_ID:
+			print(order.get_global_name(), " dispatched to ", selection.contents)
+			for entity in selection.contents:
+				var new_order:Order = order.new(entity, true, null, index)
+				entity.add_order(new_order, true)
+		_:
+			self.state = UIStateUtils.ClickState.ORDER
+			self._ui_order_selection = selection
+			self._ui_order = order
+			self._ui_order_index = index
+			self._ui_order_request = order_request
 
-func set_ability_location(screen_position:Vector2) -> void:
-	var click_position :Vector3 = camera_operations.global_position_from_raycast(self.player_camera, screen_position)
-	
-	var ability:EntityActiveLocationAbility = self.ability_array.pop_front()
-	if self.ability_array.size() == 0:
-		self.state = UIStateUtils.ClickState.SELECTED
-	print(self.ability_array.size())
-	ability.start_ability_at_location(click_position)
+func _dispatch_order_position(screen_position:Vector2) -> void:
+	var world_position = camera_operations.global_position_from_raycast(self.get_viewport().get_camera_3d(), screen_position)
+	print(self._ui_order.get_global_name(), " dispatched at position ", world_position)
+
+func _dispatch_order() -> void:
+	print(self._ui_order.get_global_name(), " dispatched")
 
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta:float) -> void:

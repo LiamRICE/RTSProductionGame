@@ -35,3 +35,6 @@ func deliver() -> Dictionary[RESOURCE, int]:
 	var returned_inventory:Dictionary[RESOURCE, int] = self._current_inventory.duplicate()
 	self._current_inventory.clear()
 	return returned_inventory
+
+func get_current_resource_target() -> RESOURCE:
+	return self._current_resource_target

@@ -16,6 +16,7 @@ var is_producing:bool = false
 
 func _ready() -> void:
 	self.production_timer = Timer.new()
+	self.production_timer.one_shot = true
 	self.add_child(self.production_timer)
 
 """ ENTITY PRODUCTION QUEUE METHODS """

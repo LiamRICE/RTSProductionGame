@@ -54,3 +54,4 @@ func _on_production_timer_timeout():
 	## Update the production module's state and emit the signal from the event bus to spawn the new entity
 	self._production_module.is_producing = false
 	EventBus.on_entity_produced.emit(new_entity, self._production_module.unit_spawn_point.global_position, self._production_module.rally_point.global_position)
+	self._order_completed()

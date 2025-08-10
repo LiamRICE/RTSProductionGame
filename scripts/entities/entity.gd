@@ -7,6 +7,7 @@ const Vector3SecondOrderDynamics:Script = preload("uid://dk0dxwf2vi886")
 const QuaternionSecondOrderDynamics:Script = preload("uid://2qt0fxo8oqaa")
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
+const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Common Entity nodes
@@ -39,8 +40,15 @@ var target_position:Vector3 ## The commanded linear position along the path
 var position_dynamics:Vector3SecondOrderDynamics
 var rotation_dynamics:QuaternionSecondOrderDynamics
 
+## Abilities
 @export_group("Abilities")
 @export var abilities:Array[EntityAbility]
+
+## Legal Orders
+@export_group("Entity Orders")
+@export var entity_move_orders:Dictionary[Script, ORDER_REQUEST]
+@export var entity_common_orders:Dictionary[Script, ORDER_REQUEST]
+@export var entity_specific_orders:Dictionary[Script, ORDER_REQUEST]
 
 ## Common Entity states
 @export_group("States")

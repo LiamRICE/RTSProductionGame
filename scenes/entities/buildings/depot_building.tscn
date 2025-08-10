@@ -9,9 +9,8 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_oqqwk"]
 size = Vector3(2, 1, 3)
 
-[node name="DepotBuilding" type="Node3D" node_paths=PackedStringArray("depot_module", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
+[node name="DepotBuilding" type="Node3D" node_paths=PackedStringArray("mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings", "depot"]]
 script = ExtResource("1_6h8ua")
-depot_module = NodePath("DepotModule")
 mesh_container = NodePath("MeshContainer")
 navigation_obstacle = NodePath("NavigationObstacle3D")
 placement_collision_shape = NodePath("Body/BaseShape")

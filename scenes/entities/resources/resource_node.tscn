@@ -6,8 +6,9 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_yrqnr"]
 size = Vector3(0.884399, 0.353455, 0.795029)
 
-[node name="ResourceNodeMetal" type="Node3D" node_paths=PackedStringArray("body") groups=["resource"]]
+[node name="ResourceNodeMetal" type="Node3D" node_paths=PackedStringArray("navigation_obstacle", "body") groups=["resource"]]
 script = ExtResource("1_o7r71")
+navigation_obstacle = NodePath("NavigationObstacle3D")
 resource_type = 3
 resource_amount = 5
 body = NodePath("StaticBody3D")
