@@ -7,7 +7,7 @@ const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Database
 @export var entity_db:Dictionary[ENTITY_ID, DataRef]
-@export var order_db:Dictionary[int, Script]
+@export var move_orders:Array[OrderData]
 
 """ DATABASE METHODS """
 
@@ -23,6 +23,7 @@ func get_stats(id:ENTITY_ID) -> Dictionary[STATS, float]:
 func get_entity_name(id:ENTITY_ID) -> String:
 	return entity_db[id].resource.name
 
+## Returns a dictionary containing the amount of each resource it costs the build the queried entity.
 func get_production_cost(id:ENTITY_ID) -> Dictionary[RESOURCE, float]:
 	return entity_db[id].resource.production_cost.duplicate()
 
@@ -34,6 +35,6 @@ func get_ui_info(id:ENTITY_ID) -> Array:
 	var ref:DataRef = entity_db[id]
 	return [ref.resource.name, ref.resource.ui_description, ref.resource.ui_tooltip, ref.resource.ui_icon]
 
-## Returns an instance of the order at the index supplied
-func get_order(index:int) -> Order:
-	return order_db[index].new()
+## Returns the script of the order at the index supplied
+func get_move_order(index:int) -> OrderData:
+	return self.move_orders[index]

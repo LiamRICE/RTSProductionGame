@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://yfy3sfc5yf4q"]
+
+[ext_resource type="Script" uid="uid://bo4tqp1vwxmf2" path="res://scripts/entities/buildings/building_modules/production_module.gd" id="1_q8f4t"]
+
+[node name="ProductionModule" type="Node"]
+script = ExtResource("1_q8f4t")

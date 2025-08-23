@@ -31,7 +31,7 @@ func process(entity:Entity, delta:float) -> void:
 
 func _deposit_resources(entity:Entity) -> void:
 	entity = entity as ResourceCollectorUnit
-	self._target.drop_off(entity.inventory_module.deliver())
+	self._target.get_node("DepotModule").drop_off(entity.inventory_module.deliver())
 	## Signal that the order was successfully completed
 	self._order_completed()
 	

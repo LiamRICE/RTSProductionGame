@@ -63,7 +63,13 @@ func _ready() -> void:
 	self.fog_of_war_texture.fog_of_war_updated.connect(self._update_visibility)
 	
 	## Entity updates
-	EventBus.on_entity_destroyed.connect(fog_of_war_remove_propagator)
+	EventBus.on_entity_destroyed.connect(self._on_entity_destroyed)
+
+func _on_entity_destroyed(entity:Entity) -> void:
+	print("Entity destroyed")
+	self.fog_of_war_remove_propagator(entity)
+	if entity is Building or entity is Resources:
+		self.remove_navigation_obstacle(entity)
 
 ##----------------##
 ##-- FOG OF WAR --##
@@ -145,7 +151,8 @@ func update_navigation_map(location:Vector3 = Vector3.ZERO):
 	self._bake_navigation(location)
 
 ## Registers the building as a navigation obstacle and queues a rebake of the navigation mesh. Must be called after placing the building in it's final location.
-func register_navigation_obstacle(obstacle:Building) -> void:
+func register_navigation_obstacle(obstacle:Entity) -> void:
+	assert(obstacle is Building or obstacle is Resources)
 	print("Registering new obstacle") ## DEBUG
 	self.geom_parse.debug_timer_start() ## DEBUG
 	var vertices:PackedVector3Array = PackedVector3Array(obstacle.navigation_obstacle.vertices)
@@ -156,6 +163,14 @@ func register_navigation_obstacle(obstacle:Building) -> void:
 														obstacle.navigation_obstacle.height,
 														obstacle.navigation_obstacle.carve_navigation_mesh)
 	self.update_navigation_map(obstacle.global_position)
+
+func remove_navigation_obstacle(obstacle:Entity) -> void:
+	print("Removing Obstacle")
+	assert(obstacle is Building or obstacle is Resources)
+	obstacle.navigation_obstacle.affect_navigation_mesh = false
+	## Rebake the source geometry data
+	self._parse_navigation_source_geometry()
+	
 
 ## Parses the navigation source geometry (the terrain map) and then queues a navigation mesh bake
 func _parse_navigation_source_geometry() -> void:
@@ -245,7 +260,7 @@ class NavigationChunk:
 		self.debug_node = debug_vis_node
 		self.debug_shader = debug_shader
 	
-	func update_navigation_map():
+	func update_navigation_map() -> void:
 		if self.is_baking:
 			self.has_bake_update_queued = true
 			return

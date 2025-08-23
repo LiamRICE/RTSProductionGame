@@ -2,24 +2,9 @@ extends Node
 
 ## Constants
 const RESOURCE := preload("res://scripts/utilities/resource_utils.gd").RESOURCE
-const PlayerManager:Script = preload("uid://bi34cw4c6gv1n")
-
-var player_manager:PlayerManager
-
-
-func _ready() -> void:
-	# get the global player manager
-	_init_player_manager()
-
-
-# Required for depot functionality
-func _init_player_manager():
-	self.player_manager = get_tree().get_root().get_node("GameManager/LevelManager/PlayerManager")
-	if self.player_manager == null:
-		printerr("Warning! No player manager found! Check the SceneTree for 'GameManager/LevelManager/PlayerManager'.")
 
 
 func drop_off(amount:Dictionary[RESOURCE, int]):
 	print("Units dropped off ", amount.values(), " of type ", amount.keys())
 	for type in amount:
-		self.player_manager.add_resource(amount[type], type)
+		EventBus.on_resource_deposited.emit(amount)

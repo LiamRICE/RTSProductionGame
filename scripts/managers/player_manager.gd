@@ -42,22 +42,27 @@ func _ready() -> void:
 	self.metals = 500
 	self.rare_metals = 200
 	
+	## Connect to signals from the event bus
+	EventBus.on_resource_spent.connect(self.spend_resources)
+	EventBus.on_resource_deposited.connect(self.add_resource)
+	
 	self.ui_update_timer.wait_time = self.refresh_rate_gatherers
 	self.ui_update_timer.timeout.connect(self.update_gatherers)
 	
 	self.update_resources_ui()
 
 
-func add_resource(amount:int, type:RESOURCE):
-	match type:
-		RESOURCE.FOOD: self.food += amount
-		RESOURCE.MATERIAL: self.materials += amount
-		RESOURCE.METAL: self.metals += amount
-		RESOURCE.RARE_METAL: self.rare_metals += amount
-		RESOURCE.COMPOSITE: self.composites += amount
-		RESOURCE.COMPUTER: self.computers += amount
-		RESOURCE.NANOTECH: self.nanotech += amount
-		RESOURCE.FUEL: self.fuel += amount
+func add_resource(amount:Dictionary[RESOURCE, int]):
+	for type in amount:
+		match type:
+			RESOURCE.FOOD: self.food += amount[type]
+			RESOURCE.MATERIAL: self.materials += amount[type]
+			RESOURCE.METAL: self.metals += amount[type]
+			RESOURCE.RARE_METAL: self.rare_metals += amount[type]
+			RESOURCE.COMPOSITE: self.composites += amount[type]
+			RESOURCE.COMPUTER: self.computers += amount[type]
+			RESOURCE.NANOTECH: self.nanotech += amount[type]
+			RESOURCE.FUEL: self.fuel += amount[type]
 	# update resources UI every time you modify the amount of resources in the stockpile
 	update_resources_ui()
 
@@ -98,13 +103,13 @@ func check_resource(type:RESOURCE, amount:int) -> bool:
 	return is_valid
 
 
-func spend_resources(amount:Dictionary[RESOURCE, float]) -> bool:
+func spend_resources(amount:Dictionary[RESOURCE, float], callback:Callable) -> void:
 	if check_resources(amount):
 		for i in range(amount.size()):
 			remove_resource(amount.keys()[i], amount.values()[i])
-		return true
+		callback.call(true)
 	else:
-		return false
+		callback.call(true)
 
 
 func update_gatherers():
@@ -118,25 +123,18 @@ func update_gatherers():
 	var nanotech_count:int = 0
 	var fuel_count:int = 0
 	## TODO read signal when a unit subscribes as a resource gatherer
-	#for unit:ResourceCollectorUnit in all_gatherers:
-		#if unit.inventory_module.resource.get("node") != null:
-			#if unit.allegiance == self.allegiance:
-				#if unit.inventory_module.resource.get("node").resource_type == RESOURCE.FOOD:
-					#food_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.MATERIAL:
-					#material_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.METAL:
-					#metal_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.RARE_METAL:
-					#rare_metal_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.COMPOSITE:
-					#composites_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.COMPUTER:
-					#computer_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.NANOTECH:
-					#nanotech_count += 1
-				#elif unit.inventory_module.resource.get("node").resource_type == RESOURCE.FUEL:
-					#fuel_count += 1
+	for unit:ResourceCollectorUnit in all_gatherers:
+		if unit.allegiance == self.allegiance:
+			if unit.active_order is GatherOperation:
+				match unit.active_order.get_current_resource_target():
+					RESOURCE.FOOD: food_count += 1
+					RESOURCE.MATERIAL: material_count += 1
+					RESOURCE.METAL: metal_count += 1
+					RESOURCE.RARE_METAL: rare_metal_count += 1
+					RESOURCE.COMPOSITE: composites_count += 1
+					RESOURCE.COMPUTER: computer_count += 1
+					RESOURCE.NANOTECH: nanotech_count += 1
+					RESOURCE.FUEL: fuel_count += 1
 	self.food_gatherers = food_count
 	self.materials_gatherers = material_count
 	self.metals_gatherers = metal_count
