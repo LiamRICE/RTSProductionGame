@@ -4,7 +4,6 @@ extends Node
 var _nav_map_rid:RID
 
 ## Constants
-const MoveOrder:Script = preload("uid://b0p06e5ob6jd3")
 const MAX_THREADS:int = 4
 
 ## Internal variables

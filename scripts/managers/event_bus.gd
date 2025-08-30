@@ -9,6 +9,7 @@ const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 """ STARTUP SIGNALS """
 
 ## Navigation
+signal on_level_terrain_generated(size:Vector2i)
 signal on_navigation_map_created(map_rid:RID)
 
 

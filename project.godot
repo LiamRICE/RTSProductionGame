@@ -164,3 +164,10 @@ global_illumination/sdfgi/frames_to_converge=0
 environment/volumetric_fog/use_filter=0
 lights_and_shadows/positional_shadow/atlas_size=256
 camera/depth_of_field/depth_of_field_bokeh_shapering=2
+
+[shader_globals]
+
+world_size={
+"type": "vec2",
+"value": Vector2(4, 4)
+}

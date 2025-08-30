@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://ctaln2gus62sn"]
+
+[ext_resource type="Shader" uid="uid://gpu4jwtmk0lf" path="res://debug_tools/debug_materials/normal_viewer.gdshader" id="1_jfscs"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_jfscs")
+shader_parameter/normal = false

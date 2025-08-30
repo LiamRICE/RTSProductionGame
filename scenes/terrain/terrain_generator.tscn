@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://36c18xp7whum"]
+
+[ext_resource type="Script" uid="uid://cq3cxlkivk0tx" path="res://scripts/terrain/terrain_generator.gd" id="1_iaoq7"]
+
+[node name="TerrainGenerator" type="Node3D"]
+script = ExtResource("1_iaoq7")
+randomise_map = true
+chunk_size = 32
+map_size = Vector2i(4, 4)
+smooth_terrain = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.913488, 0.218434, -0.343257, 1.27623e-08, 0.843663, 0.536873, 0.406864, -0.490427, 0.770677, 13.9585, 12.327, 22.8731)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.0300009, 0.831385, -0.554886, -0.731773, 0.359887, 0.578783, 0.680888, 0.423415, 0.597588, 0, 11.9947, 0)
+
+[node name="Heightmap" type="Sprite3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-07, 10, 0, -10, -4.37114e-07, 0, 5, 0)
+texture_filter = 0
+
+[node name="FeaturesMap" type="Sprite3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-07, 10, 0, -10, -4.37114e-07, 32, 5, 0)
+transparent = false
+texture_filter = 0
