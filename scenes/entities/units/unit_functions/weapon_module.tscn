@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ch8ivgymt3ucp"]
+
+[ext_resource type="Script" uid="uid://7hw10bnx1jd1" path="res://scripts/entities/units/unit_features/weapon_module.gd" id="1_ovul5"]
+
+[node name="WeaponModule" type="Node"]
+script = ExtResource("1_ovul5")

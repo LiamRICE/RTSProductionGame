@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=7 format=3 uid="uid://covlla281dqnd"]
+
+[ext_resource type="Script" uid="uid://c166mbt7i2q52" path="res://scripts/data_resources/weapon_utils/ammo_resource.gd" id="1_7qbn6"]
+[ext_resource type="Script" uid="uid://c3h64yw32v5cm" path="res://scripts/data_resources/weapon_utils/fire_method_resource.gd" id="2_80cg7"]
+[ext_resource type="Resource" uid="uid://cqpu3cei4r7w3" path="res://data/weapons/ammunition/120mm_heat_shell.tres" id="2_uiq12"]
+[ext_resource type="Script" uid="uid://d18ueu0nhr54y" path="res://scripts/data_resources/weapon_utils/weapon_resource.gd" id="3_36g8d"]
+[ext_resource type="Resource" uid="uid://dipassey885ds" path="res://data/weapons/ammunition/120mm_he_shell.tres" id="3_dvdfr"]
+[ext_resource type="Resource" uid="uid://bgbpady76vcqu" path="res://data/weapons/fire_modes/single_shot.tres" id="5_46v7r"]
+
+[resource]
+script = ExtResource("3_36g8d")
+name = "120mm Smoothebore"
+description = "A tank gun"
+ui_tooltip = "A tank gun"
+weapon_category = 0
+fire_methods = Array[ExtResource("2_80cg7")]([ExtResource("5_46v7r")])
+ammo = Array[ExtResource("1_7qbn6")]([ExtResource("2_uiq12"), ExtResource("3_dvdfr")])
+reload_time = 6.0
+time_between_bursts = 0.0
+rearm_time = 12.0
+is_stabilised = true
+metadata/_custom_type_script = "uid://d18ueu0nhr54y"

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AmmoResource" load_steps=2 format=3 uid="uid://cqpu3cei4r7w3"]
+
+[ext_resource type="Script" uid="uid://c166mbt7i2q52" path="res://scripts/data_resources/weapon_utils/ammo_resource.gd" id="1_nhg56"]
+
+[resource]
+script = ExtResource("1_nhg56")
+name = "120mm HEAT Shell"
+description = "A High Explosive Anti-Tank shell"
+ui_tooltip = "A HEAT shell"
+ammo_type = 0
+number_of_clips = 23
+clip_size = 1
+damage = 15.0
+shot_type = 1
+damage_type = 2
+explosion_radius = 0.0
+metadata/_custom_type_script = "uid://c166mbt7i2q52"
