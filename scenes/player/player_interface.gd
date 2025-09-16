@@ -92,7 +92,10 @@ func mouse_state_update():
 		if raycast_result.get("collider").is_in_group("navigation_map"):
 			mouse_state = UIStateUtils.MouseState.DEFAULT
 		else:
-			target = raycast_result.get("collider").get_parent()
+			if raycast_result.get("collider").get_parent().is_in_group("modules"):
+				target = raycast_result.get("collider").get_parent().get_parent()
+			else:
+				target = raycast_result.get("collider").get_parent()
 			# check current selection
 			if self.selected_type in [UIStateUtils.SelectionType.UNITS_ECONOMIC]:
 				# check cast result
@@ -226,7 +229,10 @@ func _give_move_order(screen_position:Vector2, shift_pressed:bool) -> void:
 	var target:Entity
 	if raycast_result["collider"] != null:
 		if not raycast_result["collider"].is_in_group("navigation_map"):
-			target = raycast_result["collider"].get_parent()
+			if raycast_result["collider"].get_parent().is_in_group("modules"):
+				target = raycast_result["collider"].get_parent().get_parent()
+			else:
+				target = raycast_result["collider"].get_parent()
 		## check if is in group unit and is enemy -> assign as target
 		## check if on resource and unit has gatherer node -> assign as resource node
 		_mouse_right_click = true
@@ -420,7 +426,7 @@ func cast_ray(camera:Camera3D, screen_coord:Vector2) -> Dictionary:
 	var ray_query = PhysicsRayQueryParameters3D.new()
 	ray_query.from = from
 	ray_query.to = to
-	ray_query.collide_with_areas = true
+	ray_query.collide_with_areas = false
 	var raycast_result = space.intersect_ray(ray_query)
 	return raycast_result
 

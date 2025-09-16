@@ -51,6 +51,7 @@ navigation_map=""
 depot=""
 fog_of_war_propagators="List of all units, buildings and markers that spread FoW for the current player"
 resource_gatherer=""
+modules=""
 
 [gui]
 
