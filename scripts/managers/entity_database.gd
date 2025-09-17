@@ -17,7 +17,7 @@ func get_entity(id:ENTITY_ID) -> PackedScene:
 func get_resource(id:ENTITY_ID) -> EntityResource:
 	return entity_db[id].resource
 
-func get_stats(id:ENTITY_ID) -> Dictionary[STATS, float]:
+func get_stats(id:ENTITY_ID) -> Dictionary[STATS, Variant]:
 	return entity_db[id].resource.entity_statistics.duplicate()
 
 func get_entity_name(id:ENTITY_ID) -> String:

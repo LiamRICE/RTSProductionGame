@@ -6,7 +6,7 @@ const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Properties
 @export_group("Statistics")
-@export var entity_statistics:Dictionary[STATS, float] = {
+@export var entity_statistics:Dictionary[STATS, Variant] = {
 	STATS.HEALTH : 0,
 	STATS.SHIELD : 0,
 	STATS.ARMOUR : 0,
