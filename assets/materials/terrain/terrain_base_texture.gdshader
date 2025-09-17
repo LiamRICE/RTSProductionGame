@@ -1,47 +1,83 @@
 shader_type spatial;
 
-uniform sampler2D splatmap;
+// Debug parameters
+uniform bool debug_mode = false;
+uniform bool view_snow_mask = false;
+uniform bool view_cliff_mask = false;
+uniform bool view_sand_mask = false;
+// Parameters
+uniform float large_noise_influence : hint_range(0.0, 1.0, 0.05) = 0.2;
+uniform float cliff_amount : hint_range(0.0, 1.0, 0.01) = 0.3;
+uniform float cliff_exponent : hint_range(0.1, 10.0, 0.05) = 2.0;
+uniform float snow_threshold : hint_range(0.0, 1.0, 0.01) = 0.8;
+uniform float snow_falloff : hint_range(0.0, 0.3, 0.01) = 0.1;
+uniform float snow_randomisation_scale : hint_range(0.0, 1.0, 0.01) = 0.5;
+uniform float sand_threshold : hint_range(0.0, 1.0, 0.01) = 0.13;
+uniform float sand_falloff : hint_range(0.0, 0.3, 0.01) = 0.03;
+uniform float sand_randomisation_scale : hint_range(0.0, 1.0, 0.01) = 0.3;
+// Control Textures
+uniform sampler2D noise_map;
+uniform sampler2D large_noise;
+uniform sampler2D color_gradient;
 // Grass textures
-uniform sampler2D grass_diff;
+uniform sampler2D grass_col;
 uniform sampler2D grass_arm;
 uniform sampler2D grass_normal;
-// Road textures
-uniform sampler2D road_diff;
-uniform sampler2D road_arm;
-uniform sampler2D road_normal;
-// City textures
-uniform sampler2D city_diff;
-uniform sampler2D city_arm;
-uniform sampler2D city_normal;
+// Rock textures
+uniform sampler2D rock_col;
+uniform sampler2D rock_arm;
+uniform sampler2D rock_normal;
 // Sand textures
-uniform sampler2D sand_diff;
+uniform sampler2D sand_col;
 uniform sampler2D sand_arm;
 uniform sampler2D sand_normal;
-//
-const float texture_scale = 10.0;
-global uniform vec2 world_size;
+// Chunk parameters
+const float texture_scale = 20.0;
+global uniform vec2 inv_world_size;
+global uniform float inv_world_max_height;
 instance uniform vec2 chunk_position;
+
+// Fragment variables
+varying float world_height;
+varying float world_slope;
 
 void vertex() {
 	// Called for every vertex the material is visible on.
+	world_height = (MODEL_MATRIX * vec4(VERTEX, 1.0)).y * inv_world_max_height;
+	world_slope = acos(dot(NORMAL, vec3(0.0, 1.0, 0.0)));
 }
 
 void fragment() {
-	vec4 loc = texture(splatmap, (UV + chunk_position) / world_size);
-	// Albedo
-	ALBEDO = texture(road_diff, UV * texture_scale).rgb * loc.r + texture(city_diff, UV * texture_scale).rgb * (loc.g - loc.r) + vec3(0.0, 0.0, 1.0) * loc.b + texture(grass_diff, UV * texture_scale).rgb * loc.a;
-	//ALBEDO = vec3(1.0,0.0,0.0) * loc.r + vec3(0.0,1.0,0.0) * (loc.g - loc.r) + vec3(0.0, 0.0, 1.0) * loc.b + vec3(0.0,0.0,1.0) * loc.a;
-	// Calculate ARM
-	vec3 arm = texture(road_arm, UV * texture_scale).rgb * loc.r + texture(city_arm, UV * texture_scale).rgb * (loc.g - loc.r) + vec3(1.0, 0.0, 0.0) * loc.b + texture(grass_arm, UV * texture_scale).rgb * loc.a;
-	// Ambient Occlusion
-	AO = arm.r;
-	// Roughness
-	ROUGHNESS = arm.g;
-	// Metallic
-	METALLIC = arm.b;
-	// Normal mapping
-	NORMAL_MAP = texture(road_normal, UV * texture_scale).rgb * loc.r + texture(city_normal, UV * texture_scale).rgb * (loc.g - loc.r) + texture(sand_normal, UV * texture_scale).rgb * loc.b + texture(grass_normal, UV * texture_scale).rgb * loc.a;
-	//NORMAL_MAP = texture(grass_normal, UV * texture_scale).rgb;
+	// Calculate the current uv position in global UV coordinates
+	vec2 uv = (UV + chunk_position) * inv_world_size * texture_scale;
+	float noise_map_value = texture(noise_map, UV * texture_scale).r;
+	
+	// Calculate texture masks
+	float cliff_mask = max(pow(world_slope, cliff_exponent) - (1.0 - cliff_amount), 0.0);
+	float snow_mask = smoothstep(snow_threshold - snow_falloff, snow_threshold, world_height + noise_map_value * inv_world_max_height * snow_randomisation_scale) * (1.0 - world_slope);
+	float sand_mask = smoothstep(sand_threshold + sand_falloff, sand_threshold, world_height + noise_map_value * inv_world_max_height * sand_randomisation_scale);
+	
+	// Debug view of calculated texture masks.
+	// TODO - Delete in final project
+	if(debug_mode){
+		vec3 albedo = vec3(0.0);
+		if(view_snow_mask){
+			albedo.r = snow_mask;
+		}if(view_cliff_mask){
+			albedo.g = cliff_mask;
+		}if(view_sand_mask){
+			albedo.b = sand_mask;
+		}
+		ALBEDO = albedo;
+	}else{
+		// Texture following the masks with the following priority : Snow > Cliff > Sand > Grass
+		ALBEDO = (texture(sand_col, uv).rgb * sand_mask + texture(rock_col, uv).rgb * cliff_mask + vec3(1.0) * snow_mask + texture(grass_col, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask))) * (1.0 - texture(large_noise, UV).rgb * large_noise_influence);
+		NORMAL_MAP = (texture(sand_normal, uv).rgb * sand_mask + texture(rock_normal, uv).rgb * cliff_mask + vec3(0.0, 0.0, 1.0) * snow_mask + texture(grass_normal, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask))) * 0.2;
+		vec3 arm = texture(sand_arm, uv).rgb * sand_mask + texture(rock_arm, uv).rgb * cliff_mask + vec3(1.0, 0.2, 0.0) * snow_mask + texture(grass_arm, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask));
+		AO = arm.r;
+		ROUGHNESS = arm.g;
+		METALLIC = arm.b;
+	}
 }
 
 //void light() {

@@ -1,18 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://c1ku6ido7lle5"]
+[gd_scene load_steps=4 format=3 uid="uid://c1ku6ido7lle5"]
 
 [ext_resource type="Script" uid="uid://boci3e8npvh1a" path="res://scripts/entities/units/unit_features/inventory_module.gd" id="1_byijq"]
 [ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="2_pyqnp"]
-[ext_resource type="Script" uid="uid://4xo1bv014nhl" path="res://scripts/data_resources/orders/operations/gather_operation.gd" id="3_h4pck"]
-[ext_resource type="Texture2D" uid="uid://0xri5upas8bt" path="res://assets/ui/icons/orders/icon_projectile.png" id="4_f30cr"]
-
-[sub_resource type="Resource" id="Resource_60f0m"]
-script = ExtResource("2_pyqnp")
-order = ExtResource("3_h4pck")
-order_icon = ExtResource("4_f30cr")
-order_tooltip = "Mine a resource and deliver the material to the nearest depot."
-order_request = 7
-metadata/_custom_type_script = "uid://dcirvncucn0yg"
+[ext_resource type="Resource" uid="uid://b684p0ttspl68" path="res://data/orders/gathering_operation.tres" id="3_64bnp"]
 
 [node name="InventoryModule" type="Node"]
 script = ExtResource("1_byijq")
-logistics_orders = Array[ExtResource("2_pyqnp")]([SubResource("Resource_60f0m")])
+logistics_orders = Array[ExtResource("2_pyqnp")]([ExtResource("3_64bnp")])

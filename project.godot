@@ -167,7 +167,11 @@ camera/depth_of_field/depth_of_field_bokeh_shapering=2
 
 [shader_globals]
 
-world_size={
+inv_world_max_height={
+"type": "float",
+"value": 0.05
+}
+inv_world_size={
 "type": "vec2",
-"value": Vector2(4, 4)
+"value": Vector2(0, 0)
 }

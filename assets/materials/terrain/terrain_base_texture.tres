@@ -1,34 +1,56 @@
 [gd_resource type="ShaderMaterial" load_steps=15 format=3 uid="uid://x6l5qm4rknwr"]
 
 [ext_resource type="Shader" uid="uid://cxca1aj4b3y2r" path="res://assets/materials/terrain/terrain_base_texture.gdshader" id="1_ei5fw"]
-[ext_resource type="Texture2D" uid="uid://bqxstrs6g60fx" path="res://assets/textures/terrain/city/concrete_floor_worn_001_arm_1k.jpg" id="2_o3276"]
-[ext_resource type="Texture2D" uid="uid://bylrp2r2jwlw4" path="res://assets/textures/terrain/city/concrete_floor_worn_001_diff_1k.jpg" id="3_7cgru"]
-[ext_resource type="Texture2D" uid="uid://bhgiqd8r77scx" path="res://assets/textures/terrain/city/concrete_floor_worn_001_nor_gl_1k.jpg" id="4_8vpxj"]
-[ext_resource type="Texture2D" uid="uid://chnsjcx2tajwh" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_arm_1k.jpg" id="5_6gypx"]
-[ext_resource type="Texture2D" uid="uid://cp4x32s63eibe" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_diff_1k.jpg" id="6_mtwno"]
-[ext_resource type="Texture2D" uid="uid://d2ecnida21p0e" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_nor_gl_1k.jpg" id="7_hacey"]
-[ext_resource type="Texture2D" uid="uid://bg2x1yq2raxxh" path="res://assets/textures/terrain/road/aerial_asphalt_01_arm_1k.jpg" id="8_ngdoa"]
-[ext_resource type="Texture2D" uid="uid://ck85xqybm274d" path="res://assets/textures/terrain/road/aerial_asphalt_01_diff_1k.jpg" id="9_vc0fq"]
-[ext_resource type="Texture2D" uid="uid://b0v7gf32ennf4" path="res://assets/textures/terrain/road/aerial_asphalt_01_nor_gl_1k.jpg" id="10_3a06u"]
-[ext_resource type="Texture2D" uid="uid://cp06wxirbbc0q" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_arm_1k.jpg" id="11_nqdcb"]
-[ext_resource type="Texture2D" uid="uid://bgreiabjoqylr" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_diff_1k.jpg" id="12_mti3n"]
-[ext_resource type="Texture2D" uid="uid://ceaqkhtk4jmbo" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_nor_gl_1k.jpg" id="13_ulo40"]
+[ext_resource type="Texture2D" uid="uid://chnsjcx2tajwh" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_arm_1k.jpg" id="2_kurr6"]
+[ext_resource type="Texture2D" uid="uid://d2ecnida21p0e" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_nor_gl_1k.jpg" id="2_opyw4"]
+[ext_resource type="Texture2D" uid="uid://cp4x32s63eibe" path="res://assets/textures/terrain/earth_grass/aerial_grass_rock_diff_1k.jpg" id="3_4fjkt"]
+[ext_resource type="Texture2D" uid="uid://jq4ifrgngq4y" path="res://assets/textures/terrain/mars_rock/rock_face_arm_1k.jpg" id="4_58otr"]
+[ext_resource type="Texture2D" uid="uid://vgnoi2juuchc" path="res://assets/textures/terrain/mars_rock/rock_face_nor_gl_1k.jpg" id="5_bo3os"]
+[ext_resource type="Texture2D" uid="uid://bgreiabjoqylr" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_diff_1k.jpg" id="6_4fjkt"]
+[ext_resource type="Texture2D" uid="uid://bekx3ms12xp5d" path="res://assets/textures/terrain/mars_rock/rock_face_diff_1k.jpg" id="6_dnue7"]
+[ext_resource type="Texture2D" uid="uid://ceaqkhtk4jmbo" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_nor_gl_1k.jpg" id="7_dnue7"]
+[ext_resource type="Texture2D" uid="uid://cp06wxirbbc0q" path="res://assets/textures/terrain/earth_sand/aerial_beach_01_arm_1k.jpg" id="8_dnue7"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_o3276"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_dnue7"]
+seed = 1
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gyhns"]
+seamless = true
+noise = SubResource("FastNoiseLite_dnue7")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gyhns"]
+fractal_octaves = 2
+fractal_lacunarity = 15.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_krggg"]
+seamless = true
+noise = SubResource("FastNoiseLite_gyhns")
 
 [resource]
 render_priority = 0
 shader = ExtResource("1_ei5fw")
-shader_parameter/splatmap = SubResource("PlaceholderTexture2D_o3276")
-shader_parameter/grass_diff = ExtResource("6_mtwno")
-shader_parameter/grass_arm = ExtResource("5_6gypx")
-shader_parameter/grass_normal = ExtResource("7_hacey")
-shader_parameter/road_diff = ExtResource("9_vc0fq")
-shader_parameter/road_arm = ExtResource("8_ngdoa")
-shader_parameter/road_normal = ExtResource("10_3a06u")
-shader_parameter/city_diff = ExtResource("3_7cgru")
-shader_parameter/city_arm = ExtResource("2_o3276")
-shader_parameter/city_normal = ExtResource("4_8vpxj")
-shader_parameter/sand_diff = ExtResource("12_mti3n")
-shader_parameter/sand_arm = ExtResource("11_nqdcb")
-shader_parameter/sand_normal = ExtResource("13_ulo40")
+shader_parameter/debug_mode = false
+shader_parameter/view_snow_mask = true
+shader_parameter/view_cliff_mask = true
+shader_parameter/view_sand_mask = true
+shader_parameter/large_noise_influence = 0.45
+shader_parameter/cliff_amount = 1.0
+shader_parameter/cliff_exponent = 2.0
+shader_parameter/snow_threshold = 0.62
+shader_parameter/snow_falloff = 0.02
+shader_parameter/snow_randomisation_scale = 0.47
+shader_parameter/sand_threshold = 0.11
+shader_parameter/sand_falloff = 0.02
+shader_parameter/sand_randomisation_scale = 0.13
+shader_parameter/noise_map = SubResource("NoiseTexture2D_krggg")
+shader_parameter/large_noise = SubResource("NoiseTexture2D_gyhns")
+shader_parameter/grass_col = ExtResource("3_4fjkt")
+shader_parameter/grass_arm = ExtResource("2_kurr6")
+shader_parameter/grass_normal = ExtResource("2_opyw4")
+shader_parameter/rock_col = ExtResource("6_dnue7")
+shader_parameter/rock_arm = ExtResource("4_58otr")
+shader_parameter/rock_normal = ExtResource("5_bo3os")
+shader_parameter/sand_col = ExtResource("6_4fjkt")
+shader_parameter/sand_arm = ExtResource("8_dnue7")
+shader_parameter/sand_normal = ExtResource("7_dnue7")

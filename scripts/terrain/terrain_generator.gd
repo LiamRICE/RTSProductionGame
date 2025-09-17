@@ -1,3 +1,4 @@
+@tool
 extends Node3D
 
 ## Signals
@@ -5,12 +6,12 @@ signal _texture_generated
 
 ## Constants
 const TerrainChunk:Script = preload("uid://cioet1hqubffq")
-const TerrainFeaturesGenerator:Script = preload("uid://olyaxbr30ktx")
 
 ## Image to use for map generation
 @export_group("Generation Settings")
 @export var map_texture:Texture2D
 @export var randomise_map:bool = false
+@export var height_curve:Curve
 @export var map_seed:int = 0
 
 @export_group("Terrain Size")
@@ -22,9 +23,18 @@ const TerrainFeaturesGenerator:Script = preload("uid://olyaxbr30ktx")
 		if value > 0: chunk_subdivision = value
 		else: chunk_subdivision = 1
 @export var smooth_terrain:bool = true ## Whether or not to use smooth shading on the resulting terrain
+@export var quantize_terrain:bool = false ## Whether or not to quantise the height of the terrain
 
-@export_group("Visuals")
+@export_group("Textures")
 @export var terrain_material:Material = preload("uid://x6l5qm4rknwr")
+@export var vegetation_colour:Color = Color("7d835c")
+@export var rock_colour:Color = Color("626262")
+@export var sand_colour:Color = Color("6d7069")
+@export var eroded_colour:Color = Color("888888")
+
+@export_group("Actions")
+@export_tool_button("Generate Terrain") var generate_terrain_function:Callable = self._generate
+@export_tool_button("Clear Terrain") var clear_terrain_function:Callable = self._clear
 
 var rng:RandomNumberGenerator = RandomNumberGenerator.new()
 var noise:FastNoiseLite = preload("uid://clms0jcq7hsmf")
@@ -34,21 +44,7 @@ var low_resolution_image:Image
 var chunks_array:Array[MeshInstance3D] = []
 
 func _ready() -> void:
-	self.rng.seed = self.map_seed
-	self.chunks_array.resize(self.map_size.x * self.map_size.y)
-	
-	self._initialise_image()
-	RenderingServer.global_shader_parameter_set("world_size", self.map_size)
-	await self._texture_generated
-	
-	self._generate_terrain(self._process_chunk_vertices)
-	
-	var image:Image = TerrainFeaturesGenerator.generate_features(self.low_resolution_image, self.chunk_subdivision, 10, 0.15, 0.0, self.map_seed)
-	var splatmap:ImageTexture = ImageTexture.create_from_image(image)
-	$FeaturesMap.texture = splatmap
-	$Heightmap.texture = self.low_resolution_image
-	
-	self.terrain_material.set_shader_parameter("splatmap", splatmap)
+	pass
 
 ## Initialises the terrain chunks
 func _generate_terrain(processing_function:Callable) -> void:
@@ -76,19 +72,21 @@ func _initialise_image():
 	
 	## Fetch the image contained in the texture for quantization and manipulation
 	else:
-		assert(not self.map_texture == null)
+		assert(not self.map_texture == null, "No texture assigned to the terrain node !")
+		assert(int(self.map_texture.get_size().x) % chunk_size != 0 or int(self.map_texture.get_size().y) % chunk_size != 0)
 		print("Map is preloaded image")
 		self.map_size = Vector2i(self.map_texture.get_size() - Vector2.ONE) / self.chunk_size
 		image = self.map_texture.get_image()
 	
 	## Quantize the image
-	self._quantize_image(image, self.height)
+	#self._quantize_image(image, self.height)
 	
 	## Create the heightmap object and assign it to a static body
 	var heightmap:HeightMapShape3D = HeightMapShape3D.new()
 	self.low_resolution_image = image.duplicate()
 	self.low_resolution_image.convert(Image.FORMAT_RF)
-	heightmap.update_map_data_from_image(self.low_resolution_image, 0, self.height * 0.5)
+	self._apply_curve_on_image(self.low_resolution_image)
+	heightmap.update_map_data_from_image(self.low_resolution_image, 0, self.height)
 	$StaticBody3D/CollisionShape3D.shape = heightmap
 	
 	## Upscale the image to keep 1 pixel per vertex
@@ -111,7 +109,8 @@ func _load_chunk(x:int, z:int, processing_function:Callable) -> void:
 	chunk_instance.material_override = self.terrain_material
 	chunk_instance.set_instance_shader_parameter("chunk_position", Vector2(x, z))
 	self.add_child(chunk_instance)
-	chunk_instance.owner = self
+	if not Engine.is_editor_hint():
+		chunk_instance.owner = self
 	chunks_array[x * self.map_size.y + z] = chunk_instance
 
 ## Returns the chunk in the selected absolute x/z position
@@ -134,6 +133,43 @@ func _process_chunk_vertices(vertex: Vector3, chunk_position: Vector3) -> Vector
 	## Apply combined falloff to noise
 	return Vector3(
 		vertex.x,
-		noise_value * self.height * 0.5,
+		noise_value * self.height * self.height_curve.sample(noise_value),
 		vertex.z
 	)
+
+func _apply_curve_on_image(image:Image) -> void:
+	var size:Vector2 = image.get_size()
+	for x in size.x:
+		for y in size.y:
+			var col:Color = image.get_pixel(x, y)
+			col = col * height_curve.sample(col.r)
+			image.set_pixel(x, y, col)
+
+func _generate() -> void:
+	self._clear()
+	
+	self.rng.seed = self.map_seed
+	self.chunks_array.resize(self.map_size.x * self.map_size.y)
+	
+	self._initialise_image()
+	RenderingServer.global_shader_parameter_set("inv_world_size", Vector2.ONE / Vector2(self.map_size))
+	RenderingServer.global_shader_parameter_set("inv_world_max_height", 1.0 / self.height)
+	await self._texture_generated
+	
+	self._generate_terrain(self._process_chunk_vertices)
+	$Heightmap.texture = self.low_resolution_image
+	
+	#self.terrain_material.set_shader_parameter("grass_col", Vector3(self.vegetation_colour.r, self.vegetation_colour.g, self.vegetation_colour.b))
+	#self.terrain_material.set_shader_parameter("rock_col", Vector3(self.rock_colour.r, self.rock_colour.g, self.rock_colour.b))
+	#self.terrain_material.set_shader_parameter("sand_col", Vector3(self.sand_colour.r, self.sand_colour.g, self.sand_colour.b))
+	print("\n--- Terrain Bake Completed ---\n")
+
+func _clear() -> void:
+	if self.chunks_array.size() > 0:
+		## Clear meshes
+		for chunk in self.chunks_array:
+			chunk.free()
+		self.chunks_array.clear()
+		
+		## Clear physics
+		$StaticBody3D/CollisionShape3D.shape = null

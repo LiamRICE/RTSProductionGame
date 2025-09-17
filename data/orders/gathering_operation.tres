@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OrderData" load_steps=4 format=3 uid="uid://b684p0ttspl68"]
+
+[ext_resource type="Script" uid="uid://4xo1bv014nhl" path="res://scripts/data_resources/orders/operations/gather_operation.gd" id="1_b1lrk"]
+[ext_resource type="Texture2D" uid="uid://0xri5upas8bt" path="res://assets/ui/icons/orders/icon_projectile.png" id="2_sps74"]
+[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="3_s8clx"]
+
+[resource]
+script = ExtResource("3_s8clx")
+order = ExtResource("1_b1lrk")
+order_icon = ExtResource("2_sps74")
+order_tooltip = "Mine a resource and deliver the material to the nearest depot."
+order_request = 7
+metadata/_custom_type_script = "uid://dcirvncucn0yg"

@@ -57,6 +57,7 @@ static func create_chunk(processor_function:Callable, chunk_size:float, chunk_po
 	
 	## Use the surface tool to generate and smooth normals
 	if smoothed: surface_tool.generate_normals()
+	surface_tool.generate_tangents()
 	
 	## Output the generated mesh
 	var output_mesh: ArrayMesh = surface_tool.commit()
