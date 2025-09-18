@@ -16,16 +16,16 @@ seed = 1
 fractal_octaves = 2
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gyhns"]
-seamless = true
 noise = SubResource("FastNoiseLite_dnue7")
+seamless = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_gyhns"]
 fractal_octaves = 2
 fractal_lacunarity = 15.0
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_krggg"]
-seamless = true
 noise = SubResource("FastNoiseLite_gyhns")
+seamless = true
 
 [resource]
 render_priority = 0

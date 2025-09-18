@@ -51,10 +51,11 @@ void fragment() {
 	// Calculate the current uv position in global UV coordinates
 	vec2 uv = (UV + chunk_position) * inv_world_size * texture_scale;
 	float noise_map_value = texture(noise_map, UV * texture_scale).r;
+	float large_noise_value = texture(large_noise, UV).r;
 	
 	// Calculate texture masks
 	float cliff_mask = max(pow(world_slope, cliff_exponent) - (1.0 - cliff_amount), 0.0);
-	float snow_mask = smoothstep(snow_threshold - snow_falloff, snow_threshold, world_height + noise_map_value * inv_world_max_height * snow_randomisation_scale) * (1.0 - world_slope);
+	float snow_mask = smoothstep(snow_threshold - snow_falloff, snow_threshold, world_height + noise_map_value * inv_world_max_height * snow_randomisation_scale + large_noise_value * 0.1) * (1.0 - world_slope);
 	float sand_mask = smoothstep(sand_threshold + sand_falloff, sand_threshold, world_height + noise_map_value * inv_world_max_height * sand_randomisation_scale);
 	
 	// Debug view of calculated texture masks.

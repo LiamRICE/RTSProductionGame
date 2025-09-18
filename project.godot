@@ -12,7 +12,7 @@ config_version=5
 
 config/name="RTSProductionGame"
 run/main_scene="uid://dkve5n5x16hga"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://bva3m1240mv2f"
 
 [autoload]
@@ -131,8 +131,8 @@ rotate_modifier={
 [physics]
 
 3d/physics_engine="Jolt Physics"
-jolt_physics_3d/simulation/areas_detect_static_bodies=true
 3d/default_gravity_vector=Vector3(0, 0, 0)
+jolt_physics_3d/simulation/areas_detect_static_bodies=true
 
 [renderendering]
 
