@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://xejesn3s5jis"]
+[gd_scene load_steps=10 format=3 uid="uid://xejesn3s5jis"]
 
 [ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/entities/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
@@ -7,8 +7,6 @@
 [ext_resource type="Script" uid="uid://d18ueu0nhr54y" path="res://scripts/data_resources/weapon_utils/weapon_resource.gd" id="6_txwoa"]
 [ext_resource type="Resource" uid="uid://covlla281dqnd" path="res://data/weapons/weapons/120mm_smoothbore_cannon.tres" id="7_813ds"]
 [ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/weapon_module.tscn" id="7_h1kfa"]
-[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="8_813ds"]
-[ext_resource type="Resource" uid="uid://b0dpilxkbtfou" path="res://data/orders/attack_move_order_data.tres" id="9_h1kfa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.613342, 0.807037, 1.0376)
@@ -16,12 +14,13 @@ size = Vector3(0.613342, 0.807037, 1.0376)
 [sub_resource type="ViewportTexture" id="ViewportTexture_hxc5x"]
 viewport_path = NodePath("SubViewport")
 
-[node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
+[node name="Vehicle" type="Node3D" groups=["units"]]
 script = ExtResource("1_qm2ug")
-body = NodePath("StaticBody3D")
 entity_id = 2
-entity_specific_orders = Array[ExtResource("8_813ds")]([ExtResource("9_h1kfa")])
+current_health = 1.0
+allegiance = 1
 is_mobile = true
+is_military = true
 
 [node name="SelectionSprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
