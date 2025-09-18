@@ -5,6 +5,7 @@ signal received_damage(health:int)
 ## Constants
 const Vector3SecondOrderDynamics:Script = preload("uid://dk0dxwf2vi886")
 const QuaternionSecondOrderDynamics:Script = preload("uid://2qt0fxo8oqaa")
+const DamageType := preload("uid://coiglhf6wydkv").DamageType
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
 const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
@@ -77,8 +78,12 @@ func _physics_process(delta) -> void:
 	self.active_order.process(self, delta)
 
 ## Function called when entity takes damage
-func receive_damage(dmg:float) -> void:
-	current_health -= dmg
+func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, penetration:float=0) -> void:
+	if penetration > self.entity_statistics.get(STATS.ARMOUR):
+		current_health -= dmg / 2
+	else :
+		current_health -= dmg
+	# check if destroyed
 	if current_health <= 0:
 		self._on_destroyed()
 	else:

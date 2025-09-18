@@ -1,12 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://xejesn3s5jis"]
+[gd_scene load_steps=16 format=3 uid="uid://xejesn3s5jis"]
 
 [ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/entities/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
 [ext_resource type="ArrayMesh" uid="uid://c57wwr3fi4piq" path="res://assets/kenney_space/monorail_trainFront.obj" id="3_3bsjp"]
 [ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/healthbar.tscn" id="4_wmkho"]
-[ext_resource type="Script" uid="uid://d18ueu0nhr54y" path="res://scripts/data_resources/weapon_utils/weapon_resource.gd" id="6_txwoa"]
-[ext_resource type="Resource" uid="uid://covlla281dqnd" path="res://data/weapons/weapons/120mm_smoothbore_cannon.tres" id="7_813ds"]
-[ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/weapon_module.tscn" id="7_h1kfa"]
+[ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://data/weapons/army_equipment_resource.gd" id="6_o0odg"]
+[ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/army_equipment.tscn" id="7_h1kfa"]
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://data/weapons/equipment_resource.gd" id="7_txwoa"]
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://data/weapons/weapon_resource.gd" id="8_txwoa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.613342, 0.807037, 1.0376)
@@ -14,8 +15,55 @@ size = Vector3(0.613342, 0.807037, 1.0376)
 [sub_resource type="ViewportTexture" id="ViewportTexture_hxc5x"]
 viewport_path = NodePath("SubViewport")
 
-[node name="Vehicle" type="Node3D" groups=["units"]]
+[sub_resource type="Resource" id="Resource_le5uv"]
+script = ExtResource("8_txwoa")
+weapon_name = "Autocannon"
+description = "Autocannon description"
+ui_tooltip = "Autocannon UI Tooltip"
+weapon_range = 20.0
+damage = 5.0
+damage_type = 1
+armour_penetration = 20.0
+ammunition = 800
+fire_rate_per_minute = 120.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"
+
+[sub_resource type="Resource" id="Resource_813ds"]
+script = ExtResource("7_txwoa")
+weapon = SubResource("Resource_le5uv")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"
+
+[sub_resource type="Resource" id="Resource_txwoa"]
+script = ExtResource("8_txwoa")
+weapon_name = "Machine Gun"
+weapon_range = 15.0
+damage = 0.5
+damage_type = 1
+armour_penetration = 5.0
+ammunition = 2000
+fire_rate_per_minute = 600.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"
+
+[sub_resource type="Resource" id="Resource_5lvtk"]
+script = ExtResource("7_txwoa")
+weapon = SubResource("Resource_txwoa")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"
+
+[sub_resource type="Resource" id="Resource_h1kfa"]
+script = ExtResource("6_o0odg")
+loadout_name = "IFV"
+description = "IFV Description"
+ui_tooltip = "IFV UI Tooltip"
+unit_accuracy = 0.8
+experience_level = 2
+weapons = Array[ExtResource("7_txwoa")]([SubResource("Resource_813ds"), SubResource("Resource_5lvtk")])
+metadata/_custom_type_script = "uid://3i5rn4jk1yxu"
+
+[node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
 script = ExtResource("1_qm2ug")
+body = NodePath("StaticBody3D")
 entity_id = 2
 current_health = 1.0
 allegiance = 1
@@ -43,12 +91,7 @@ shape = SubResource("BoxShape3D_4hctu")
 offset = Vector2(0, 100)
 texture = SubResource("ViewportTexture_hxc5x")
 
-[node name="WeaponModule" parent="." node_paths=PackedStringArray("weapon_position_array") instance=ExtResource("7_h1kfa")]
-weapon_resource_array = Array[ExtResource("6_txwoa")]([ExtResource("7_813ds")])
-weapon_position_array = [NodePath("../WeaponPositions/Marker3D")]
-
-[node name="WeaponPositions" type="Node" parent="."]
-
-[node name="Marker3D" type="Marker3D" parent="WeaponPositions"]
+[node name="ArmyEquipment" parent="." instance=ExtResource("7_h1kfa")]
+equipment_resource = SubResource("Resource_h1kfa")
 
 [connection signal="received_damage" from="." to="." method="_on_received_damage"]

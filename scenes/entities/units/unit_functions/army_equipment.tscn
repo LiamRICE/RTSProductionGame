@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://ch8ivgymt3ucp"]
+
+[ext_resource type="Script" uid="uid://bujfp6n7wqbvb" path="res://scripts/entities/units/unit_features/army_equipment.gd" id="1_curjb"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_geuds"]
+radius = 10.0
+
+[node name="ArmyEquipment" type="Node3D" groups=["modules"]]
+script = ExtResource("1_curjb")
+
+[node name="WeaponRangeDetector" type="Area3D" parent="."]
+collision_mask = 6
+input_ray_pickable = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponRangeDetector"]
+shape = SubResource("SphereShape3D_geuds")
+
+[connection signal="body_entered" from="WeaponRangeDetector" to="." method="_on_weapon_range_detector_body_entered"]
+[connection signal="body_exited" from="WeaponRangeDetector" to="." method="_on_weapon_range_detector_body_exited"]
