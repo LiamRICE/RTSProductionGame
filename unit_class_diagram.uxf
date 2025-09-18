@@ -162,7 +162,7 @@ m1=1</panel_attributes>
     <panel_attributes>CombatMode
 --
 BALANCED (no modifiers)
-ENTRENCHED (lower damage, lower casualties)
+ENTRENCH (lower damage, lower casualties)
 ASSAULT (higher casualties, slightly higher damage)
 </panel_attributes>
     <additional_attributes/>

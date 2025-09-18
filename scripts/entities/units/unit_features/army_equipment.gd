@@ -3,7 +3,7 @@ class_name ArmyEquipment extends Node3D
 # Imports
 const CombatMode := preload("uid://coiglhf6wydkv").CombatMode
 const EngagementMode := preload("uid://coiglhf6wydkv").EngagementMode
-const ACCURACY_MODIFIER := preload("uid://coiglhf6wydkv").ACCURACY_MODIFIER
+const EXPERIENCE_ACCURACY_MODIFIER := preload("uid://coiglhf6wydkv").EXPERIENCE_ACCURACY_MODIFIER
 
 # set variables
 @export_group("Equipment")
@@ -24,7 +24,7 @@ func _ready():
 # initialises all of the variables in the army equipment object
 func _initialise():
 	# extract base variables
-	self._unit_accuracy = self.equipment_resource.unit_accuracy * ACCURACY_MODIFIER[self.equipment_resource.experience_level]
+	self._unit_accuracy = self.equipment_resource.unit_accuracy * EXPERIENCE_ACCURACY_MODIFIER[self.equipment_resource.experience_level]
 	self._combat_mode = CombatMode.BALANCED
 	self._engagement_mode = EngagementMode.FULL
 	# extract equipment
@@ -67,7 +67,7 @@ func engage(targets : Array[Entity], _delta : float):
 						var accuracy = self._unit_accuracy + weapon.weapon.weapon_accuracy
 						if weapon.weapon.self_guided_weapon:
 							accuracy = weapon.weapon.weapon_accuracy
-						var damage = weapon.fire(_delta) * fire_proportion * accuracy
+						var damage = weapon.fire(_delta, self._combat_mode) * fire_proportion * accuracy
 						target.receive_damage(damage, weapon.weapon.weapon_damage_type, weapon.weapon.weapon_armour_penetration)
 		
 		# Optimal engagement mode : weapons only attack optimal targets

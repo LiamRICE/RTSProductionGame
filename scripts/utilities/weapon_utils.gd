@@ -1,13 +1,16 @@
 extends RefCounted
 
-# constants
-const ACCURACY_MODIFIER:Array[float] = [0.85, 0.9, 1, 1.05, 1.1]
-const SHOCK_MODIFIER:Array[float] = [0.75, 1, 1, 1.25, 1.5]
+# CombatMode Modifiers
+const COMBAT_MODE_DAMAGE_MODIFIER:Array[float] = [1, 0.85, 1.05]
+const COMBAT_MODE_SHOCK_MODIFIER:Array[float] = [1, 0.75, 0.9]
+# ExperienceLevel Modifiers
+const EXPERIENCE_ACCURACY_MODIFIER:Array[float] = [0.85, 0.9, 1, 1.05, 1.1]
+const EXPERIENCE_SHOCK_MODIFIER:Array[float] = [0.75, 1, 1, 1.25, 1.5]
 
 # enumerations
 enum CombatMode{
 	BALANCED=0,
-	ENTRENCHED=1,
+	ENTRENCH=1,
 	ASSAULT=2
 }
 

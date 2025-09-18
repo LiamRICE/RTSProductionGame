@@ -1,5 +1,8 @@
 class_name Equipment extends RefCounted
 
+const CombatMode := preload("uid://coiglhf6wydkv").CombatMode
+const COMBAT_MODE_DAMAGE_MODIFIER := preload("uid://coiglhf6wydkv").COMBAT_MODE_DAMAGE_MODIFIER
+
 var weapon : Weapon
 var max_quantity : int
 var quantity : int
@@ -8,7 +11,7 @@ var ammunition : float
 var ammunition_use_per_unit_per_second : float
 
 # returns the raw damage of the unit over the time delta
-func fire(_delta:float) -> float:
+func fire(_delta:float, combat_mode:CombatMode) -> float:
 	# decrease ammo
 	var decrease_ammount := self.ammunition_use_per_unit_per_second * self.quantity * _delta
 	var damage = self.weapon.weapon_damage_per_second * self.quantity * _delta
@@ -18,6 +21,8 @@ func fire(_delta:float) -> float:
 		self.ammunition = 0
 		var fraction := decrease_ammount - ammunition / decrease_ammount
 		damage = damage * fraction
+	# modify damage by combat mode
+	damage = damage * COMBAT_MODE_DAMAGE_MODIFIER[combat_mode]
 	# return amount of damage dealt over this time period
 	return damage
 
