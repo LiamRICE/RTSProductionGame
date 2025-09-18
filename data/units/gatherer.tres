@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_bi0t2")
-entity_statistics = Dictionary[int, float]({
+entity_statistics = Dictionary[int, Variant]({
 0: 50.0,
 1: 0.0,
 2: 0.0,
@@ -16,7 +16,6 @@ entity_statistics = Dictionary[int, float]({
 7: 2.0,
 8: 5.0,
 9: 360.0,
-10: 0.0,
 11: 1.0,
 12: 1.0,
 13: 10.0

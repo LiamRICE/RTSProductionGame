@@ -156,7 +156,7 @@ func initialise_fog_of_war_propagation() -> Sprite2D:
 	
 	## Create the FoW sprite, assign it's texture and return it to the calling object
 	self.fog_of_war_sprite = Sprite2D.new()
-	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2
+	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.VIEW_DISTANCE] * 2
 	self.fog_of_war_sprite.texture = self.vision_texture
 	return self.fog_of_war_sprite
 
@@ -172,9 +172,5 @@ func update_offline_stat(stat:STATS) -> void:
 	match stat:
 		STATS.SHIELD:
 			pass
-		STATS.ATTACK_SPEED:
-			pass
-		STATS.SIGHT:
-			self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2 * GameSettings.fog_of_war_resolution
-		STATS.ATTACK_RANGE:
-			pass
+		STATS.VIEW_DISTANCE:
+			self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.VIEW_DISTANCE] * 2 * GameSettings.fog_of_war_resolution
