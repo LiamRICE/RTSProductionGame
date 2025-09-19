@@ -8,6 +8,13 @@ const EXPERIENCE_ACCURACY_MODIFIER:Array[float] = [0.85, 0.9, 1, 1.05, 1.1]
 const EXPERIENCE_SHOCK_MODIFIER:Array[float] = [0.75, 1, 1, 1.25, 1.5]
 
 # enumerations
+enum CombatState{
+	NONE,
+	ENGAGED,
+	ENGAGING,
+	ENGAGED_ENGAGING,
+}
+
 enum CombatMode{
 	BALANCED=0,
 	ENTRENCH=1,
@@ -88,3 +95,14 @@ enum WeaponState {
 	RELOADING = 3,
 	REARMING = 4,
 }
+
+
+static func update_combat_state(engaged:bool, engaging:bool) -> CombatState:
+	if engaged and engaging:
+		return CombatState.ENGAGED_ENGAGING
+	elif engaged:
+		return CombatState.ENGAGED
+	elif engaging:
+		return CombatState.ENGAGING
+	else:
+		return CombatState.NONE

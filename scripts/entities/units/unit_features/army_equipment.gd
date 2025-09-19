@@ -1,19 +1,29 @@
 class_name ArmyEquipment extends Node3D
 
 # Imports
+const WeaponDebugView := preload("uid://mw2q7lomrl1p")
+const CombatState := preload("uid://coiglhf6wydkv").CombatState
 const CombatMode := preload("uid://coiglhf6wydkv").CombatMode
 const EngagementMode := preload("uid://coiglhf6wydkv").EngagementMode
 const EXPERIENCE_ACCURACY_MODIFIER := preload("uid://coiglhf6wydkv").EXPERIENCE_ACCURACY_MODIFIER
+const WeaponUtils := preload("uid://coiglhf6wydkv")
 
 # set variables
 @export_group("Equipment")
 @export var equipment_resource : ArmyEquipmentResource
+
+# DEBUG
+@export_group("Debug")
+@export var debug_view : WeaponDebugView
 
 # internal variables
 var _unit_accuracy : float
 var equipment : Array[Equipment]
 var _tracked_enemy_entities : Array[Entity]
 var _weapon_range_detector : Area3D
+var _combat_state : CombatState
+var _parent : Entity
+var _is_attacked : bool
 
 # Unit Combat Settings
 var _combat_mode : CombatMode
@@ -23,6 +33,8 @@ var _engagement_mode : EngagementMode
 
 func _ready():
 	self._initialise()
+	self._parent = self.get_parent()
+	self._parent.received_damage.connect(self.manage_attacked_state)
 
 func _physics_process(delta: float) -> void:
 	if not self._tracked_enemy_entities.is_empty():
@@ -36,6 +48,8 @@ func _initialise():
 	self._unit_accuracy = self.equipment_resource.unit_accuracy * EXPERIENCE_ACCURACY_MODIFIER[self.equipment_resource.experience_level]
 	self._combat_mode = CombatMode.BALANCED
 	self._engagement_mode = EngagementMode.FULL
+	self._combat_state = CombatState.NONE
+	self._is_attacked = false
 	self._weapon_range_detector = self.get_child(0)
 	# var to search highest range
 	var highest_range : float = 0
@@ -70,6 +84,9 @@ func _initialise():
 
 # attacks each target in range with each weapon
 func engage(targets : Array[Entity], _delta : float):
+	# DEBUG clear shooting attay
+	self.debug_view.set_values_shooting([])
+	var found : bool = false
 	# only attacks if there are valid targets
 	if len(targets) > 0:
 		# Full engagement mode : attacks each enemy equally
@@ -77,6 +94,10 @@ func engage(targets : Array[Entity], _delta : float):
 			for weapon in self.equipment:
 				var targets_in_range = weapon.targets_in_range(targets, self.global_position)
 				if not targets_in_range.is_empty():
+					found = true
+					self._combat_state = WeaponUtils.update_combat_state(self._is_attacked, true)
+					# DEBUG show shooting
+					self.debug_view.add_value_shooting(weapon.weapon)
 					# create the proportion of fire to split between each target (can check weapons to optimise damage between attacking units)
 					var fire_proportion : float = 1. / float(len(targets_in_range)) # TODO - fix bug where multiple targets implies 0 damage???
 					print("Fire proportion : ", fire_proportion)
@@ -91,6 +112,17 @@ func engage(targets : Array[Entity], _delta : float):
 		# Optimal engagement mode : weapons only attack optimal targets
 		elif self._engagement_mode == EngagementMode.OPTIMAL:
 			pass
+		
+		if not found:
+			self._combat_state = WeaponUtils.update_combat_state(self._is_attacked, false)
+		
+		if self._combat_state in [CombatState.ENGAGED, CombatState.ENGAGED_ENGAGING]:
+			self.debug_view.set_values_shot_at(true)
+			self._is_attacked = false
+
+
+func manage_attacked_state():
+	self.is_attacked = true
 
 """ INTERNAL SIGNALS """
 
@@ -111,3 +143,7 @@ func _on_weapon_range_detector_body_exited(body: Node3D) -> void:
 		if body in self._tracked_enemy_entities:
 			self._tracked_enemy_entities.erase(entity)
 		print("Tracked Enemies : ", self._tracked_enemy_entities)
+
+
+func _damage_taken():
+	pass

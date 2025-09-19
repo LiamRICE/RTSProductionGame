@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://xejesn3s5jis"]
+[gd_scene load_steps=18 format=3 uid="uid://xejesn3s5jis"]
 
 [ext_resource type="Script" uid="uid://cnosw7tjiuo0e" path="res://scripts/entities/units/vehicle.gd" id="1_qm2ug"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_6twp8"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/army_equipment.tscn" id="7_h1kfa"]
 [ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://data/weapons/equipment_resource.gd" id="7_txwoa"]
 [ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://data/weapons/weapon_resource.gd" id="8_txwoa"]
+[ext_resource type="PackedScene" uid="uid://crlue2t1rli5v" path="res://scenes/test/weapon_debug_view.tscn" id="9_813ds"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4hctu"]
 size = Vector3(0.613342, 0.807037, 1.0376)
@@ -61,6 +62,9 @@ experience_level = 2
 weapons = Array[ExtResource("7_txwoa")]([SubResource("Resource_813ds"), SubResource("Resource_5lvtk")])
 metadata/_custom_type_script = "uid://3i5rn4jk1yxu"
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_h1kfa"]
+viewport_path = NodePath("SubViewport")
+
 [node name="Vehicle" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
 script = ExtResource("1_qm2ug")
 body = NodePath("StaticBody3D")
@@ -90,7 +94,12 @@ shape = SubResource("BoxShape3D_4hctu")
 offset = Vector2(0, 100)
 texture = SubResource("ViewportTexture_hxc5x")
 
-[node name="ArmyEquipment" parent="." instance=ExtResource("7_h1kfa")]
+[node name="ArmyEquipment" parent="." node_paths=PackedStringArray("debug_view") instance=ExtResource("7_h1kfa")]
 equipment_resource = SubResource("Resource_h1kfa")
+debug_view = NodePath("../WeaponDebugView")
+
+[node name="WeaponDebugView" parent="." instance=ExtResource("9_813ds")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6028209, 0)
+texture = SubResource("ViewportTexture_h1kfa")
 
 [connection signal="received_damage" from="." to="." method="_on_received_damage"]
