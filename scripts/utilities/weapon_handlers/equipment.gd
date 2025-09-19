@@ -29,7 +29,17 @@ func fire(_delta:float, combat_mode:CombatMode) -> float:
 
 func targets_in_range(entities:Array[Entity], current_position:Vector3) -> Array[Entity]:
 	var entities_in_range : Array[Entity] = []
+	var to_clear : Array[int] = []
+	var i := 0
 	for entity in entities:
-		if current_position.distance_to(entity.global_position) < self.weapon.weapon_range:
-			entities_in_range.append(entity)
+		if entity:
+			if current_position.distance_to(entity.global_position) < self.weapon.weapon_range:
+				entities_in_range.append(entity)
+		else:
+			to_clear.append(i)
+		i += 1
+	if not to_clear.is_empty():
+		to_clear.reverse()
+		for j in to_clear:
+			entities.remove_at(j)
 	return entities_in_range

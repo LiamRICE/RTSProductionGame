@@ -1,7 +1,6 @@
 class_name ResourceCollectorUnit extends Unit
 
 ## Constants
-const InventoryModule:Script = preload("uid://boci3e8npvh1a")
 const Healthbar:Script = preload("uid://45nawhpn2sjv")
 
 ## Internal nodes

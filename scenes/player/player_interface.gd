@@ -237,10 +237,10 @@ func _give_move_order(screen_position:Vector2, shift_pressed:bool) -> void:
 		## check if on resource and unit has gatherer node -> assign as resource node
 		_mouse_right_click = true
 		if not selected_entities.contents.is_empty() and self.selected_type in [UIStateUtils.SelectionType.UNITS, UIStateUtils.SelectionType.UNITS_ECONOMIC]:
+			# TODO - Filter out dead units
 			var mouse_position :Vector2 = get_viewport().get_mouse_position()
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			if not camera_raycast_coords == Vector3.ZERO:
-				# TODO - spread out units
 				var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
 				for i in range(len(selected_entities.contents)):
 					var unit = selected_entities.contents[i]
@@ -443,7 +443,7 @@ func _on_unit_blob_pressed():
 func _on_enemy_unit_pressed():
 	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	var vehicle:Vehicle = vehicle_scene.instantiate()
-	vehicle.allegiance = self.player_team - 1
+	vehicle.allegiance = self.player_team + 1
 	level_manager.add_unit(vehicle, Vector3(0, 0, 0), Vector3(-12, 0, -12))
 
 

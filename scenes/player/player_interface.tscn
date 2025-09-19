@@ -11,7 +11,7 @@ script = ExtResource("1_x6a1n")
 metadata/_edit_lock_ = true
 
 [node name="DebugControls" type="HBoxContainer" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_top = 25.0
 offset_right = 681.0
 offset_bottom = 56.0
