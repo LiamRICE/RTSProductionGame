@@ -359,9 +359,10 @@ VEHICLE_PARA=5
 # Aircraft
 HELICOPTER=6
 AEROPLANE=7
+AEROPLANE_NAVAL=8
 
 # Naval Craft
-SHIP=8</panel_attributes>
+SHIP=9</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

@@ -4,6 +4,7 @@ extends Node
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
 const STATS := preload("uid://dki6gr7rrru2p").STATS
+const TYPE := preload("uid://dki6gr7rrru2p").TYPE
 
 ## Database
 @export var entity_db:Dictionary[ENTITY_ID, DataRef]
@@ -22,6 +23,9 @@ func get_stats(id:ENTITY_ID) -> Dictionary[STATS, Variant]:
 
 func get_entity_name(id:ENTITY_ID) -> String:
 	return entity_db[id].resource.name
+
+func get_entity_type(id:ENTITY_ID) -> TYPE:
+	return entity_db[id].resource.unit_type
 
 ## Returns a dictionary containing the amount of each resource it costs the build the queried entity.
 func get_production_cost(id:ENTITY_ID) -> Dictionary[RESOURCE, float]:

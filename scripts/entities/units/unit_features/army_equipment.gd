@@ -124,6 +124,13 @@ func engage(targets : Array[Entity], _delta : float):
 func manage_attacked_state():
 	self.is_attacked = true
 
+
+func get_weapons() -> Array[Weapon]:
+	var weapons : Array[Weapon] = []
+	for equip in self.equipment:
+		weapons.append(equip.weapon)
+	return weapons
+
 """ INTERNAL SIGNALS """
 
 func _on_weapon_range_detector_body_entered(body: Node3D) -> void:

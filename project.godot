@@ -137,31 +137,37 @@ jolt_physics_3d/simulation/areas_detect_static_bodies=true
 
 [renderendering]
 
-camera/depth_of_field/depth_of_field_bokeh_shapering=0
+camera/depth_of_field/depth_of_field_bokeh_shapering=2
 
 [rendering]
 
 occlusion_culling/bvh_build_quality=0
-lights_and_shadows/directional_shadow/size=256
+lights_and_shadows/directional_shadow/size=8192
 lights_and_shadows/directional_shadow/size.mobile=512
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/directional_shadow/16_bits=false
-lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 global_illumination/gi/use_half_resolution=true
-textures/default_filters/anisotropic_filtering_level=0
+global_illumination/voxel_gi/quality=1
+textures/default_filters/anisotropic_filtering_level=4
 camera/depth_of_field/depth_of_field_bokeh_shape=0
-camera/depth_of_field/depth_of_field_bokeh_quality=0
-environment/ssao/quality=0
+camera/depth_of_field/depth_of_field_bokeh_quality=3
+environment/ssao/quality=4
 environment/ssao/adaptive_target=1.0
-environment/ssil/quality=0
+environment/ssil/quality=4
 environment/ssil/adaptive_target=1.0
-textures/decals/filter=0
-textures/light_projectors/filter=0
+anti_aliasing/quality/msaa_2d=3
+anti_aliasing/quality/msaa_3d=3
+scaling_3d/mode=2
+textures/decals/filter=5
+textures/light_projectors/filter=5
 environment/glow/upscale_mode=0
-environment/screen_space_reflection/roughness_quality=0
-environment/subsurface_scattering/subsurface_scattering_quality=0
-global_illumination/sdfgi/probe_ray_count=0
-global_illumination/sdfgi/frames_to_converge=0
+environment/screen_space_reflection/roughness_quality=3
+environment/subsurface_scattering/subsurface_scattering_quality=3
+global_illumination/sdfgi/probe_ray_count=5
+global_illumination/sdfgi/frames_to_converge=3
+global_illumination/sdfgi/frames_to_update_lights=0
 environment/volumetric_fog/use_filter=0
-lights_and_shadows/positional_shadow/atlas_size=256
+anti_aliasing/quality/use_taa=true
+lights_and_shadows/positional_shadow/atlas_size=8192
 camera/depth_of_field/depth_of_field_bokeh_shapering=2

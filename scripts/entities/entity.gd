@@ -10,6 +10,7 @@ const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
 const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 const STATS := preload("uid://dki6gr7rrru2p").STATS
+const TYPE := preload("uid://dki6gr7rrru2p").TYPE
 
 ## Common Entity nodes
 @export var body:PhysicsBody3D
@@ -18,10 +19,11 @@ var fog_of_war_sprite:Sprite2D
 ## Necessary Entity declaration
 @export_group("Properties")
 @export var entity_id:ENTITY_ID
+var entity_type:TYPE
 
 ## Common Entity properties
 @export_group("Statistics")
-@export var entity_statistics:Dictionary[STATS, float]
+@export var entity_statistics:Dictionary[STATS, Variant]
 @export var current_health:float ## The current health the unit has
 @export var current_shield:float ## The current amount of shields the unit has
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by sight stat.
@@ -69,6 +71,9 @@ func _ready() -> void:
 	## Set unit health to max
 	self.current_health = self.entity_statistics[STATS.HEALTH]
 	self.current_shield = self.entity_statistics[STATS.SHIELD]
+	
+	## Set unit properties
+	self.entity_type = EntityDatabase.get_entity_type(self.entity_id)
 	
 	## Initialise orders
 	self.active_order = self.default_order.new(self)

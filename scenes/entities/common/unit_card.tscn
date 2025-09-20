@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqgx8be6uxhou"]
+
+[ext_resource type="Script" uid="uid://45nawhpn2sjv" path="res://scripts/common/unit_card.gd" id="1_77ony"]
+[ext_resource type="PackedScene" uid="uid://dstwkdkqifu0m" path="res://scenes/UI/units/unit_card.tscn" id="2_8bx08"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_wlcvk"]
+viewport_path = NodePath("SubViewport")
+
+[node name="UnitCard" type="Sprite3D"]
+billboard = 1
+texture = SubResource("ViewportTexture_wlcvk")
+script = ExtResource("1_77ony")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(160, 80)
+
+[node name="UnitCard" parent="SubViewport" instance=ExtResource("2_8bx08")]

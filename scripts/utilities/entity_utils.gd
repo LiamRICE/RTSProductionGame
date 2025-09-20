@@ -15,6 +15,7 @@ enum ENTITY_ID{
 ## Entity stats
 enum STATS{
 	# General
+	TYPE=10,
 	HEALTH=0,
 	NUM_ENTITIES=3,
 	SHIELD=1,
@@ -34,6 +35,24 @@ enum STATS{
 	GATHER_AMOUNT=12,
 	MAX_RESOURCE=13,
 	CARRY_UNIT=14
+}
+
+enum TYPE{
+	# Static
+	BUILDING=0,
+	# Infantry
+	INFANTRY=1,
+	INFANTRY_PARA=2,
+	# Vehicle
+	VEHICLE=3,
+	VEHICLE_HELO=4,
+	VEHICLE_PARA=5,
+	# Aircraft
+	HELICOPTER=6,
+	AEROPLANE=7,
+	AEROPLANE_NAVAL=8,
+	# Naval Craft
+	SHIP=9
 }
 
 ## Entity order request state

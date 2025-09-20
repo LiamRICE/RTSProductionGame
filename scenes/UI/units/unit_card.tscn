@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://dstwkdkqifu0m"]
+
+[ext_resource type="Script" uid="uid://babr1rdcwc7hk" path="res://scripts/ui/units/unit_card.gd" id="1_07cii"]
+
+[node name="UnitCard" type="CanvasLayer"]
+script = ExtResource("1_07cii")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0, 0.7353805, 0.8301776, 1)
+
+[node name="UnitNameLabel" type="RichTextLabel" parent="VBoxContainer/ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_colors/default_color = Color(0.13725491, 0, 0.7607843, 1)
+text = "Unit Name"
+fit_content = true
+autowrap_mode = 0
+
+[node name="UnitTypeLabel" type="RichTextLabel" parent="VBoxContainer/ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -56.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/default_color = Color(0.13776922, 0, 0.7620614, 1)
+text = "Vehicle"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 2
+
+[node name="HealthBar" type="ProgressBar" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0.51208055, 0.8142626, 1)
+value = 50.0
+show_percentage = false
