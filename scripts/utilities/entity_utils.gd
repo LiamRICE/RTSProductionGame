@@ -11,6 +11,7 @@ enum ENTITY_ID{
 	BARRACKS,
 	TURRET,
 	TANK,
+	MARINES,
 }
 
 ## Entity stats

@@ -9,8 +9,7 @@ const EXPERIENCE_ACCURACY_MODIFIER := preload("uid://coiglhf6wydkv").EXPERIENCE_
 const WeaponUtils := preload("uid://coiglhf6wydkv")
 
 # set variables
-@export_group("Equipment")
-@export var equipment_resource : ArmyEquipmentResource
+var equipment_resource : ArmyEquipmentResource
 
 # DEBUG
 @export_group("Debug")
@@ -108,8 +107,8 @@ func engage(targets : Array[Entity], _delta : float):
 						var accuracy = self._unit_accuracy + weapon.weapon.weapon_accuracy
 						if weapon.weapon.self_guided_weapon:
 							accuracy = weapon.weapon.weapon_accuracy
-						var damage = weapon.fire(_delta, self._combat_mode) * fire_proportion * accuracy
-						target.receive_damage(damage, weapon.weapon.weapon_damage_type, weapon.weapon.weapon_armour_penetration)
+						var damage = weapon.fire(_delta, self._combat_mode) * fire_proportion
+						target.receive_damage(damage, weapon.weapon.weapon_damage_type, weapon.weapon.weapon_armour_penetration, accuracy)
 		
 		# Optimal engagement mode : weapons only attack optimal targets
 		elif self._engagement_mode == EngagementMode.OPTIMAL:

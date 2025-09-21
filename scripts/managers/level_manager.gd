@@ -23,6 +23,7 @@ func _ready():
 	
 	# Create units
 	var tank_scene:PackedScene = preload("uid://bt0pblfmn6r")
+	var marines:PackedScene = preload("uid://rd2cpncdmftr")
 	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	var gatherer_scene:PackedScene = preload("uid://ditvkcv1wolek")
 	var city_centre_scene:PackedScene = preload("uid://bph3bulc5igvo")
@@ -41,6 +42,8 @@ func _ready():
 			unit = tank_scene.instantiate()
 		elif x == 1:
 			unit = vehicle_scene.instantiate()
+		elif x == 2:
+			unit = marines.instantiate()
 		else:
 			unit = gatherer_scene.instantiate()
 		unit.allegiance = 1

@@ -21,7 +21,8 @@ var fog_of_war_sprite:Sprite2D
 @export_group("Properties")
 @export var entity_id:ENTITY_ID
 var entity_type:TYPE
-var cover_multiplier:float = 1
+var cover_damage_reduction:float = 0
+var cover_accuracy_reduction:float = 0
 
 ## Common Entity properties
 @export_group("Statistics")
@@ -85,9 +86,14 @@ func _physics_process(delta) -> void:
 	self.active_order.process(self, delta)
 
 ## Function called when entity takes damage
-func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, penetration:float=0) -> void:
+func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, penetration:float=0, accuracy:float=0) -> void:
+	# reduce accuracy by this unit's cover
+	accuracy = accuracy - self.cover_accuracy_reduction
+	# reduce damage by accuracy
+	if accuracy < 1:
+		dmg = dmg * accuracy
 	# calculate damage based on unit type, damage type, armour and penetration
-	current_health -= WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_multiplier)
+	current_health -= WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_damage_reduction)
 	# check if destroyed
 	if current_health <= 0:
 		self._on_destroyed()

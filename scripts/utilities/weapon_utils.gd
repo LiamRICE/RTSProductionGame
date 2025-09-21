@@ -111,7 +111,7 @@ static func update_combat_state(engaged:bool, engaging:bool) -> CombatState:
 		return CombatState.NONE
 
 
-static func calculate_damage(damage:float, penetration:float, damage_type:DamageType, unit_type:TYPE, armour:float, cover_bonus:float=1):
+static func calculate_damage(damage:float, penetration:float, damage_type:DamageType, unit_type:TYPE, armour:float, cover_bonus:float=0):
 	# explosive damage better against infantry and buildings
 	if damage_type == DamageType.EXPLOSIVE:
 		if unit_type in [TYPE.INFANTRY, TYPE.INFANTRY_PARA]:
@@ -135,7 +135,7 @@ static func calculate_damage(damage:float, penetration:float, damage_type:Damage
 		damage = 0
 	
 	## apply cover bonus
-	damage = damage * cover_bonus
+	damage = damage * ( 1 - cover_bonus )
 	
 	## Calculate armour penetration
 	if penetration < armour:

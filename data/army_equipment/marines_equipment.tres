@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmyEquipmentResource" load_steps=5 format=3 uid="uid://1qs8xj8opwsi"]
+
+[ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://scripts/data_resources/weapon_resources/army_equipment_resource.gd" id="1_bdhly"]
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="2_lrn3s"]
+[ext_resource type="Resource" uid="uid://cq6c4c81nghxo" path="res://data/army_equipment/weapons/marines_rifles.tres" id="3_nvbva"]
+[ext_resource type="Resource" uid="uid://dgkiof2sbhcwt" path="res://data/army_equipment/weapons/marines_at4.tres" id="4_4w3uf"]
+
+[resource]
+script = ExtResource("1_bdhly")
+loadout_name = "RIMa"
+description = "RIMa description"
+ui_tooltip = "RIMa tooltip"
+unit_accuracy = 0.85
+experience_level = 3
+weapons = Array[ExtResource("2_lrn3s")]([ExtResource("3_nvbva"), ExtResource("4_4w3uf")])
+metadata/_custom_type_script = "uid://3i5rn4jk1yxu"

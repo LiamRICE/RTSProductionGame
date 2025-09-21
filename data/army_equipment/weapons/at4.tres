@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://0p87yodcmdn1"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_eg47w"]
+
+[resource]
+script = ExtResource("1_eg47w")
+weapon_name = "AT-4"
+description = "AT-4 description"
+ui_tooltip = "AT-4 tooltip"
+weapon_range = 5.0
+damage = 25.0
+damage_type = 2
+armour_penetration = 500.0
+ammunition = 6
+fire_rate_per_minute = 4.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

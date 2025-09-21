@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://2tyvcbejss75"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_mjsun"]
+[ext_resource type="Resource" uid="uid://1qs8xj8opwsi" path="res://data/army_equipment/marines_equipment.tres" id="2_ldjr5"]
+
+[resource]
+script = ExtResource("1_mjsun")
+entity_statistics = Dictionary[int, Variant]({
+0: 500,
+1: 0,
+2: 5,
+6: 12,
+7: 2,
+8: 0.5,
+9: 1.0
+})
+unit_type = 2
+unit_equipment_resource = ExtResource("2_ldjr5")
+name = "Marines"
+metadata/_custom_type_script = "uid://cmh45u84mi2lo"
