@@ -9,7 +9,8 @@ enum ENTITY_ID{
 	CITY_CENTRE,
 	DEPOT,
 	BARRACKS,
-	TURRET
+	TURRET,
+	TANK,
 }
 
 ## Entity stats
@@ -52,7 +53,10 @@ enum TYPE{
 	AEROPLANE=7,
 	AEROPLANE_NAVAL=8,
 	# Naval Craft
-	SHIP=9
+	SHIP=9,
+	# Drones
+	SMALL_DRONE=10,
+	LARGE_DRONE=11,
 }
 
 ## Entity order request state

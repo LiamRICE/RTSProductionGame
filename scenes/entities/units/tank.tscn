@@ -1,0 +1,64 @@
+[gd_scene load_steps=11 format=3 uid="uid://bt0pblfmn6r"]
+
+[ext_resource type="Script" uid="uid://dapmi44k6atuh" path="res://scripts/entities/units/tank.gd" id="1_xy8yi"]
+[ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_uj8u2"]
+[ext_resource type="ArrayMesh" uid="uid://cmlb3dv2ww8ma" path="res://assets/kenney_space/craft_cargoB.obj" id="3_wd15m"]
+[ext_resource type="ArrayMesh" uid="uid://7qnt7au5dho8" path="res://assets/kenney_space/turret_double.obj" id="4_xy8yi"]
+[ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/unit_card.tscn" id="5_xy8yi"]
+[ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/army_equipment.tscn" id="6_j75wx"]
+[ext_resource type="PackedScene" uid="uid://crlue2t1rli5v" path="res://scenes/test/weapon_debug_view.tscn" id="7_58twc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k5q73"]
+size = Vector3(1.015626, 1.1227797, 1.855545)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_a8lk7"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_yq071"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Tank" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
+script = ExtResource("1_xy8yi")
+body = NodePath("StaticBody3D")
+entity_id = 8
+is_mobile = true
+is_military = true
+metadata/_custom_type_script = "uid://bbw1frmdbpa4v"
+
+[node name="SelectionSprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1.5, 0, 0, 0, -6.556708e-08, -1.5, 0, 1.5, -6.556708e-08, 0, 0.15, 0)
+visible = false
+texture = ExtResource("2_uj8u2")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.75, 0, -6.556708e-08, 0, 0.75, 0, 6.556708e-08, 0, -0.75, 0, 0, 0)
+mesh = ExtResource("3_wd15m")
+
+[node name="TurretDouble" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = ExtResource("4_xy8yi")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+input_capture_on_drag = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0039858967, 0.5569044, 0.012199789)
+shape = SubResource("BoxShape3D_k5q73")
+
+[node name="UnitCard" parent="." instance=ExtResource("5_xy8yi")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1592321, 0)
+texture = SubResource("ViewportTexture_a8lk7")
+
+[node name="ArmyEquipment" parent="." node_paths=PackedStringArray("debug_view") instance=ExtResource("6_j75wx")]
+unique_name_in_owner = true
+debug_view = NodePath("../WeaponDebugView")
+
+[node name="WeaponDebugView" parent="." instance=ExtResource("7_58twc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.164802, 0)
+texture = SubResource("ViewportTexture_yq071")
+
+[connection signal="received_damage" from="." to="." method="_on_received_damage"]

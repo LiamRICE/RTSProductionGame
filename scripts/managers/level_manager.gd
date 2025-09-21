@@ -22,6 +22,7 @@ func _ready():
 	EventBus.on_entity_produced.connect(self.add_unit)
 	
 	# Create units
+	var tank_scene:PackedScene = preload("uid://bt0pblfmn6r")
 	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
 	var gatherer_scene:PackedScene = preload("uid://ditvkcv1wolek")
 	var city_centre_scene:PackedScene = preload("uid://bph3bulc5igvo")
@@ -36,7 +37,9 @@ func _ready():
 	
 	for x in range(3):
 		var unit:Unit
-		if x < 1:
+		if x == 0:
+			unit = tank_scene.instantiate()
+		elif x == 1:
 			unit = vehicle_scene.instantiate()
 		else:
 			unit = gatherer_scene.instantiate()

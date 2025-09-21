@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentResource" load_steps=3 format=3 uid="uid://bgluqbtn1la3l"]
+
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="1_hewee"]
+[ext_resource type="Resource" uid="uid://lb0jky20rffw" path="res://data/army_equipment/weapons/120mm_gun.tres" id="2_201u4"]
+
+[resource]
+script = ExtResource("1_hewee")
+weapon = ExtResource("2_201u4")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"

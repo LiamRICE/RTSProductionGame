@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://lb0jky20rffw"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_7w837"]
+
+[resource]
+script = ExtResource("1_7w837")
+weapon_name = "120mm Smoothebore"
+description = "120mm gun description"
+ui_tooltip = "120mm gun tooltip"
+weapon_range = 12.0
+damage = 12.0
+damage_type = 1
+armour_penetration = 200.0
+ammunition = 20
+fire_rate_per_minute = 10.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

@@ -1,5 +1,8 @@
 extends RefCounted
 
+# imports
+const TYPE := preload("uid://dki6gr7rrru2p").TYPE
+
 # CombatMode Modifiers
 const COMBAT_MODE_DAMAGE_MODIFIER:Array[float] = [1, 0.85, 1.05]
 const COMBAT_MODE_SHOCK_MODIFIER:Array[float] = [1, 0.75, 0.9]
@@ -106,3 +109,36 @@ static func update_combat_state(engaged:bool, engaging:bool) -> CombatState:
 		return CombatState.ENGAGING
 	else:
 		return CombatState.NONE
+
+
+static func calculate_damage(damage:float, penetration:float, damage_type:DamageType, unit_type:TYPE, armour:float, cover_bonus:float=1):
+	# explosive damage better against infantry and buildings
+	if damage_type == DamageType.EXPLOSIVE:
+		if unit_type in [TYPE.INFANTRY, TYPE.INFANTRY_PARA]:
+			damage = damage * 1.5
+		elif unit_type in [TYPE.BUILDING]:
+			damage = damage * 1.25
+		elif unit_type in [TYPE.HELICOPTER, TYPE.AEROPLANE, TYPE.AEROPLANE_NAVAL, TYPE.SMALL_DRONE, TYPE.LARGE_DRONE]:
+			damage = damage
+		else:
+			damage = damage * 0.75
+	# laser and microwave damage much worse against everything except drones
+	elif damage_type in [DamageType.ENERGY_LASER, DamageType.ENERGY_MICROWAVE]:
+		if unit_type not in [TYPE.SMALL_DRONE, TYPE.LARGE_DRONE]:
+			damage = damage * 0.05
+	# kinetic and heat damage better against vehicles and ships and worse against aircraft and much worse against infantry
+	elif damage_type in [DamageType.KINETIC, DamageType.HEAT]:
+		if unit_type not in [TYPE.VEHICLE, TYPE.VEHICLE_HELO, TYPE.VEHICLE_PARA, TYPE.SHIP]:
+			damage = damage * 0.5
+	# no damage ignores the damage value
+	elif damage_type == DamageType.NO_DAMAGE:
+		damage = 0
+	
+	## apply cover bonus
+	damage = damage * cover_bonus
+	
+	## Calculate armour penetration
+	if penetration < armour:
+		damage = 1 - ( (armour - penetration) / armour ) ** 2
+	
+	return damage

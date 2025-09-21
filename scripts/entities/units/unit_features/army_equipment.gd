@@ -102,8 +102,7 @@ func engage(targets : Array[Entity], _delta : float):
 					# DEBUG show shooting
 					self.debug_view.add_value_shooting(weapon.weapon)
 					# create the proportion of fire to split between each target (can check weapons to optimise damage between attacking units)
-					var fire_proportion : float = 1. / float(len(targets_in_range)) # TODO - fix bug where multiple targets implies 0 damage???
-					print("Fire proportion : ", fire_proportion)
+					var fire_proportion : float = 1. / float(len(targets_in_range))
 					for target in targets_in_range:
 						# decrease damage as proportion to the number of attacking enemies as damage is split between targets
 						var accuracy = self._unit_accuracy + weapon.weapon.weapon_accuracy

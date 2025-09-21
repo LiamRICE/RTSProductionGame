@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmyEquipmentResource" load_steps=5 format=3 uid="uid://b6m263l33awkf"]
+
+[ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://scripts/data_resources/weapon_resources/army_equipment_resource.gd" id="1_bfyob"]
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="2_1mgfh"]
+[ext_resource type="Resource" uid="uid://cmv0201rh8fbc" path="res://data/army_equipment/weapons/IFV_machine_gun.tres" id="3_1mgfh"]
+[ext_resource type="Resource" uid="uid://bgluqbtn1la3l" path="res://data/army_equipment/weapons/tank_120mm_gun.tres" id="4_qak8b"]
+
+[resource]
+script = ExtResource("1_bfyob")
+loadout_name = "Tank"
+description = "Tank description"
+ui_tooltip = "Tank tooltip"
+unit_accuracy = 0.8
+experience_level = 2
+weapons = Array[ExtResource("2_1mgfh")]([ExtResource("3_1mgfh"), ExtResource("4_qak8b")])
+metadata/_custom_type_script = "uid://3i5rn4jk1yxu"

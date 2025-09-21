@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://j57275ar8ce7" path="res://scripts/managers/entity_database.gd" id="1_eoec7"]
 [ext_resource type="Script" uid="uid://e2gcdi7ep8g0" path="res://scripts/data_resources/data_ref.gd" id="2_v6l60"]
+[ext_resource type="PackedScene" uid="uid://bt0pblfmn6r" path="res://scenes/entities/units/tank.tscn" id="3_7sch4"]
+[ext_resource type="Resource" uid="uid://bdw530jx7m43r" path="res://data/units/tank.tres" id="3_10miw"]
 [ext_resource type="Resource" uid="uid://bi7fdmflrc76y" path="res://data/units/vehicle.tres" id="3_dwruv"]
 [ext_resource type="PackedScene" uid="uid://xejesn3s5jis" path="res://scenes/entities/units/vehicle.tscn" id="4_g3vnj"]
 [ext_resource type="Resource" uid="uid://byvhmf4w6cp2q" path="res://data/units/gatherer.tres" id="5_8dxqe"]
@@ -14,34 +16,14 @@
 [ext_resource type="PackedScene" uid="uid://bll0qqe2act2i" path="res://scenes/entities/buildings/depot_building.tscn" id="10_od80n"]
 [ext_resource type="Resource" uid="uid://dtu4174gvre8n" path="res://data/buildings/turret.tres" id="11_g3vnj"]
 [ext_resource type="PackedScene" uid="uid://b1tdkpg420s70" path="res://scenes/entities/buildings/turret_gun.tscn" id="12_8dxqe"]
-[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="15_od80n"]
 [ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="16_7sch4"]
 [ext_resource type="Resource" uid="uid://dv3c6rhxudak" path="res://data/orders/move_order_data.tres" id="17_10miw"]
 [ext_resource type="Resource" uid="uid://b77q4ykwmju5t" path="res://data/orders/reverse_order_data.tres" id="18_34qml"]
 
 [sub_resource type="Resource" id="Resource_34qml"]
-script = ExtResource("15_od80n")
-entity_statistics = Dictionary[int, Variant]({
-0: 0.0,
-1: 0.0,
-2: 0.0,
-3: 0.0,
-4: 0.0,
-5: 0.0,
-6: 0.0,
-7: 0.0,
-8: 0.0,
-9: 0.0,
-10: 0.0
-})
-metadata/_custom_type_script = "uid://cmh45u84mi2lo"
-
-[sub_resource type="PackedScene" id="PackedScene_w0rog"]
-
-[sub_resource type="Resource" id="Resource_1fgul"]
 script = ExtResource("2_v6l60")
-scene = SubResource("PackedScene_w0rog")
-resource = SubResource("Resource_34qml")
+scene = ExtResource("6_qmxdq")
+resource = ExtResource("5_8dxqe")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
 [sub_resource type="Resource" id="Resource_qmxdq"]
@@ -80,15 +62,22 @@ scene = ExtResource("12_8dxqe")
 resource = ExtResource("11_g3vnj")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
+[sub_resource type="Resource" id="Resource_w0rog"]
+script = ExtResource("2_v6l60")
+scene = ExtResource("3_7sch4")
+resource = ExtResource("3_10miw")
+metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
+
 [node name="EntityDatabase" type="Node"]
 script = ExtResource("1_eoec7")
 entity_db = Dictionary[int, ExtResource("2_v6l60")]({
-0: SubResource("Resource_1fgul"),
+0: SubResource("Resource_34qml"),
 2: SubResource("Resource_qmxdq"),
 3: SubResource("Resource_od80n"),
 4: SubResource("Resource_x44mm"),
 5: SubResource("Resource_gnbni"),
 6: SubResource("Resource_7sch4"),
-7: SubResource("Resource_10miw")
+7: SubResource("Resource_10miw"),
+8: SubResource("Resource_w0rog")
 })
 move_orders = Array[ExtResource("16_7sch4")]([ExtResource("17_10miw"), ExtResource("18_34qml")])

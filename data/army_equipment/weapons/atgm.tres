@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://81hlbc2dhwt0"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_fvs2c"]
+
+[resource]
+script = ExtResource("1_fvs2c")
+weapon_name = "Milan ATGM"
+description = "ATGM description"
+ui_tooltip = "ATGM tooltip"
+weapon_range = 15.0
+damage = 20.0
+damage_type = 2
+armour_penetration = 600.0
+ammunition = 4
+fire_rate_per_minute = 3.0
+weapon_accuracy = 1.2
+self_guided_weapon = true
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

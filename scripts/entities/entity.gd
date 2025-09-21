@@ -5,6 +5,7 @@ signal received_damage(health:int)
 ## Constants
 const Vector3SecondOrderDynamics:Script = preload("uid://dk0dxwf2vi886")
 const QuaternionSecondOrderDynamics:Script = preload("uid://2qt0fxo8oqaa")
+const WeaponUtils:Script = preload("uid://coiglhf6wydkv")
 const DamageType := preload("uid://coiglhf6wydkv").DamageType
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
@@ -20,6 +21,7 @@ var fog_of_war_sprite:Sprite2D
 @export_group("Properties")
 @export var entity_id:ENTITY_ID
 var entity_type:TYPE
+var cover_multiplier:float = 1
 
 ## Common Entity properties
 @export_group("Statistics")
@@ -84,10 +86,8 @@ func _physics_process(delta) -> void:
 
 ## Function called when entity takes damage
 func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, penetration:float=0) -> void:
-	if penetration > self.entity_statistics.get(STATS.ARMOUR):
-		current_health -= dmg / 2
-	else :
-		current_health -= dmg
+	# calculate damage based on unit type, damage type, armour and penetration
+	current_health -= WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_multiplier)
 	# check if destroyed
 	if current_health <= 0:
 		self._on_destroyed()
