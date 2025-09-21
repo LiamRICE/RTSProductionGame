@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentResource" load_steps=3 format=3 uid="uid://o4lv8sj1mn3c"]
+
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="1_otcoq"]
+[ext_resource type="Resource" uid="uid://cc6q48y51kcrg" path="res://data/army_equipment/weapons/autocannon.tres" id="2_8g81q"]
+
+[resource]
+script = ExtResource("1_otcoq")
+weapon = ExtResource("2_8g81q")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"

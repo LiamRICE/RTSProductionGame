@@ -17,6 +17,8 @@ const TYPE := preload("uid://dki6gr7rrru2p").TYPE
 	STATS.TURN_RATE : 0,
 }
 @export var unit_type:TYPE
+@export_group("Armament")
+@export var unit_equipment_resource:ArmyEquipmentResource
 
 @export_group("Properties")
 @export var production_cost:Dictionary[RESOURCE, float]

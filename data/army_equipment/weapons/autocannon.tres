@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://cc6q48y51kcrg"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_gpv6l"]
+
+[resource]
+script = ExtResource("1_gpv6l")
+weapon_name = "Autocannon"
+description = "Autocannon description"
+ui_tooltip = "Autocannon tooltip"
+weapon_range = 10.0
+damage = 2.0
+armour_penetration = 10.0
+ammunition = 600
+fire_rate_per_minute = 60.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

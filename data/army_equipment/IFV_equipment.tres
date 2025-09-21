@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmyEquipmentResource" load_steps=5 format=3 uid="uid://dcp0ovrv5hraj"]
+
+[ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://scripts/data_resources/weapon_resources/army_equipment_resource.gd" id="1_fpfwd"]
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="2_631re"]
+[ext_resource type="Resource" uid="uid://o4lv8sj1mn3c" path="res://data/army_equipment/weapons/IFV_autocannon.tres" id="3_6qj0n"]
+[ext_resource type="Resource" uid="uid://cmv0201rh8fbc" path="res://data/army_equipment/weapons/IFV_machine_gun.tres" id="4_i3s2h"]
+
+[resource]
+script = ExtResource("1_fpfwd")
+loadout_name = "IFV"
+description = "IFV description"
+ui_tooltip = "IFV tooltip"
+unit_accuracy = 0.8
+experience_level = 2
+weapons = Array[ExtResource("2_631re")]([ExtResource("3_6qj0n"), ExtResource("4_i3s2h")])
+metadata/_custom_type_script = "uid://3i5rn4jk1yxu"

@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://bi7fdmflrc76y"]
+[gd_resource type="Resource" script_class="EntityResource" load_steps=4 format=3 uid="uid://bi7fdmflrc76y"]
 
 [ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_xa01o"]
 [ext_resource type="Texture2D" uid="uid://dq7beibq4ll4s" path="res://assets/ui/icons/units/monorail_trainFront_SW.png" id="2_jmvym"]
+[ext_resource type="Resource" uid="uid://dcp0ovrv5hraj" path="res://data/army_equipment/IFV_equipment.tres" id="3_ebht4"]
 
 [resource]
 script = ExtResource("1_xa01o")
@@ -20,6 +21,7 @@ entity_statistics = Dictionary[int, Variant]({
 13: 0.0
 })
 unit_type = 3
+unit_equipment_resource = ExtResource("3_ebht4")
 production_cost = Dictionary[int, float]({
 1: 25.0,
 3: 75.0

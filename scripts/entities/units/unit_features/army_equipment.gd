@@ -32,9 +32,10 @@ var _engagement_mode : EngagementMode
 """ NODE METHODS """
 
 func _ready():
-	self._initialise()
 	self._parent = self.get_parent()
 	self._parent.received_damage.connect(self.manage_attacked_state)
+	# initialise the equipment
+	self._initialise()
 
 func _physics_process(delta: float) -> void:
 	if not self._tracked_enemy_entities.is_empty():
@@ -44,6 +45,8 @@ func _physics_process(delta: float) -> void:
 
 # initialises all of the variables in the army equipment object
 func _initialise():
+	# fetch the equipment resource from the entity database
+	self.equipment_resource = EntityDatabase.get_entity_armament(self._parent.entity_id)
 	# extract base variables
 	self._unit_accuracy = self.equipment_resource.unit_accuracy * EXPERIENCE_ACCURACY_MODIFIER[self.equipment_resource.experience_level]
 	self._combat_mode = CombatMode.BALANCED
