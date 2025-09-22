@@ -76,7 +76,7 @@ func _initialise():
 		new_equipment.weapon.weapon_damage_type = equipment_res.weapon.damage_type
 		new_equipment.weapon.weapon_damage_per_second = equipment_res.weapon.damage * (equipment_res.weapon.fire_rate_per_minute / 60)
 		new_equipment.weapon.weapon_armour_penetration = equipment_res.weapon.armour_penetration
-		print("Weapon ready : ", new_equipment.weapon.name, " with ", new_equipment.weapon.weapon_damage_per_second, " dps and ", new_equipment.ammunition, " ammunition over ", new_equipment.quantity, " ", self.equipment_resource.loadout_name, "s")
+		# print("Weapon ready : ", new_equipment.weapon.name, " with ", new_equipment.weapon.weapon_damage_per_second, " dps and ", new_equipment.ammunition, " ammunition over ", new_equipment.quantity, " ", self.equipment_resource.loadout_name, "s")
 		self.equipment.append(new_equipment)
 		# set the highest range value to the highest weapon range
 		if new_equipment.weapon.weapon_range > highest_range:
@@ -137,20 +137,15 @@ func get_weapons() -> Array[Weapon]:
 func _on_weapon_range_detector_body_entered(body: Node3D) -> void:
 	if body.get_parent() is Entity:
 		var entity = body.get_parent()
-		print("Body entered : ", entity)
-		print(self.get_parent().allegiance, " == ", entity.allegiance)
 		if entity.allegiance != 0 and entity.allegiance != self.get_parent().allegiance:
 			self._tracked_enemy_entities.append(entity)
-	print("Tracked Enemies : ", self._tracked_enemy_entities)
 
 
 func _on_weapon_range_detector_body_exited(body: Node3D) -> void:
 	if body.get_parent() is Entity:
 		var entity = body.get_parent()
-		print("Body exited : ", entity)
 		if body in self._tracked_enemy_entities:
 			self._tracked_enemy_entities.erase(entity)
-		print("Tracked Enemies : ", self._tracked_enemy_entities)
 
 
 func _damage_taken():

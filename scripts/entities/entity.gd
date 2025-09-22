@@ -93,7 +93,11 @@ func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, pene
 	if accuracy < 1:
 		dmg = dmg * accuracy
 	# calculate damage based on unit type, damage type, armour and penetration
-	current_health -= WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_damage_reduction)
+	var damage = WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_damage_reduction)
+	# reduce damage by cover
+	damage -= damage * self.cover_damage_reduction
+	# apply damage
+	self.current_health -= damage
 	# check if destroyed
 	if current_health <= 0:
 		self._on_destroyed()
