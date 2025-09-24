@@ -10,9 +10,11 @@ const TerrainChunk:Script = preload("uid://cioet1hqubffq")
 ## Image to use for map generation
 @export_group("Generation Settings")
 @export var map_texture:Texture2D
-@export var randomise_map:bool = false
 @export var height_curve:Curve
+@export_subgroup("Randomisation")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var randomise_map:bool = false
 @export var map_seed:int = 0
+@export var noise:FastNoiseLite = preload("uid://clms0jcq7hsmf")
 
 @export_group("Terrain Size")
 @export var chunk_size:int = 256 ## The size of each map chunk in metres
@@ -37,14 +39,14 @@ const TerrainChunk:Script = preload("uid://cioet1hqubffq")
 @export_tool_button("Clear Terrain") var clear_terrain_function:Callable = self._clear
 
 var rng:RandomNumberGenerator = RandomNumberGenerator.new()
-var noise:FastNoiseLite = preload("uid://clms0jcq7hsmf")
 var quantized_image:Image
 var low_resolution_image:Image
 
 var chunks_array:Array[MeshInstance3D] = []
 
 func _ready() -> void:
-	pass
+	if not Engine.is_editor_hint():
+		self._generate()
 
 ## Initialises the terrain chunks
 func _generate_terrain(processing_function:Callable) -> void:
@@ -59,11 +61,13 @@ func _initialise_image():
 	
 	if self.randomise_map:
 		print("Randomising new map")
+		var texture_size:Vector2i = Vector2i(self.map_size.x, self.map_size.y) * self.chunk_size * self.chunk_subdivision + Vector2i.ONE
 		self.map_texture = NoiseTexture2D.new()
-		self.map_texture.set_width(self.map_size.x * self.chunk_size + 1)
-		self.map_texture.set_height(self.map_size.y * self.chunk_size + 1)
-		self.map_texture.noise = preload("uid://clms0jcq7hsmf")
+		self.map_texture.set_width(texture_size.x)
+		self.map_texture.set_height(texture_size.y)
+		self.map_texture.noise = self.noise
 		self.map_texture.noise.seed = self.map_seed
+		self.map_texture.noise.frequency = self.map_texture.noise.frequency / self.chunk_subdivision
 		
 		print("waiting for texture to generate")
 		await self.map_texture.changed
@@ -73,27 +77,37 @@ func _initialise_image():
 	## Fetch the image contained in the texture for quantization and manipulation
 	else:
 		assert(not self.map_texture == null, "No texture assigned to the terrain node !")
-		assert(int(self.map_texture.get_size().x) % chunk_size != 0 or int(self.map_texture.get_size().y) % chunk_size != 0)
+		assert(int(self.map_texture.get_size().x) % chunk_size == 0 or int(self.map_texture.get_size().y) % chunk_size == 0)
 		print("Map is preloaded image")
 		self.map_size = Vector2i(self.map_texture.get_size() - Vector2.ONE) / self.chunk_size
 		image = self.map_texture.get_image()
+		
+	## Reset the noise scale
+	if self.randomise_map:
+		self.map_texture.noise.frequency = self.map_texture.noise.frequency * self.chunk_subdivision
 	
 	## Quantize the image
-	#self._quantize_image(image, self.height)
+	if self.quantize_terrain:
+		self._quantize_image(image, self.height)
 	
 	## Create the heightmap object and assign it to a static body
 	var heightmap:HeightMapShape3D = HeightMapShape3D.new()
 	self.low_resolution_image = image.duplicate()
 	self.low_resolution_image.convert(Image.FORMAT_RF)
 	self._apply_curve_on_image(self.low_resolution_image)
+	self.low_resolution_image.resize(self.map_size.x * self.chunk_size + 1, self.map_size.y * self.chunk_size + 1)
 	heightmap.update_map_data_from_image(self.low_resolution_image, 0, self.height)
 	$StaticBody3D/CollisionShape3D.shape = heightmap
 	
 	## Upscale the image to keep 1 pixel per vertex
-	image.resize(self.map_size.x * self.chunk_size * self.chunk_subdivision + 1,
-				self.map_size.y * self.chunk_size * self.chunk_subdivision + 1,
-				Image.INTERPOLATE_TRILINEAR)
+	#image.resize(self.map_size.x * self.chunk_size * self.chunk_subdivision + 1,
+				#self.map_size.y * self.chunk_size * self.chunk_subdivision + 1,
+				#Image.INTERPOLATE_TRILINEAR)
 	self.quantized_image = image
+	
+	var image_for_data:Image = Image.create_empty(32,32,false,Image.FORMAT_L8)
+	image_for_data.blit_rect(image, Rect2i(0,0,32,32), Vector2i(0,0))
+	print(image_for_data.get_data())
 	
 	## Image is saved in R8 format
 	self.map_texture = ImageTexture.create_from_image(image)
@@ -108,7 +122,7 @@ func _load_chunk(x:int, z:int, processing_function:Callable) -> void:
 	chunk_instance.position.z = (float(z) - float(self.map_size.y) / 2) * float(chunk_size)
 	chunk_instance.material_override = self.terrain_material
 	chunk_instance.set_instance_shader_parameter("chunk_position", Vector2(x, z))
-	self.add_child(chunk_instance)
+	self.add_child(chunk_instance, false, Node.INTERNAL_MODE_FRONT)
 	if not Engine.is_editor_hint():
 		chunk_instance.owner = self
 	chunks_array[x * self.map_size.y + z] = chunk_instance
@@ -169,7 +183,13 @@ func _clear() -> void:
 		## Clear meshes
 		for chunk in self.chunks_array:
 			chunk.free()
-		self.chunks_array.clear()
+		self.chunks_array.resize(0)
 		
 		## Clear physics
 		$StaticBody3D/CollisionShape3D.shape = null
+	
+	if self.get_child_count(true) > 5:
+		for child in self.get_children(true):
+			if child is MeshInstance3D and child != $WaterMesh:
+				child.free()
+	self.chunks_array.resize(0)

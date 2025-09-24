@@ -44,7 +44,7 @@ varying float world_slope;
 void vertex() {
 	// Called for every vertex the material is visible on.
 	world_height = (MODEL_MATRIX * vec4(VERTEX, 1.0)).y * inv_world_max_height;
-	world_slope = acos(dot(NORMAL, vec3(0.0, 1.0, 0.0)));
+	world_slope = 1.0 - NORMAL.y;
 }
 
 void fragment() {
@@ -54,8 +54,8 @@ void fragment() {
 	float large_noise_value = texture(large_noise, UV).r;
 	
 	// Calculate texture masks
-	float cliff_mask = max(pow(world_slope, cliff_exponent) - (1.0 - cliff_amount), 0.0);
-	float snow_mask = smoothstep(snow_threshold - snow_falloff, snow_threshold, world_height + noise_map_value * inv_world_max_height * snow_randomisation_scale + large_noise_value * 0.1) * (1.0 - world_slope);
+	float cliff_mask = smoothstep(0.0, 1.0 - cliff_amount, pow(world_slope, cliff_exponent));
+	float snow_mask = smoothstep(snow_threshold - snow_falloff, snow_threshold, world_height + noise_map_value * inv_world_max_height * snow_randomisation_scale + large_noise_value * 0.1) * (1.0 - cliff_mask);
 	float sand_mask = smoothstep(sand_threshold + sand_falloff, sand_threshold, world_height + noise_map_value * inv_world_max_height * sand_randomisation_scale);
 	
 	// Debug view of calculated texture masks.
@@ -72,7 +72,7 @@ void fragment() {
 		ALBEDO = albedo;
 	}else{
 		// Texture following the masks with the following priority : Snow > Cliff > Sand > Grass
-		ALBEDO = (texture(sand_col, uv).rgb * sand_mask + texture(rock_col, uv).rgb * cliff_mask + vec3(1.0) * snow_mask + texture(grass_col, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask))) * (1.0 - texture(large_noise, UV).rgb * large_noise_influence);
+		ALBEDO = (texture(sand_col, uv).rgb * sand_mask + texture(rock_col, uv).rgb * cliff_mask + vec3(1.0) * snow_mask + texture(grass_col, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask))) * (1.0 - texture(large_noise, (UV + chunk_position) * inv_world_size).rgb * large_noise_influence);
 		NORMAL_MAP = (texture(sand_normal, uv).rgb * sand_mask + texture(rock_normal, uv).rgb * cliff_mask + vec3(0.0, 0.0, 1.0) * snow_mask + texture(grass_normal, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask))) * 0.2;
 		vec3 arm = texture(sand_arm, uv).rgb * sand_mask + texture(rock_arm, uv).rgb * cliff_mask + vec3(1.0, 0.2, 0.0) * snow_mask + texture(grass_arm, uv).rgb * (1.0 - (sand_mask + cliff_mask + snow_mask));
 		AO = arm.r;

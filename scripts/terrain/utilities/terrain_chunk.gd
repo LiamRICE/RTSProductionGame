@@ -1,12 +1,12 @@
 extends Node
 
-static func create_chunk(processor_function:Callable, chunk_size:float, chunk_position:Vector3, unit_subdivision:int = 4, smoothed:bool = true):
+static func create_chunk(processor_function:Callable, chunk_size:int, chunk_position:Vector3, unit_subdivision:int = 4, smoothed:bool = true):
 	## Create a new surface
 	var surface_tool:SurfaceTool = SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
 	## Generate grid of positions
-	var vertices_per_side:int = roundi(chunk_size) * unit_subdivision + 1
+	var vertices_per_side:int = chunk_size * unit_subdivision + 1
 	var step:float = 1.0 / float(unit_subdivision)
 	var vertices:Array[Array] = []
 	vertices.resize(vertices_per_side)
@@ -21,10 +21,10 @@ static func create_chunk(processor_function:Callable, chunk_size:float, chunk_po
 	## Build quads
 	for x in range(vertices_per_side - 1):
 		for z in range(vertices_per_side - 1):
-			var x0:float = float(x) * step / chunk_size
-			var z0:float = float(z) * step / chunk_size
-			var x1:float = float(x + 1) * step / chunk_size
-			var z1:float = float(z + 1) * step / chunk_size
+			var x0:float = float(x) * step / float(chunk_size)
+			var z0:float = float(z) * step / float(chunk_size)
+			var x1:float = float(x + 1) * step / float(chunk_size)
+			var z1:float = float(z + 1) * step / float(chunk_size)
 			
 			## Vertex position vector
 			var p00:Vector3 = vertices[x][z]
