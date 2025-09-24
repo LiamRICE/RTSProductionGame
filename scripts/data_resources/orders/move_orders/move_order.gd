@@ -13,6 +13,7 @@ const _path_point_margin:float = 0.02
 func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, location:Vector3 = Vector3.INF) -> void:
 	super._init(entity, queue_order, operation)
 	self._request_path_async(entity, queue_order, location)
+	print("Move to ", location)
 
 func process(entity:Entity, delta:float) -> void:
 	## Only abort if the EntityPathServer has finished processing the request

@@ -1,7 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bt0pblfmn6r"]
+[gd_scene load_steps=13 format=3 uid="uid://bt0pblfmn6r"]
 
 [ext_resource type="Script" uid="uid://dapmi44k6atuh" path="res://scripts/entities/units/tank.gd" id="1_xy8yi"]
+[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="2_58twc"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_uj8u2"]
+[ext_resource type="Resource" uid="uid://b0dpilxkbtfou" path="res://data/orders/attack_move_order_data.tres" id="3_a8lk7"]
 [ext_resource type="ArrayMesh" uid="uid://cmlb3dv2ww8ma" path="res://assets/kenney_space/craft_cargoB.obj" id="3_wd15m"]
 [ext_resource type="ArrayMesh" uid="uid://7qnt7au5dho8" path="res://assets/kenney_space/turret_double.obj" id="4_xy8yi"]
 [ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/unit_card.tscn" id="5_xy8yi"]
@@ -21,6 +23,7 @@ viewport_path = NodePath("SubViewport")
 script = ExtResource("1_xy8yi")
 body = NodePath("StaticBody3D")
 entity_id = 8
+entity_specific_orders = Array[ExtResource("2_58twc")]([ExtResource("3_a8lk7")])
 is_mobile = true
 is_military = true
 metadata/_custom_type_script = "uid://bbw1frmdbpa4v"

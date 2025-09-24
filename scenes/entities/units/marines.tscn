@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://rd2cpncdmftr"]
+[gd_scene load_steps=13 format=3 uid="uid://rd2cpncdmftr"]
 
 [ext_resource type="Script" uid="uid://crlrkoo8hgg85" path="res://scripts/entities/units/marines.gd" id="1_niftk"]
 [ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="2_4va2g"]
+[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="2_pd8ly"]
 [ext_resource type="ArrayMesh" uid="uid://bhympx8bddcur" path="res://assets/kenney_space/astronautB.obj" id="2_ytwl0"]
 [ext_resource type="ArrayMesh" uid="uid://bfuybseifehxq" path="res://assets/kenney_space/weapon_rifle.obj" id="3_4va2g"]
+[ext_resource type="Resource" uid="uid://b0dpilxkbtfou" path="res://data/orders/attack_move_order_data.tres" id="3_oc8dr"]
 [ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/unit_card.tscn" id="5_ixanu"]
 [ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/army_equipment.tscn" id="6_t41s1"]
 [ext_resource type="PackedScene" uid="uid://crlue2t1rli5v" path="res://scenes/test/weapon_debug_view.tscn" id="7_pd8ly"]
@@ -21,6 +23,7 @@ viewport_path = NodePath("SubViewport")
 script = ExtResource("1_niftk")
 body = NodePath("StaticBody3D")
 entity_id = 9
+entity_specific_orders = Array[ExtResource("2_pd8ly")]([ExtResource("3_oc8dr")])
 is_mobile = true
 is_military = true
 metadata/_custom_type_script = "uid://bbw1frmdbpa4v"

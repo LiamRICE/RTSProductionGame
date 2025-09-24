@@ -5,14 +5,18 @@ var _current_speed:float = 0
 var _enemies_in_range : Array[Entity] = []
 
 func _init(entity:Entity, queue_order:bool = false, operation:Operation = null, location:Vector3 = Vector3.INF) -> void:
-	super._init(entity, queue_order, operation)
-	self._request_path_async(entity, queue_order, location)
+	super._init(entity, queue_order, operation, location)
+	# self._request_path_async(entity, queue_order, location)
+	print("Initialised attack move order")
 
 func process(entity:Entity, delta:float) -> void:
 	## Only abort if the EntityPathServer has finished processing the request
 	if not self._has_received_path:
 		return
-	super.process(entity, delta)
+	if self.should_abort:
+		self.should_abort = false
+		self.order_aborted.emit()
+		return
 	
 	if self._is_new_path:
 		self._is_new_path = false
@@ -33,10 +37,9 @@ func process(entity:Entity, delta:float) -> void:
 		self._next_point = self._path[self._path_index]
 	
 	## Trigger movment
-	self._enemies_in_range = entity.get_node("WeaponModule").get_enemies_in_range()
+	self._enemies_in_range = entity.get_node("ArmyEquipment").get_enemies_in_range()
 	if len(self._enemies_in_range) > 0:
 		self._stop(entity, delta)
-		print("Firing at enemy")
 	else:
 		self._move(entity, delta, has_arrived_at_destination)
 
@@ -85,11 +88,13 @@ func _request_path_async(entity:Entity, queue_order:bool, location:Vector3) -> v
 		elif entity.active_order is MoveOrder:
 			start = entity.active_order._path[entity.active_order._path.size() - 1]
 	## Query the entity navigation server
+	print("Requesting path...")
 	EntityNavigationServer.request_path(self, start, location)
 
 ## Called when the path is received back from the EntityNavigationServer
 func _path_received(path:PackedVector3Array) -> void:
 	## Check path has data (paths generated before Navmesh sync can be empty as can 0 distance paths)
+	print("Path received : ", path)
 	if path.is_empty():
 		self._order_failed()
 		return
@@ -99,6 +104,17 @@ func _path_received(path:PackedVector3Array) -> void:
 	## Inform the update loop that it has received data
 	self._has_received_path = true
 	self._is_new_path = true
+
+
+## Called when the order is completed. Fires a signal to the listening unit to have it's next order in the queue executed.
+func _order_completed() -> void:
+	print("Attack Move Order completed")
+	self.order_completed.emit()
+
+## Called when an order is aborted automatically (not called abort() ) if the conditions of the order are no longer true.
+func _order_failed() -> void:
+	print("Attack Move Order failed")
+	self.order_failed.emit()
 
 
 func _to_string() -> String:

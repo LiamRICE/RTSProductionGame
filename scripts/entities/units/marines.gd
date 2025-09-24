@@ -18,7 +18,7 @@ func _physics_process(delta) -> void:
 	super._physics_process(delta)
 	
 	# increase cover when unit is stationary
-	if self.active_order is not MoveOrder and self.active_order is not MoveReverseOrder:
+	if self.active_order is not MoveOrder:
 		if self.cover_accuracy_reduction < 0.1:
 			self.cover_accuracy_reduction += self.cover_gain_rate_per_sec * delta
 		else:

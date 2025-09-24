@@ -16,10 +16,13 @@ var equipment_resource : ArmyEquipmentResource
 @export var debug_view : WeaponDebugView
 
 # internal variables
+var _weapon_range_detector : Area3D
+var _collision_shape : CollisionShape3D
+var _highest_range : float
+
 var _unit_accuracy : float
 var equipment : Array[Equipment]
 var _tracked_enemy_entities : Array[Entity]
-var _weapon_range_detector : Area3D
 var _combat_state : CombatState
 var _parent : Entity
 var _is_attacked : bool
@@ -33,8 +36,10 @@ var _engagement_mode : EngagementMode
 func _ready():
 	self._parent = self.get_parent()
 	self._parent.received_damage.connect(self.manage_attacked_state)
-	# initialise the equipment
+	## initialise the equipment
 	self._initialise()
+	## create new shape
+	print("Inisitalised ", self._weapon_range_detector) ## Weapon ranges are shared between all units? How to fix?
 
 func _physics_process(delta: float) -> void:
 	if not self._tracked_enemy_entities.is_empty():
@@ -52,9 +57,10 @@ func _initialise():
 	self._engagement_mode = EngagementMode.FULL
 	self._combat_state = CombatState.NONE
 	self._is_attacked = false
-	self._weapon_range_detector = self.get_child(0)
+	self._weapon_range_detector = $WeaponRangeDetector
+	self._collision_shape = $WeaponRangeDetector/CollisionShape3D
 	# var to search highest range
-	var highest_range : float = 0
+	self._highest_range = 0
 	# extract equipment
 	for equipment_res in self.equipment_resource.weapons:
 		# set the equipment
@@ -79,10 +85,13 @@ func _initialise():
 		# print("Weapon ready : ", new_equipment.weapon.name, " with ", new_equipment.weapon.weapon_damage_per_second, " dps and ", new_equipment.ammunition, " ammunition over ", new_equipment.quantity, " ", self.equipment_resource.loadout_name, "s")
 		self.equipment.append(new_equipment)
 		# set the highest range value to the highest weapon range
-		if new_equipment.weapon.weapon_range > highest_range:
-			highest_range = new_equipment.weapon.weapon_range
+		if new_equipment.weapon.weapon_range > self._highest_range:
+			self._highest_range = new_equipment.weapon.weapon_range
 	# set the range of the area2D as the highest range
-	self._weapon_range_detector.get_child(0).shape.radius = highest_range
+	var sphere_shape := SphereShape3D.new()
+	sphere_shape.set_radius(self._highest_range)
+	self._collision_shape.shape = sphere_shape
+	print("Detection Radius = ", self._collision_shape.shape.radius)
 
 # attacks each target in range with each weapon
 func engage(targets : Array[Entity], _delta : float):
@@ -132,6 +141,14 @@ func get_weapons() -> Array[Weapon]:
 		weapons.append(equip.weapon)
 	return weapons
 
+
+func get_enemies_in_range() -> Array[Entity]:
+	var enemies_in_range : Array[Entity] = []
+	for entity in self._tracked_enemy_entities:
+		if self._parent.global_position.distance_to(entity.global_position) < self._highest_range:
+			enemies_in_range.append(entity)
+	return enemies_in_range
+
 """ INTERNAL SIGNALS """
 
 func _on_weapon_range_detector_body_entered(body: Node3D) -> void:
@@ -139,13 +156,20 @@ func _on_weapon_range_detector_body_entered(body: Node3D) -> void:
 		var entity = body.get_parent()
 		if entity.allegiance != 0 and entity.allegiance != self.get_parent().allegiance:
 			self._tracked_enemy_entities.append(entity)
+			EventBus.on_entity_destroyed.connect(self._on_tracked_entity_destroyed)
 
 
 func _on_weapon_range_detector_body_exited(body: Node3D) -> void:
 	if body.get_parent() is Entity:
 		var entity = body.get_parent()
-		if body in self._tracked_enemy_entities:
+		if entity in self._tracked_enemy_entities:
 			self._tracked_enemy_entities.erase(entity)
+			EventBus.on_entity_destroyed.disconnect(_on_tracked_entity_destroyed)
+
+
+func _on_tracked_entity_destroyed(entity:Entity):
+	if entity in self._tracked_enemy_entities:
+		self._tracked_enemy_entities.erase(entity)
 
 
 func _damage_taken():
