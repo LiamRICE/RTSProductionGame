@@ -38,10 +38,10 @@ script = ExtResource("1_iaoq7")
 map_texture = ExtResource("2_kks0f")
 height_curve = SubResource("Curve_e152h")
 randomise_map = true
-chunk_size = 128
+chunk_size = 32
 map_size = Vector2i(4, 4)
 height = 8
-chunk_subdivision = 1
+chunk_subdivision = 16
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 visible = false

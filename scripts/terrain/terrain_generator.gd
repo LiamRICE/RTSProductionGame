@@ -78,9 +78,10 @@ func _initialise_image():
 	else:
 		assert(not self.map_texture == null, "No texture assigned to the terrain node !")
 		assert(int(self.map_texture.get_size().x) % chunk_size == 0 or int(self.map_texture.get_size().y) % chunk_size == 0)
-		print("Map is preloaded image")
-		self.map_size = Vector2i(self.map_texture.get_size() - Vector2.ONE) / self.chunk_size
+		print("\n--- Map is preloaded image ---\n")
+		self.map_size = Vector2i(self.map_texture.get_size() - Vector2.ONE) / self.chunk_size / self.chunk_subdivision
 		image = self.map_texture.get_image()
+		print("\t- Map size : ", self.map_size)
 		
 	## Reset the noise scale
 	if self.randomise_map:
@@ -94,8 +95,9 @@ func _initialise_image():
 	var heightmap:HeightMapShape3D = HeightMapShape3D.new()
 	self.low_resolution_image = image.duplicate()
 	self.low_resolution_image.convert(Image.FORMAT_RF)
-	self._apply_curve_on_image(self.low_resolution_image)
-	self.low_resolution_image.resize(self.map_size.x * self.chunk_size + 1, self.map_size.y * self.chunk_size + 1)
+	#self._apply_curve_on_image(self.low_resolution_image)
+	if self.randomise_map:
+		self.low_resolution_image.resize(self.map_size.x * self.chunk_size + 1, self.map_size.y * self.chunk_size + 1)
 	heightmap.update_map_data_from_image(self.low_resolution_image, 0, self.height)
 	$StaticBody3D/CollisionShape3D.shape = heightmap
 	
@@ -105,11 +107,7 @@ func _initialise_image():
 				#Image.INTERPOLATE_TRILINEAR)
 	self.quantized_image = image
 	
-	var image_for_data:Image = Image.create_empty(32,32,false,Image.FORMAT_L8)
-	image_for_data.blit_rect(image, Rect2i(0,0,32,32), Vector2i(0,0))
-	print(image_for_data.get_data())
-	
-	## Image is saved in R8 format
+	## Image is saved in RF format
 	self.map_texture = ImageTexture.create_from_image(image)
 	self._texture_generated.emit()
 
@@ -147,7 +145,7 @@ func _process_chunk_vertices(vertex: Vector3, chunk_position: Vector3) -> Vector
 	## Apply combined falloff to noise
 	return Vector3(
 		vertex.x,
-		noise_value * self.height * self.height_curve.sample(noise_value),
+		noise_value * self.height,# * self.height_curve.sample(noise_value),
 		vertex.z
 	)
 
