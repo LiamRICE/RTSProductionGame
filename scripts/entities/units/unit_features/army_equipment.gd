@@ -34,6 +34,7 @@ var _engagement_mode : EngagementMode
 """ NODE METHODS """
 
 func _ready():
+	print(self.get_parent())
 	self._parent = self.get_parent()
 	self._parent.received_damage.connect(self.manage_attacked_state)
 	## initialise the equipment
@@ -65,6 +66,7 @@ func _initialise():
 	for equipment_res in self.equipment_resource.weapons:
 		# set the equipment
 		var new_equipment := Equipment.new()
+		print(equipment_res.weapon)
 		new_equipment.ammunition = equipment_res.weapon.ammunition * equipment_res.quantity
 		new_equipment.max_ammunition = equipment_res.weapon.ammunition * equipment_res.quantity
 		new_equipment.quantity = equipment_res.quantity

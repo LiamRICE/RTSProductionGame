@@ -25,6 +25,9 @@ func _ready():
 	var tank_scene:PackedScene = preload("uid://bt0pblfmn6r")
 	var marines:PackedScene = preload("uid://rd2cpncdmftr")
 	var vehicle_scene:PackedScene = preload("uid://xejesn3s5jis")
+	var scout_snipers:PackedScene = preload("uid://cfvupsnryrtxn")
+	var caesar_artillery:PackedScene = preload("uid://cvfgms4r4h83l")
+	var drone_team:PackedScene = preload("uid://cs1uugf7rv0oa")
 	var gatherer_scene:PackedScene = preload("uid://ditvkcv1wolek")
 	var city_centre_scene:PackedScene = preload("uid://bph3bulc5igvo")
 	
@@ -36,7 +39,7 @@ func _ready():
 	building._init_placement_collision()
 	self.add_building(building, Vector3(0,1.5,0))
 	
-	for x in range(3):
+	for x in range(6):
 		var unit:Unit
 		if x == 0:
 			unit = tank_scene.instantiate()
@@ -44,6 +47,12 @@ func _ready():
 			unit = vehicle_scene.instantiate()
 		elif x == 2:
 			unit = marines.instantiate()
+		elif x == 3:
+			unit = caesar_artillery.instantiate()
+		elif x == 4:
+			unit = scout_snipers.instantiate()
+		elif x == 5:
+			unit = drone_team.instantiate()
 		else:
 			unit = gatherer_scene.instantiate()
 		unit.allegiance = 1

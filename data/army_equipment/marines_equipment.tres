@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://scripts/data_resources/weapon_resources/army_equipment_resource.gd" id="1_bdhly"]
 [ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="2_lrn3s"]
-[ext_resource type="Resource" uid="uid://cq6c4c81nghxo" path="res://data/army_equipment/weapons/marines_rifles.tres" id="3_nvbva"]
-[ext_resource type="Resource" uid="uid://dgkiof2sbhcwt" path="res://data/army_equipment/weapons/marines_at4.tres" id="4_4w3uf"]
+[ext_resource type="Resource" uid="uid://cq6c4c81nghxo" path="res://data/army_equipment/equipment_sets/marines_rifles.tres" id="3_nvbva"]
+[ext_resource type="Resource" uid="uid://dgkiof2sbhcwt" path="res://data/army_equipment/equipment_sets/marines_at4.tres" id="4_4w3uf"]
 
 [resource]
 script = ExtResource("1_bdhly")

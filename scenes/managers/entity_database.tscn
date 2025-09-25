@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bkxlxlcq1slku"]
+[gd_scene load_steps=40 format=3 uid="uid://bkxlxlcq1slku"]
 
 [ext_resource type="Script" uid="uid://j57275ar8ce7" path="res://scripts/managers/entity_database.gd" id="1_eoec7"]
 [ext_resource type="Script" uid="uid://e2gcdi7ep8g0" path="res://scripts/data_resources/data_ref.gd" id="2_v6l60"]
@@ -21,6 +21,12 @@
 [ext_resource type="Resource" uid="uid://2tyvcbejss75" path="res://data/units/marines.tres" id="17_w0rog"]
 [ext_resource type="PackedScene" uid="uid://rd2cpncdmftr" path="res://scenes/entities/units/marines.tscn" id="18_1fgul"]
 [ext_resource type="Resource" uid="uid://b77q4ykwmju5t" path="res://data/orders/reverse_order_data.tres" id="18_34qml"]
+[ext_resource type="Resource" uid="uid://ba7bojfopir04" path="res://data/units/drone_team.tres" id="19_dc3el"]
+[ext_resource type="PackedScene" uid="uid://cs1uugf7rv0oa" path="res://scenes/entities/units/drone_team.tscn" id="20_6v515"]
+[ext_resource type="Resource" uid="uid://brkyq1p6w8dk3" path="res://data/units/caesar_artillery.tres" id="20_couvw"]
+[ext_resource type="Resource" uid="uid://b4jjojbtff8eb" path="res://data/units/scout_snipers.tres" id="21_6v515"]
+[ext_resource type="PackedScene" uid="uid://cfvupsnryrtxn" path="res://scenes/entities/units/scout_snipers.tscn" id="22_couvw"]
+[ext_resource type="PackedScene" uid="uid://cvfgms4r4h83l" path="res://scenes/entities/units/caesar_artillery.tscn" id="22_gtuf3"]
 
 [sub_resource type="Resource" id="Resource_34qml"]
 script = ExtResource("2_v6l60")
@@ -76,6 +82,24 @@ scene = ExtResource("18_1fgul")
 resource = ExtResource("17_w0rog")
 metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
 
+[sub_resource type="Resource" id="Resource_gtuf3"]
+script = ExtResource("2_v6l60")
+scene = ExtResource("20_6v515")
+resource = ExtResource("19_dc3el")
+metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
+
+[sub_resource type="Resource" id="Resource_mmogl"]
+script = ExtResource("2_v6l60")
+scene = ExtResource("22_gtuf3")
+resource = ExtResource("20_couvw")
+metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
+
+[sub_resource type="Resource" id="Resource_re4vh"]
+script = ExtResource("2_v6l60")
+scene = ExtResource("22_couvw")
+resource = ExtResource("21_6v515")
+metadata/_custom_type_script = "uid://e2gcdi7ep8g0"
+
 [node name="EntityDatabase" type="Node"]
 script = ExtResource("1_eoec7")
 entity_db = Dictionary[int, ExtResource("2_v6l60")]({
@@ -87,6 +111,9 @@ entity_db = Dictionary[int, ExtResource("2_v6l60")]({
 6: SubResource("Resource_7sch4"),
 7: SubResource("Resource_10miw"),
 8: SubResource("Resource_w0rog"),
-9: SubResource("Resource_n6tmr")
+9: SubResource("Resource_n6tmr"),
+10: SubResource("Resource_gtuf3"),
+11: SubResource("Resource_mmogl"),
+12: SubResource("Resource_re4vh")
 })
 move_orders = Array[ExtResource("16_7sch4")]([ExtResource("17_10miw"), ExtResource("18_34qml")])

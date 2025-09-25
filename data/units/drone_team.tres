@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://ba7bojfopir04"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_2vdp5"]
+[ext_resource type="Resource" uid="uid://btvxayav32u7b" path="res://data/army_equipment/drone_equipment.tres" id="2_d74e6"]
+
+[resource]
+script = ExtResource("1_2vdp5")
+entity_statistics = Dictionary[int, Variant]({
+0: 150,
+1: 0,
+2: 2,
+6: 10,
+7: 3,
+8: 1,
+9: 1
+})
+unit_type = 1
+unit_equipment_resource = ExtResource("2_d74e6")
+name = "Drone Team"
+metadata/_custom_type_script = "uid://cmh45u84mi2lo"

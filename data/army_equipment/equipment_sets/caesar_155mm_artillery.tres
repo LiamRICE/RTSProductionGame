@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentResource" load_steps=3 format=3 uid="uid://n3xcgfyh1x10"]
+
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="1_bk7nj"]
+[ext_resource type="Resource" uid="uid://bfajhvmwaaph5" path="res://data/army_equipment/weapons/155mm_artillery.tres" id="2_s53ok"]
+
+[resource]
+script = ExtResource("1_bk7nj")
+weapon = ExtResource("2_s53ok")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"

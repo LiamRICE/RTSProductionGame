@@ -12,6 +12,9 @@ enum ENTITY_ID{
 	TURRET,
 	TANK,
 	MARINES,
+	DRONE_TEAM,
+	CAESAR_ARTILLERY,
+	SCOUT_SNIPERS,
 }
 
 ## Entity stats

@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfvupsnryrtxn"]
+
+[ext_resource type="Script" uid="uid://d2yr2crkg78lg" path="res://scripts/entities/units/scout_snipers.gd" id="1_ohesr"]
+[ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="1_rtyex"]
+[ext_resource type="ArrayMesh" uid="uid://74a2cm20b56d" path="res://assets/kenney_space/alien.obj" id="2_ohesr"]
+[ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/unit_card.tscn" id="3_p8f3k"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lycv0"]
+size = Vector3(0.48756403, 0.807037, 0.26080382)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_4flus"]
+viewport_path = NodePath("SubViewport")
+
+[node name="ScoutSnipers" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
+script = ExtResource("1_ohesr")
+body = NodePath("StaticBody3D")
+entity_id = 12
+is_mobile = true
+is_military = true
+
+[node name="SelectionSprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
+visible = false
+texture = ExtResource("1_rtyex")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+mesh = ExtResource("2_ohesr")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+input_capture_on_drag = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0038681645, 0.399033, 0.001067847)
+shape = SubResource("BoxShape3D_lycv0")
+
+[node name="UnitCard" parent="." instance=ExtResource("3_p8f3k")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1955605, 0)
+texture = SubResource("ViewportTexture_4flus")
