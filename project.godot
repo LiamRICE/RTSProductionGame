@@ -42,6 +42,10 @@ mouse_cursor/tooltip_position_offset=Vector2(40, 10)
 
 project/assembly_name="RTSProductionGame"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg")
+
 [global_group]
 
 units="Group of all units for all players"
