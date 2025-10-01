@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="RTSProductionGame"
-run/main_scene="uid://dkve5n5x16hga"
+run/main_scene="uid://d3m3a4r8ucxin"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://bva3m1240mv2f"
 
@@ -166,6 +166,7 @@ environment/subsurface_scattering/subsurface_scattering_quality=0
 global_illumination/sdfgi/probe_ray_count=0
 global_illumination/sdfgi/frames_to_converge=0
 environment/volumetric_fog/use_filter=0
+occlusion_culling/use_occlusion_culling=true
 lights_and_shadows/positional_shadow/atlas_size=256
 camera/depth_of_field/depth_of_field_bokeh_shapering=2
 

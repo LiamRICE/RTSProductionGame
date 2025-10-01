@@ -44,9 +44,9 @@ static func get_unit_position_spread(unit_pos:Vector3, box_start_pos:Vector3, bo
 				done = true
 			i += 1
 		var new_vect:Vector3 = (box_start_pos - unit_pos)
-		var len:float = Vector3.ZERO.distance_to(new_vect)
+		var length:float = Vector3.ZERO.distance_to(new_vect)
 		# calculate position offset variables for X and Y in the movement grid
-		var y_diff = new_vect / len
+		var y_diff = new_vect / length
 		var x_diff = Vector3(y_diff.z, y_diff.y, -y_diff.x)
 		var position:Vector2 = Vector2(-(width-1)/2, 0)
 		for x in range(num_units):

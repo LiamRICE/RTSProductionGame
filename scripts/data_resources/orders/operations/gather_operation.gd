@@ -79,7 +79,6 @@ func _on_order_aborted() -> void:
 	self._active_order = self._order_queue.pop_front()
 	if self._active_order == null:
 		self.abort()
-		Script
 
 ## Called when the current order has been completed. The entity pops the next order from the queue or goes to it's idle order.
 func _on_order_completed() -> void:
