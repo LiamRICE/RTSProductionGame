@@ -6,7 +6,7 @@ const Healthbar:Script = preload("uid://45nawhpn2sjv")
 
 ## Internal nodes
 @onready var inventory_module:InventoryModule = $InventoryModule
-@onready var healthbar:Healthbar = $Healthbar
+@onready var healthbar:Healthbar = $ProjectedNodes/Healthbar
 
 
 func _ready():

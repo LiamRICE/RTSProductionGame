@@ -33,6 +33,8 @@ func initialise_placement(team:int) -> void:
 	_set_preview_state(true)
 	self.mesh_container.position.y += 0.5
 	self.allegiance = team
+	
+	self.navigation_obstacle.add_to_group("navigation_geometry_parse")
 
 func place(location:Vector3) -> void:
 	_set_preview_state(false)
@@ -50,7 +52,7 @@ func is_placement_valid() -> bool:
 	var points_valid:bool = true
 	for point in points:
 		var result:Vector3 = CommonUtils.raycast(self, point, Vector3.DOWN)
-		if previous_point != 0: points_valid = points_valid and is_equal_approx(previous_point, result.y)
+		if previous_point != 0: points_valid = points_valid and result.y > previous_point - 0.2 or result.y < previous_point + 0.2
 		previous_point = result.y
 	
 	var is_valid:bool = bodies == 0 and points_valid

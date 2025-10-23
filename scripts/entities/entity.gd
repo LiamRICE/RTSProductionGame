@@ -11,12 +11,15 @@ const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 const STATS := preload("uid://dki6gr7rrru2p").STATS
 
 ## Common Entity nodes
+@export_group("Nodes")
 @export var body:PhysicsBody3D
+@export var projected_nodes:Node3D
 var fog_of_war_sprite:Sprite2D
 
 ## Necessary Entity declaration
 @export_group("Properties")
 @export var entity_id:ENTITY_ID
+var entity_position:Vector3
 
 ## Common Entity properties
 @export_group("Statistics")
@@ -75,6 +78,8 @@ func _ready() -> void:
 func _physics_process(delta) -> void:
 	## Execute current order
 	self.active_order.process(self, delta)
+	
+	self._snap_to_terrain_surface()
 
 ## Function called when entity takes damage
 func receive_damage(dmg:float) -> void:
@@ -92,6 +97,10 @@ func select() -> bool:
 func deselect() -> void:
 	return
 
+func _snap_to_terrain_surface() -> void:
+	self.projected_nodes.global_position.y = TerrainDatabase.query_height(self.global_position)
+	self.entity_position = self.projected_nodes.global_position
+
 ## Updates the allegiance of entities and executes any code required on an allegiance change
 func _update_allegiance(new_allegiance:int) -> void:
 	self.allegiance = new_allegiance
@@ -105,7 +114,7 @@ func _on_destroyed() -> void:
 	self.queue_free()
 
 
-""" MANAGE ORDERS """
+""" MANAGE ORDER QUEUE """
 
 ## Adds the defined order to this entity. The is_queued flag determines if the order should be appended to the end of the order queue or executed immediately.
 func add_order(order:Order, is_queued:bool = false) -> void:
@@ -142,7 +151,7 @@ func _order_failed() -> void:
 		self.active_order = self.default_order.new(self)
 		self.is_default_order = true
 
-""" ABILITY METHODS """
+""" ORDER METHODS """
 
 ## Returns the orders that this unit can do split up per line in the UI
 func get_entity_orders() -> Array[OrderData]:

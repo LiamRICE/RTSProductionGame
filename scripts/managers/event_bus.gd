@@ -11,6 +11,7 @@ const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 ## Navigation
 signal on_level_terrain_generated(size:Vector2i)
 signal on_navigation_map_created(map_rid:RID)
+signal on_new_obstacle_created(entity:Entity, obstacle:NavigationObstacle3D)
 
 
 """ ENTITY SIGNALS """

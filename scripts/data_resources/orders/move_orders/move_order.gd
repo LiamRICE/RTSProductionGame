@@ -69,7 +69,7 @@ func _request_path_async(entity:Entity, queue_order:bool, location:Vector3) -> v
 		elif entity.active_order is MoveOrder:
 			start = entity.active_order._path[entity.active_order._path.size() - 1]
 	## Query the entity navigation server
-	EntityNavigationServer.request_path(self, start, location)
+	EntityNavigationServer.request_path(self, start, Vector3(location.x, 0, location.z))
 
 ## Called when the path is received back from the EntityNavigationServer
 func _path_received(path:PackedVector3Array) -> void:

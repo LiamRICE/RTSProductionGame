@@ -60,8 +60,6 @@ var _ui_order_index:int
 var _ui_order:Script
 var _ui_order_selection:Selection
 
-## Ability Variables
-var ability_array:Array[EntityActiveLocationAbility]
 
 ## Constants
 const MIN_SELECT_SQUARED:float = 81
@@ -77,7 +75,7 @@ func _ready():
 	initialise_event_signals()
 
 
-func _physics_process(delta:float):
+func _physics_process(_delta:float):
 	mouse_state_update()
 
 
@@ -89,9 +87,7 @@ func mouse_state_update():
 	var raycast_result = cast_ray(camera, get_viewport().get_mouse_position())
 	var target:Entity
 	if raycast_result.get("collider") != null:
-		if raycast_result.get("collider").is_in_group("navigation_map"):
-			mouse_state = UIStateUtils.MouseState.DEFAULT
-		else:
+		if raycast_result.get("collider").get_parent() is Entity:
 			target = raycast_result.get("collider").get_parent()
 			# check current selection
 			if self.selected_type in [UIStateUtils.SelectionType.UNITS_ECONOMIC]:
@@ -113,6 +109,8 @@ func mouse_state_update():
 					self.mouse_state = UIStateUtils.MouseState.ENEMY
 				else:
 					self.mouse_state = UIStateUtils.MouseState.DEFAULT
+		else:
+			mouse_state = UIStateUtils.MouseState.DEFAULT
 
 
 func mouse_update():
@@ -223,6 +221,7 @@ func _give_move_order(screen_position:Vector2, shift_pressed:bool) -> void:
 	var camera :Camera3D = self.get_viewport().get_camera_3d()
 	# cast to check location
 	var raycast_result = cast_ray(camera, screen_position)
+	assert(raycast_result.size() > 0)
 	var target:Entity
 	if raycast_result["collider"] != null:
 		if not raycast_result["collider"].is_in_group("navigation_map"):
@@ -235,8 +234,8 @@ func _give_move_order(screen_position:Vector2, shift_pressed:bool) -> void:
 			var camera_raycast_coords :Vector3 = camera_operations.global_position_from_raycast(camera, mouse_position)
 			if not camera_raycast_coords == Vector3.ZERO:
 				# TODO - spread out units
-				var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, len(selected_entities.contents))
-				for i in range(len(selected_entities.contents)):
+				var spread_array:Array[Vector3] = CommonUtils.get_unit_position_spread(selected_entities.contents[0].global_position, camera_raycast_coords, camera_raycast_coords, selected_entities.contents.size())
+				for i in range(selected_entities.contents.size()):
 					var unit = selected_entities.contents[i]
 					var target_pos = spread_array[i]
 					if target != null and unit is ResourceCollectorUnit and target.is_in_group("resource"):
@@ -259,7 +258,7 @@ func cast_selection() -> bool:
 		# checks if the unit is controlled by the player
 		if unit.allegiance == player_team:
 			# Checks if each unit is contained within the dragged selection rect
-			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.global_transform.origin)):
+			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(unit.entity_position)):
 				units.push_back(unit)
 				unit.select()
 			else:
@@ -268,7 +267,7 @@ func cast_selection() -> bool:
 		# checks if the building is controlled by the player
 		if building.allegiance == player_team:
 			# checks if the building is contained within the dragged selection rect
-			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.global_transform.origin)):
+			if _dragged_rect_left.abs().has_point(player_camera.project_to_screen(building.entity_position)):
 				buildings.push_back(building)
 				building.select()
 			else:
@@ -413,7 +412,7 @@ func _on_barracks_added():
 
 
 func cast_ray(camera:Camera3D, screen_coord:Vector2) -> Dictionary:
-	var ray_length = 100
+	var ray_length = 10000
 	var from = camera.project_ray_origin(screen_coord)
 	var to = from + camera.project_ray_normal(screen_coord) * ray_length
 	var space = camera.get_world_3d().direct_space_state

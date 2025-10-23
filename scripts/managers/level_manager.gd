@@ -53,22 +53,23 @@ func add_building(building:Building, location:Vector3) -> void:
 	var player:Node = self.player_manager.get_node("Player" + str(building.allegiance))
 	## Add the building to the list of player buildings
 	player.get_node("Buildings").add_child(building)
+	location.y = 0.0 ## Make sure the building is placed at 0 level
 	building.place(location) ## Place the building
-	self.world_manager.register_navigation_obstacle(building) ## Registers the building to the navigation system and queues a rebake
-	
-	if building.allegiance == self.player_interface.player_team:
-		var fow_sprite:Sprite2D = building.initialise_fog_of_war_propagation()
-		self.world_manager.fog_of_war_register_propagator(fow_sprite, location)
+	EventBus.on_new_obstacle_created.emit(building, building.navigation_obstacle)
 
+## Adds a resource node to the world
+func add_resource_node(node:Resources, location:Vector3) -> void:
+	## Add the building to the list of player buildings
+	$WorldManager/Resources.add_child(node)
+	location.y = 0.0
+	node.position = location
+	EventBus.on_new_obstacle_created.emit(node, node.navigation_obstacle)
 
 ## Adds a unit to the world
-func add_unit(unit:Unit, location:Vector3, rally_point:Vector3=location) -> void:
+func add_unit(unit:Unit, location:Vector3, rally_point:Vector3 = location) -> void:
 	var player:Node = player_manager.get_node("Player" + str(unit.allegiance))
+	location.y = 0.0
+	rally_point.y = 0.0
 	## Add the unit to the list of player units
 	player.get_node("Units").add_child(unit)
 	unit.spawn(location, rally_point) ## Place the unit
-	
-	if unit.allegiance == self.player_interface.player_team:
-		## Assign it to units with mobile FOW
-		var fow_sprite:Sprite2D = unit.initialise_fog_of_war_propagation()
-		world_manager.fog_of_war_register_propagator(fow_sprite, location)

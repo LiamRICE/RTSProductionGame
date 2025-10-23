@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://codd0sfjcvg05"]
 
-[ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scenes/player/player_interface.gd" id="1_x6a1n"]
+[ext_resource type="Script" uid="uid://crs777xecsrt4" path="res://scripts/player/player_interface.gd" id="1_x6a1n"]
 [ext_resource type="Texture2D" uid="uid://dj27egggvc2nt" path="res://assets/ui/interface/selection_rect.png" id="2_u4r1x"]
 
 [node name="PlayerInterface" type="Control"]
@@ -11,7 +11,7 @@ script = ExtResource("1_x6a1n")
 metadata/_edit_lock_ = true
 
 [node name="DebugControls" type="HBoxContainer" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_top = 25.0
 offset_right = 681.0
 offset_bottom = 56.0

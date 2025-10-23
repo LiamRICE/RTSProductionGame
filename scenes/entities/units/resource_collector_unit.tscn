@@ -12,34 +12,38 @@ size = Vector3(0.491333, 0.829468, 0.36554)
 [sub_resource type="ViewportTexture" id="ViewportTexture_472qh"]
 viewport_path = NodePath("SubViewport")
 
-[node name="ResourceCollectorUnit" type="Node3D" node_paths=PackedStringArray("body") groups=["resource_gatherer", "units"]]
+[node name="ResourceCollectorUnit" type="Node3D" node_paths=PackedStringArray("body", "projected_nodes") groups=["resource_gatherer", "units"]]
 script = ExtResource("1_ubpkj")
-body = NodePath("StaticBody3D")
+body = NodePath("ProjectedNodes/StaticBody3D")
+projected_nodes = NodePath("ProjectedNodes")
 entity_id = 3
 allegiance = 1
 is_mobile = true
 
-[node name="SelectionSprite3D" type="Sprite3D" parent="."]
+[node name="ProjectedNodes" type="Node3D" parent="."]
+
+[node name="SelectionSprite3D" type="Sprite3D" parent="ProjectedNodes"]
 transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.15, 0)
 visible = false
 texture = ExtResource("2_c3eiw")
 
-[node name="Model" type="MeshInstance3D" parent="."]
+[node name="Model" type="MeshInstance3D" parent="ProjectedNodes"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 mesh = ExtResource("3_xtrm0")
+skeleton = NodePath("../..")
 
-[node name="InventoryModule" parent="." instance=ExtResource("4_du1o4")]
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="ProjectedNodes"]
 collision_layer = 4
 collision_mask = 4
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ProjectedNodes/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0170288, 0.40033, 0.0344543)
 shape = SubResource("BoxShape3D_1m3al")
 
-[node name="Healthbar" parent="." instance=ExtResource("5_slmj4")]
+[node name="Healthbar" parent="ProjectedNodes" instance=ExtResource("5_slmj4")]
 offset = Vector2(0, 100)
 texture = SubResource("ViewportTexture_472qh")
+
+[node name="InventoryModule" parent="." instance=ExtResource("4_du1o4")]
 
 [connection signal="received_damage" from="." to="." method="_on_received_damage"]

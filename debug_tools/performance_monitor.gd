@@ -15,8 +15,6 @@ func _process(delta:float) -> void:
 	var frame_time:String = str(delta*1000).left(5)
 	var draw_calls:int = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	var vram:float = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1000000.0
-	var FOW_time:float = Performance.get_custom_monitor("Fog of War/Position Update Time")
-	var FOW_vis:float = Performance.get_custom_monitor("Fog of War/Visibility Update Time")
 	var nav_bake:float = Performance.get_custom_monitor("Navigation/Navigation Bake Time")
 	var nav_parse:float = Performance.get_custom_monitor("Navigation/Geometry Parse Time")
 	
@@ -24,7 +22,5 @@ func _process(delta:float) -> void:
 	self.display_ms.text = "Frame time : " + frame_time + " ms"
 	self.draw_calls_display.text = "Draw calls : " + str(draw_calls)
 	self.vram_usage.text = "VRAM Used : " + str(snappedf(vram, 0.01)) + " MiB"
-	self.fow_display.text = "FOW update time = " + str(FOW_time) + " µs"
-	self.fow_vis.text = "FOW visibility update = " + str(FOW_vis) + " µs"
 	self.nav_parse_time.text = "Navigation parse time = " + str(nav_parse) + " µs"
 	self.nav_update_time.text = "Navigation bake time = " + str(nav_bake) + " µs"

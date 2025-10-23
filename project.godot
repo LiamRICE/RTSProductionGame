@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="RTSProductionGame"
-run/main_scene="uid://d3m3a4r8ucxin"
+run/main_scene="uid://bxxh350ju5ih6"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://bva3m1240mv2f"
 
@@ -21,6 +21,7 @@ EntityDatabase="*res://scenes/managers/entity_database.tscn"
 EntityNavigationServer="*res://scenes/managers/entity_path_server.tscn"
 GameSettings="*res://scenes/managers/game_settings.tscn"
 EventBus="*res://scenes/managers/event_bus.tscn"
+TerrainDatabase="*res://scripts/managers/terrain_database.gd"
 
 [debug]
 
@@ -55,6 +56,7 @@ navigation_map=""
 depot=""
 fog_of_war_propagators="List of all units, buildings and markers that spread FoW for the current player"
 resource_gatherer=""
+navigation_geometry_parse="Nodes in this group are parsed by the Navigation Geometry Parse"
 
 [gui]
 
@@ -118,19 +120,23 @@ rotate_modifier={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":4,"position":Vector2(143, 18),"global_position":Vector2(152, 66),"factor":1.0,"button_index":3,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
+mod_1={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194325,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
 3d_physics/layer_1="Terrain"
 3d_physics/layer_2="Buildings"
 3d_physics/layer_3="Units"
+3d_physics/layer_4="Navigation"
 
 [navigation]
 
-3d/default_cell_size=0.1
-3d/default_cell_height=0.1
-3d/merge_rasterizer_cell_scale=0.2
-3d/default_edge_connection_margin=0.2
+3d/default_cell_size=1.0
+3d/default_cell_height=1.0
 
 [physics]
 
@@ -161,7 +167,6 @@ environment/ssil/adaptive_target=1.0
 textures/decals/filter=0
 textures/light_projectors/filter=0
 environment/glow/upscale_mode=0
-environment/screen_space_reflection/roughness_quality=0
 environment/subsurface_scattering/subsurface_scattering_quality=0
 global_illumination/sdfgi/probe_ray_count=0
 global_illumination/sdfgi/frames_to_converge=0

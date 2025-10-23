@@ -19,7 +19,7 @@ var is_queued_shift:bool = false
 var pending_target:Vector3
 
 ## Selection
-@onready var selection_sprite : Sprite3D = $SelectionSprite3D
+@onready var selection_sprite : Sprite3D = $ProjectedNodes/SelectionSprite3D
 var TEAM : int
 
 

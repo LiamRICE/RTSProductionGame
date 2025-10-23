@@ -13,47 +13,50 @@ size = Vector3(1, 1.1, 1)
 height = 0.7
 radius = 0.3
 
-[node name="TurretGun" type="Node3D" node_paths=PackedStringArray("rotating_mesh", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body") groups=["buildings"]]
+[node name="TurretGun" type="Node3D" node_paths=PackedStringArray("rotating_mesh", "mesh_container", "navigation_obstacle", "placement_collision_shape", "body", "projected_nodes") groups=["buildings"]]
 script = ExtResource("1_a5qkp")
-rotating_mesh = NodePath("Meshes/Turret")
+rotating_mesh = NodePath("ProjectedNodes/Meshes/Turret")
 damage = 10.0
 attack_speed = 5.0
 attack_range = 8.0
-mesh_container = NodePath("Meshes")
+mesh_container = NodePath("ProjectedNodes/Meshes")
 navigation_obstacle = NodePath("NavigationObstacle3D")
-placement_collision_shape = NodePath("Body/BaseShape")
+placement_collision_shape = NodePath("ProjectedNodes/Body/BaseShape")
 preview_material = ExtResource("2_wophf")
 preview_valid_colour = Color(0, 0, 1, 0.247059)
 preview_invalid_colour = Color(1, 0, 0, 0.247059)
-body = NodePath("Body")
+body = NodePath("ProjectedNodes/Body")
+projected_nodes = NodePath("ProjectedNodes")
 entity_id = 7
 allegiance = 1
 metadata/_custom_type_script = "uid://bmbcm5f6vnvg7"
 
-[node name="Meshes" type="Node3D" parent="."]
+[node name="ProjectedNodes" type="Node3D" parent="."]
 
-[node name="Turret" type="MeshInstance3D" parent="Meshes"]
+[node name="Meshes" type="Node3D" parent="ProjectedNodes"]
+
+[node name="Turret" type="MeshInstance3D" parent="ProjectedNodes/Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 mesh = ExtResource("2_i41cj")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="Plateform" type="MeshInstance3D" parent="Meshes"]
+[node name="Plateform" type="MeshInstance3D" parent="ProjectedNodes/Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = ExtResource("3_grxsd")
 
-[node name="Structure" type="MeshInstance3D" parent="Meshes"]
+[node name="Structure" type="MeshInstance3D" parent="ProjectedNodes/Meshes"]
 mesh = ExtResource("4_wophf")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="Body" type="StaticBody3D" parent="."]
+[node name="Body" type="StaticBody3D" parent="ProjectedNodes"]
 collision_layer = 2
 collision_mask = 2
 
-[node name="BaseShape" type="CollisionShape3D" parent="Body"]
+[node name="BaseShape" type="CollisionShape3D" parent="ProjectedNodes/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("BoxShape3D_a5qkp")
 
-[node name="TurretShape" type="CollisionShape3D" parent="Body"]
+[node name="TurretShape" type="CollisionShape3D" parent="ProjectedNodes/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
 shape = SubResource("CylinderShape3D_i41cj")
 

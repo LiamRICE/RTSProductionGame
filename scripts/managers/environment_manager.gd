@@ -14,7 +14,8 @@ func _ready() -> void:
 
 func add_mesh_path(entity:Entity, path:PackedVector3Array) -> void:
 	if self.data.has(entity):
-		self.data[entity].free()
+		if is_instance_valid(self.data[entity]):
+			self.data[entity].free()
 		self.data.erase(entity)
 	if path.size() <= 0:
 		return

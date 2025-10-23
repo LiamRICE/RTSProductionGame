@@ -14,7 +14,7 @@ extends Camera3D
 @export var ZOOM_SPEED :float = 300
 
 # Constants
-const MAX_HEIGHT :float = 10
+const MAX_HEIGHT :float = 500
 const MIN_HEIGHT :float = 3
 
 # Internal Variables
@@ -22,6 +22,7 @@ var goal_transform :Transform3D = Transform3D.IDENTITY
 var last_mouse_position:Vector2 = Vector2.ZERO
 var mouse_position_delta:Vector2 = Vector2.ZERO
 var is_rotating:bool = false
+var previous_height:float = 0.0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -33,7 +34,7 @@ func _ready():
 	self.goal_transform.basis = camera.transform.basis
 	
 	camera.global_transform = goal_transform
-
+	self.previous_height = TerrainDatabase.query_height(self.global_position)
 
 # Reads input events fired by the engine (eg. mouse motion)
 func _input(event:InputEvent) -> void:
@@ -45,10 +46,15 @@ func _input(event:InputEvent) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# Pan the camera in 2D over the map
-	var dir :Vector2 = Input.get_vector("left", "right", "up", "down") * PAN_SPEED * delta * camera.global_transform.origin.y
+	var dir :Vector2 = Input.get_vector("left", "right", "up", "down") * PAN_SPEED * delta * goal_transform.origin.y
+	if Input.is_action_pressed("mod_1"):
+		dir *= 3
 	var dir_3D :Vector3 = Vector3(dir.x, 0, dir.y)
 	
 	goal_transform.origin += dir_3D.rotated(Vector3.UP, yaw.global_rotation.y)
+	var terrain_height:float = TerrainDatabase.query_height(self.global_position)
+	if terrain_height == 0.0:
+		terrain_height = self.previous_height
 	
 	# Rotate camera
 	## Check if the camera is rotating
@@ -69,13 +75,12 @@ func _process(delta):
 	# Zoom the camera in and out
 	var zoom_order:float = Input.get_axis("zoom_in", "zoom_out")
 	if Input.is_action_just_pressed("zoom_out") and not goal_transform.origin.y >= MAX_HEIGHT:
-		goal_transform.origin += Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
-	if Input.is_action_just_pressed("zoom_in") and not goal_transform.origin.y <= MIN_HEIGHT:
-		goal_transform.origin -= Vector3(0, ZOOM_SPEED, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
+		goal_transform.origin += Vector3(0, ZOOM_SPEED * goal_transform.origin.y * 0.1, 0).rotated(Vector3.LEFT, pitch.global_rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
+	if Input.is_action_just_pressed("zoom_in") and not goal_transform.origin.y <=  MIN_HEIGHT:
+		goal_transform.origin -= Vector3(0, ZOOM_SPEED * goal_transform.origin.y * 0.1, 0).rotated(Vector3.LEFT, pitch.rotation.x).rotated(Vector3.UP, yaw.global_rotation.y)
 	
-	camera.global_transform.origin = camera.global_transform.origin.lerp(goal_transform.origin, PAN_RESPONSIVENESS * delta)
+	camera.global_transform.origin = camera.global_transform.origin.lerp(goal_transform.origin + Vector3(0, terrain_height, 0), PAN_RESPONSIVENESS * delta)
 	yaw.basis = yaw.basis.slerp(goal_transform.basis, YAW_RESPONSIVENESS * delta).orthonormalized()
-
 
 # Projects the 3D world space coordinate into the camera's 2D screen space
 func project_to_screen(point:Vector3) -> Vector2:

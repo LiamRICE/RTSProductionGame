@@ -7,111 +7,96 @@ var geom_parse:TimingTool = TimingTool.new("Source Geometry Parsing")
 var nav_calc:TimingTool = TimingTool.new("Navigation Mesh Baking")
 var geom_parse_time:float = 0
 var nav_calc_time:float = 0
-var fow_update_time:TimingTool = TimingTool.new("Fog of War Objects Update")
-var fow_visibility_update:TimingTool = TimingTool.new("Fog of War Visibility Update")
-var fow_position_update_time:float = 0
-var fow_visibility_time:float = 0
 
 ## Include classes
-const FogOfWarTexture:Script = preload("uid://hjkey36jrmgt")
-const FogOfWarMesh:Script = preload("uid://cwlxvuyy3e330")
-const MapGenerator:Script = preload("uid://dxvkb5diu86pt")
 const MeshCommonTools:Script = preload("uid://df6pe6unvfqg6")
-
-## Terrain Generation
-@export var map_generator:MapGenerator
 
 ## World Ticker
 @export var world_timer:Timer
 
-## Fog Of War Data
-var fog_of_war_texture:FogOfWarTexture
-@export var fog_of_war_mesh:FogOfWarMesh
+## Heightmap
+@export_group("Heightmap Physics Settings")
+@export var heightmap:Texture2D
+@export var physics_heightmap_resolution:Vector2i = Vector2i(512, 512)
+var heightmap_image:Image
+
 
 ## Navigation Data
 @export_group("Navigation")
 var source_geometry_data:NavigationMeshSourceGeometryData3D
 var navigation_map:RID
-var navigation_cell_size:float = 0.1
-var navigation_cell_height:float = 0.1
-#var debug_navigation_shader:Shader = preload("uid://cjf4rhl5exh5t")
+var navigation_cell_size:float = ProjectSettings.get_setting("navigation/3d/default_cell_size")
+var navigation_cell_height:float = ProjectSettings.get_setting("navigation/3d/default_cell_height")
 
-@export var navigation_chunk_size:Vector2i = Vector2i(32, 32) ## The size of each navigation region. Must be a power of two.
+@export var terrain3D:Terrain3D
+@export var terrain3D_size:Vector2i = Vector2i(8192, 8192)
+@export var navigation_chunk_size:Vector2i = Vector2i(1024, 1024) ## The size of each navigation region. Must be a power of two.
+@export_flags_3d_physics var physics_layers_used_in_bake:int = 8
 @export_flags_3d_navigation var navigation_layers:int = 1
 var navigation_chunks:Array[NavigationChunk] = [] ## Dictionary of chunks. Each chunk is 
+var obstacles:Dictionary[Entity, NavigationObstacle3D]
 
 ## Navigation state
 var is_baking:bool = false
 var has_bake_update_queued:bool = false
 
+
 func _ready() -> void:
 	## Register monitors for performance
-	Performance.add_custom_monitor("Fog of War/Position Update Time", self._get_fow_position_update_time)
-	Performance.add_custom_monitor("Fog of War/Visibility Update Time", self._get_fow_visibility_update_time)
 	Performance.add_custom_monitor("Navigation/Navigation Bake Time", self._get_nav_bake_time)
 	Performance.add_custom_monitor("Navigation/Geometry Parse Time", self._get_nav_parse_time)
 	
-	## Generate the terrain
-	self.map_generator.map_generation_completed.connect(self._initialise_fog_of_war)
-	self.map_generator.initialise_terrain_map()
-	
-	## Initialise world timer
-	self.world_timer.timeout.connect(fog_of_war_update)
-	
-	## Fog of war
-	self.fog_of_war_texture = self.fog_of_war_mesh.fog_of_war_texture
-	self.fog_of_war_texture.fog_of_war_updated.connect(self._update_visibility)
-	
 	## Entity updates
 	EventBus.on_entity_destroyed.connect(self._on_entity_destroyed)
+	EventBus.on_new_obstacle_created.connect(self._on_new_obstacle_instantiated)
+	
+	## Database initialisation
+	if not self.heightmap == null:
+		self.heightmap_image = self.heightmap.get_image()
+	else:
+		printerr("No heightmap specified. No HeightMapShape will be built.")
+	TerrainDatabase.update_level_data(0, self.terrain3D, self.heightmap_image)
+	
+	## Initialise physics for raycasting terrain intersections
+	if $TerrainPhysicsBody/TerrainCollisionShape.shape == null:
+		self._bake_heightmap_shape()
+	
+	self._initialise_navigation()
 
 func _on_entity_destroyed(entity:Entity) -> void:
 	print("Entity destroyed")
-	self.fog_of_war_remove_propagator(entity)
-	if entity is Building or entity is Resources:
-		self.remove_navigation_obstacle(entity)
+	if self.obstacles.has(entity):
+		self.obstacles[entity].free()
+		self.obstacles.erase(entity)
+	self.source_geometry_data.clear_projected_obstructions()
 
-##----------------##
-##-- FOG OF WAR --##
-##----------------##
+func _on_new_obstacle_instantiated(entity:Entity, obstacle:NavigationObstacle3D) -> void:
+	self.obstacles[entity] = obstacle
+	obstacle.reparent($NavigationObjects)
+	obstacle.global_position.y = 0.0
+	if not obstacle.is_in_group("navigation_geometry_parse"):
+		obstacle.add_to_group("navigation_geometry_parse")
+	self.register_navigation_obstacle(entity)
 
-func _initialise_fog_of_war(texture_size:Vector2i) -> void:
-	texture_size = (texture_size + Vector2i.ONE) * GameSettings.fog_of_war_resolution
-	self.fog_of_war_mesh._initialise_fog_of_war(texture_size)
+##-------------##
+##-- PHYSICS --##
+##-------------##
+
+
+func _bake_heightmap_shape() -> void:
+	var low_resolution_heightmap:Image = self.heightmap_image.duplicate()
+	low_resolution_heightmap.resize(self.physics_heightmap_resolution.x, self.physics_heightmap_resolution.y, Image.INTERPOLATE_BILINEAR)
+	low_resolution_heightmap.convert(Image.FORMAT_RF)
 	
-	## Initialise navigation after the first frame has been processed
-	self.call_deferred("_initialise_navigation")
-
-func fog_of_war_update() -> void:
-	self.fow_update_time.debug_timer_start()
-	for entity in self.get_tree().get_nodes_in_group("fog_of_war_propagators"):
-		entity.fog_of_war_sprite.position = self.fog_of_war_mesh.world_3d_to_world_2d(entity.position)
-	self.fow_position_update_time = self.fow_update_time.debug_timer_stop()
+	var uniform_scale:float = float(self.terrain3D_size.x) / float(self.physics_heightmap_resolution.x)
 	
-	self.fog_of_war_texture.fog_of_war_request_texture_update()
+	var height_map_shape:HeightMapShape3D = HeightMapShape3D.new()
+	height_map_shape.update_map_data_from_image(low_resolution_heightmap, 0, 25)
+	print(25 * uniform_scale)
+	
+	$TerrainPhysicsBody/TerrainCollisionShape.shape = height_map_shape
+	$TerrainPhysicsBody/TerrainCollisionShape.scale = Vector3(uniform_scale, uniform_scale, uniform_scale)
 
-func _update_visibility() -> void:
-	self.fow_visibility_update.debug_timer_start()
-	for entity in self.get_tree().get_nodes_in_group("units"):
-		if not entity.is_in_group("fog_of_war_propagators"):
-			entity.update_visibility(self.fog_of_war_mesh.world_3d_to_world_2d(entity.position), self.fog_of_war_texture.fog_of_war_viewport_image)
-	self.fow_visibility_time = self.fow_visibility_update.debug_timer_stop()
-
-## Register a sprite as a FoW propagator
-func fog_of_war_register_propagator(fow_sprite:Sprite2D, world_position:Vector3) -> void:
-	fow_sprite.scale *= GameSettings.fog_of_war_resolution
-	var position_2d:Vector2 = self.fog_of_war_mesh.world_3d_to_world_2d(world_position)
-	self.fog_of_war_texture.register_entity_sprite(fow_sprite, position_2d)
-
-## Removes the sprite from the FoW system and frees it
-func fog_of_war_remove_propagator(entity:Entity) -> void:
-	if entity.is_in_group("fog_of_war_propagators"):
-		self.fog_of_war_texture.remove_entity_sprite(entity.fog_of_war_sprite)
-
-func _get_fow_position_update_time() -> float: ## Performance monitor debug
-	return self.fow_position_update_time
-func _get_fow_visibility_update_time() -> float:
-	return self.fow_visibility_time
 
 ##----------------##
 ##-- NAVIGATION --##
@@ -130,11 +115,13 @@ func _initialise_navigation() -> void:
 		NavigationServer3D.map_set_cell_height(self.navigation_map, self.navigation_cell_height)
 	
 	## Create the navigation chunks
-	self.navigation_chunks.resize((self.map_generator.size.x / self.navigation_chunk_size.x) * (self.map_generator.size.y / self.navigation_chunk_size.y))
+	self.navigation_chunks.resize((self.terrain3D_size.x / self.navigation_chunk_size.x) * (self.terrain3D_size.y / self.navigation_chunk_size.y))
+	print(self.navigation_chunk_size)
+	assert(self.navigation_chunks.size() <= 1024, "Too many Navigation Chunks. Reduce navigation chunk size.")
 	NavigationChunk.source_geometry_data = self.source_geometry_data ## Set the static variable source_geometry_data
 	var index:int = 0
-	for x in range(-self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.map_generator.size.x / 2 + self.navigation_chunk_size.x / 2, self.navigation_chunk_size.x):
-		for z in range(-self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.map_generator.size.y / 2 + self.navigation_chunk_size.y / 2, self.navigation_chunk_size.y):
+	for x in range(-self.terrain3D_size.x / 2 + self.navigation_chunk_size.x / 2, self.terrain3D_size.x / 2 + self.navigation_chunk_size.x / 2, self.navigation_chunk_size.x):
+		for z in range(-self.terrain3D_size.y / 2 + self.navigation_chunk_size.y / 2, self.terrain3D_size.y / 2 + self.navigation_chunk_size.y / 2, self.navigation_chunk_size.y):
 			var chunk:NavigationChunk = NavigationChunk.new(Vector3(x, 0, z), self.navigation_map, self.navigation_chunk_size, self.navigation_cell_size, self.navigation_cell_height, $DebugNavRegions)
 			chunk.bake_completed.connect(self._bake_completed)
 			self.navigation_chunks[index] = chunk
@@ -157,26 +144,28 @@ func register_navigation_obstacle(obstacle:Entity) -> void:
 	self.geom_parse.debug_timer_start() ## DEBUG
 	var vertices:PackedVector3Array = PackedVector3Array(obstacle.navigation_obstacle.vertices)
 	for index in range(vertices.size()):
-		vertices.set(index, vertices[index] + obstacle.navigation_obstacle.global_position)
-	self.source_geometry_data.add_projected_obstruction(vertices,
-														obstacle.navigation_obstacle.global_position.y,
-														obstacle.navigation_obstacle.height,
-														obstacle.navigation_obstacle.carve_navigation_mesh)
+		vertices.set(index, vertices[index] + obstacle.navigation_obstacle.global_position)#Vector3(obstacle.navigation_obstacle.global_position.x, 0.0, obstacle.navigation_obstacle.global_position.z))
+	#self.source_geometry_data.add_projected_obstruction(vertices, 0.0,
+														#obstacle.navigation_obstacle.height * 32,
+														#obstacle.navigation_obstacle.carve_navigation_mesh)
+	NavigationServer3D.parse_source_geometry_data(self.navigation_chunks[0].navigation_mesh, self.source_geometry_data, $NavigationObjects)
 	self.update_navigation_map(obstacle.global_position)
 
-func remove_navigation_obstacle(obstacle:Entity) -> void:
+func remove_navigation_obstacle(entity:Entity) -> void:
 	print("Removing Obstacle")
-	assert(obstacle is Building or obstacle is Resources)
-	obstacle.navigation_obstacle.affect_navigation_mesh = false
+	self.obstacles[entity].free()
+	self.obstacles.erase(entity)
 	## Rebake the source geometry data
-	self._parse_navigation_source_geometry()
+	NavigationServer3D.parse_source_geometry_data(self.navigation_chunks[0].navigation_mesh, self.source_geometry_data, $NavigationObjects)
+	self.update_navigation_map(entity.global_position)
+	#self._parse_navigation_source_geometry()
 	
 
 ## Parses the navigation source geometry (the terrain map) and then queues a navigation mesh bake
 func _parse_navigation_source_geometry() -> void:
 	print("Parsing navigation source geometry")
 	self.geom_parse.debug_timer_start() ## DEBUG
-	NavigationServer3D.parse_source_geometry_data(self.navigation_chunks[0].navigation_mesh, self.source_geometry_data, self.get_tree().root, self.update_navigation_map)
+	NavigationServer3D.parse_source_geometry_data(self.navigation_chunks[0].navigation_mesh, self.source_geometry_data, $NavigationObjects, self.update_navigation_map)
 
 ## Once the scene tree has been parsed, bake the navigation mesh
 func _bake_navigation(location:Vector3 = Vector3.ZERO) -> void:
@@ -194,7 +183,9 @@ func _bake_navigation(location:Vector3 = Vector3.ZERO) -> void:
 				if not positions_array.has(loc): positions_array.append(loc)
 		## Update these chunks
 		for pos in positions_array:
-			self.navigation_chunks[pos.x * (self.map_generator.size.x / self.navigation_chunk_size.x) + pos.y].update_navigation_map()
+			print("Updating positions : ", pos, " for location ", location)
+			print(self.navigation_chunks[pos.x * (self.terrain3D_size.x / self.navigation_chunk_size.x) + pos.y].position)
+			self.navigation_chunks[pos.x * (self.terrain3D_size.x / self.navigation_chunk_size.x) + pos.y].update_navigation_map()
 
 func _bake_completed() -> void:
 	self.nav_calc_time = nav_calc.debug_timer_stop() ## DEBUG
@@ -202,7 +193,7 @@ func _bake_completed() -> void:
 func _position_to_navigation_chunk_position(location:Vector3) -> Vector2i:
 	var location_2d:Vector2i = Vector2i(roundi(location.x), roundi(location.z))
 	location_2d -= self.navigation_chunk_size / 2
-	return (location_2d.snapped(self.navigation_chunk_size) + self.map_generator.size / 2) / self.navigation_chunk_size
+	return (location_2d.snapped(self.navigation_chunk_size) + self.terrain3D_size / 2) / self.navigation_chunk_size
 
 func _get_nav_bake_time() -> float:
 	return self.nav_calc_time
@@ -232,6 +223,7 @@ class NavigationChunk:
 	signal bake_completed
 	
 	func _init(position:Vector3, navigation_map:RID, chunk_size:Vector2i, cell_size:float, cell_height:float, debug_vis_node:Node = null, debug_shader:Shader = null) -> void:
+		var cell_padding:float = cell_size * 4
 		self.position = position
 		self.region_rid = NavigationServer3D.region_create()
 		## Create the navigation mesh and adjust it's settings
@@ -240,16 +232,18 @@ class NavigationChunk:
 		self.navigation_mesh.set_cell_size(cell_size)
 		self.navigation_mesh.set_agent_radius(cell_size * 2)
 		self.navigation_mesh.set_parsed_geometry_type(NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS)
-		self.navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN)
+		self.navigation_mesh.set_source_geometry_mode(NavigationMesh.SOURCE_GEOMETRY_GROUPS_EXPLICIT)
+		self.navigation_mesh.set_source_group_name("navigation_geometry_parse")
 		self.navigation_mesh.set_sample_partition_type(NavigationMesh.SAMPLE_PARTITION_WATERSHED)
 		self.navigation_mesh.set_agent_max_climb(cell_size)
 		self.navigation_mesh.set_agent_max_slope(30)
-		self.navigation_mesh.set_edge_max_length(5)
+		self.navigation_mesh.set_agent_height(cell_size)
+		self.navigation_mesh.set_edge_max_length(0)
 		self.navigation_mesh.set_edge_max_error(1.5)
-		chunk_size = chunk_size + Vector2i(4, 4)
-		self.navigation_mesh.set_filter_baking_aabb(AABB(Vector3(-(chunk_size.x / 2), -4, -(chunk_size.y / 2)), Vector3(chunk_size.x, 12, chunk_size.y)))
+		chunk_size = chunk_size + Vector2i(cell_padding * 2, cell_padding * 2)
+		self.navigation_mesh.set_filter_baking_aabb(AABB(Vector3(-(chunk_size.x / 2), -(cell_padding * 2), -(chunk_size.y / 2)), Vector3(chunk_size.x, cell_padding * 2, chunk_size.y)))
 		self.navigation_mesh.set_filter_baking_aabb_offset(position)
-		self.navigation_mesh.set_border_size(2)
+		self.navigation_mesh.set_border_size(cell_padding)
 		## Set navigation layers
 		self.navigation_mesh.set_collision_mask_value(1, true)
 		self.navigation_mesh.set_collision_mask_value(2, false)
@@ -257,6 +251,7 @@ class NavigationChunk:
 		
 		## Set the region in the navigation server
 		NavigationServer3D.region_set_map(self.region_rid, navigation_map)
+		NavigationServer3D.region_set_transform(self.region_rid, Transform3D(Basis.IDENTITY, Vector3(0, -cell_size, 0)))
 		self.debug_node = debug_vis_node
 		self.debug_shader = debug_shader
 	

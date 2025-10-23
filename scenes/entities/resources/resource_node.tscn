@@ -6,26 +6,30 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_yrqnr"]
 size = Vector3(0.884399, 0.353455, 0.795029)
 
-[node name="ResourceNodeMetal" type="Node3D" node_paths=PackedStringArray("navigation_obstacle", "body") groups=["resource"]]
+[node name="ResourceNodeMetal" type="Node3D" node_paths=PackedStringArray("navigation_obstacle", "body", "projected_nodes") groups=["resource"]]
 script = ExtResource("1_o7r71")
 navigation_obstacle = NodePath("NavigationObstacle3D")
 resource_type = 3
 resource_amount = 5
-body = NodePath("StaticBody3D")
+body = NodePath("ProjectedNodes/StaticBody3D")
+projected_nodes = NodePath("ProjectedNodes")
 metadata/_custom_type_script = "uid://djpbit5h4ps0b"
 
-[node name="RockCrystals" type="MeshInstance3D" parent="."]
+[node name="ProjectedNodes" type="Node3D" parent="."]
+
+[node name="RockCrystals" type="MeshInstance3D" parent="ProjectedNodes"]
 mesh = ExtResource("2_73mkm")
+skeleton = NodePath("../..")
 
-[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
-vertices = PackedVector3Array(-0.3, 0, 0.3, 0.3, 0, 0.3, 0.3, 0, -0.3, -0.3, 0, -0.3)
-affect_navigation_mesh = true
-avoidance_enabled = false
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="ProjectedNodes"]
 collision_layer = 2
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ProjectedNodes/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0473145, 0.173004, 0.030098)
 shape = SubResource("BoxShape3D_yrqnr")
+
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="." groups=["navigation_geometry_parse"]]
+vertices = PackedVector3Array(-0.3, 0, 0.3, 0.3, 0, 0.3, 0.3, 0, -0.3, -0.3, 0, -0.3)
+affect_navigation_mesh = true
+avoidance_enabled = false
