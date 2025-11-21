@@ -10,6 +10,6 @@
 
 [node name="MainCamera" type="Camera3D" parent="Yaw/Pitch"]
 near = 0.1
-far = 50000.0
+far = 8000.0
 script = ExtResource("1_56qkh")
 ZOOM_SPEED = 3.0

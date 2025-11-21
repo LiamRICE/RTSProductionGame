@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bcae1wwc1mqtc"]
+[gd_scene load_steps=28 format=3 uid="uid://kgpvcaiw30ui"]
 
 [ext_resource type="Script" uid="uid://c3m2j27g87q0x" path="res://scripts/managers/level_manager.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://djyeu4i21c28o" path="res://scripts/managers/world_manager.gd" id="2_kek77"]
@@ -6,13 +6,14 @@
 [ext_resource type="Texture2D" uid="uid://gtwbhseisxt6" path="res://assets/maps/common/HDRIs/kloofendal_48d_partly_cloudy_puresky_4k.exr" id="3_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://di2dykp7unme6" path="res://scenes/entities/resources/resource_node.tscn" id="3_4c57u"]
 [ext_resource type="Script" uid="uid://brcxb50tcwui4" path="res://scripts/managers/ui_manager.gd" id="3_272bh"]
-[ext_resource type="Terrain3DMaterial" uid="uid://cex20l24s2r74" path="res://assets/maps/level0/level0_material.tres" id="4_vivmo"]
-[ext_resource type="Terrain3DAssets" uid="uid://cpibv456r1qy0" path="res://assets/maps/level0/level0_assets.tres" id="5_2cqfq"]
+[ext_resource type="Terrain3DMaterial" uid="uid://cjkh2efxsv1nl" path="res://assets/maps/level0/level0_material.tres" id="4_vivmo"]
+[ext_resource type="Terrain3DAssets" uid="uid://ds45qsetiogiv" path="res://assets/maps/level0/level0_assets.tres" id="5_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://ps6jj5321do1" path="res://assets/maps/level0/Terrain001_8K_heightmap.exr" id="5_vivmo"]
 [ext_resource type="Shape3D" uid="uid://bg86qs7wv4q8r" path="res://assets/maps/level0/level0_heightmap_shape.tres" id="8_2cqfq"]
 [ext_resource type="Shader" uid="uid://che2wvfwlpi3v" path="res://assets/maps/common/shaders/water_shader.gdshader" id="8_074og"]
 [ext_resource type="Script" uid="uid://bi34cw4c6gv1n" path="res://scripts/managers/player_manager.gd" id="8_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://c6ga862t4hde5" path="res://debug_tools/performance_monitor.tscn" id="9_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://pmoufxv46gn6" path="res://assets/maps/common/textures/foam/water_foam.png" id="9_82xsv"]
 [ext_resource type="Texture2D" uid="uid://c0uwldpamjpbv" path="res://assets/maps/common/textures/waves/aerial_beach_01_nor_gl_1k.jpg" id="9_cegan"]
 [ext_resource type="PackedScene" uid="uid://bsh0v2nxk318h" path="res://scenes/player/camera.tscn" id="10_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://codd0sfjcvg05" path="res://scenes/player/player_interface.tscn" id="11_dg77c"]
@@ -50,13 +51,21 @@ indices = PackedInt32Array(0, 1, 2, 2, 1, 18, 0, 3, 1, 1167, 0, 2, 3, 4, 1, 145,
 render_priority = 0
 shader = ExtResource("8_074og")
 shader_parameter/water_normal = ExtResource("9_cegan")
-shader_parameter/water_colour = Color(0.00035253368, 0.04727924, 0.29334626, 1)
-shader_parameter/water_roughness = 0.0499999988824
+shader_parameter/water_colour = Color(9.156274e-05, 0.01447942, 0.15354818, 1)
+shader_parameter/water_roughness = 0.15999999642368
 shader_parameter/time_scale = 0.00999999977648
 shader_parameter/water_scale = 100.0
-shader_parameter/water_translucency_depth = 1.0000000149012
+shader_parameter/shore_tint = Color(6.256998e-07, 0.5124474, 0.5860605, 1)
+shader_parameter/water_translucency_depth = 3.11999993026176
 shader_parameter/transparency_influence = 0.76999998278896
-shader_parameter/depth_falloff = 1.0000000149012
+shader_parameter/fresnel_amount = 1.99999995902132
+shader_parameter/foam_edge_distance = 0.21999999508256
+shader_parameter/foam_falloff_distance = 0.0999999977648
+shader_parameter/foam_edge_bias = 0.05
+shader_parameter/foam_scale = 1000.0
+shader_parameter/foam_scroll_speed = 0.07999999821184
+shader_parameter/edge_falloff_color = Color(0.8776157, 0.8776158, 0.8776157, 1)
+shader_parameter/foam_texture = ExtResource("9_82xsv")
 
 [sub_resource type="QuadMesh" id="QuadMesh_2cqfq"]
 material = SubResource("ShaderMaterial_82xsv")
