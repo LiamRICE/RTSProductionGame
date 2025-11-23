@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>448</x>
+      <y>720</y>
+      <w>304</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>ArmyEquipment
+--
+equipment_resources : ArmyEquipmentResource
+equipment : Array[Equipment]
+engagement_type : EngagementType
+combat_mode : CombatMode
+--
+_initialise()
+engage(target : Entity)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>760</x>
+      <y>720</y>
+      <w>216</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Weapon
+--
+name : str
+ui_tooltip : str
+description : str
+weapon_type : WeaponType
+weapon_range : float
+weapon_damage_per_second : float
+weapon_damage_type : DamageType
+weapon_accuracy : float
+self_guided_weapon : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>632</x>
+      <y>872</y>
+      <w>40</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1040</x>
+      <y>792</y>
+      <w>96</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>WeaponType
+--
+DIRECT_FIRE
+INDIRECT_FIRE</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1104</x>
+      <y>728</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>/Enum/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1152</x>
+      <y>792</y>
+      <w>184</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>DamageType
+--
+KINETIC
+EXPLOSIVE
+HEAT
+ENERGY_LASER
+ENERGY_MICROWAVE
+NO_DAMAGE</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1160</x>
+      <y>744</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1112</x>
+      <y>744</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>624</x>
+      <y>920</y>
+      <w>232</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>Equipment
+--
+weapon : Weapon
+max_quantity : int
+quantity : int
+max_ammunition : int
+ammunition : float
+ammunition_use_per_unit : float
+--
+fire()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>872</y>
+      <w>32</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>648</y>
+      <w>104</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>CombatMode
+--
+BALANCED (no modifiers)
+ENTRENCH (lower damage, lower casualties)
+ASSAULT (higher casualties, slightly higher damage)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1176</x>
+      <y>728</y>
+      <w>56</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>368</x>
+      <y>920</y>
+      <w>224</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>ArmyEquipmentResource
+--
+# General
+loadout_name : str
+ui_tooltip : str
+description : str
+
+# Statistics
+unit_accuracy : float
+weapons : Array[EquipmentResource]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>872</y>
+      <w>32</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>496</x>
+      <y>1040</y>
+      <w>40</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>1088</y>
+      <w>208</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>WeaponResource
+--
+# General
+name : str
+description : str
+ui_tooltip : str
+weapon_type : WeaponType
+
+# Statistics
+weapon_range : float
+damage : float
+damage_type : DamageType
+fire_rate_per_minute : float
+weapon_accuracy : float
+self_guided_weapon : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>328</x>
+      <y>88</y>
+      <w>232</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>EntityResource
+--
+# Entity Variables
+name : str
+ui_icon : Texture2D
+ui_tooltip : str
+description : str
+# Unit Statistics
+unit_type : UnitType
+stats : Dictionary[UnitStatistics, Variant]
+weapons : Dictionary[WeaponResource, int]
+production_cost : Dictionary[Resource, float]
+production_time : float</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>328</x>
+      <y>304</y>
+      <w>184</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Entity</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>624</x>
+      <y>208</y>
+      <w>184</w>
+      <h>296</h>
+    </coordinates>
+    <panel_attributes>UnitStatistics
+--
+# General
+HEALTH=0
+NUM_ENTITIES=3
+SHIELD=1
+ARMOUR=2
+UNIT_TYPE=4
+VIEW_DISTANCE=6
+RADAR_DISTANCE=5
+VIEW_STEALTH=15
+RADAR_STEALTH=16
+
+# Movement
+SPEED=7
+ACCELERATION=8
+TURN_RATE=9
+
+# Resources
+GATHER_SPEED=11
+GATHER_AMOUNT=12
+MAX_RESOURCE=13
+CARRY_UNIT=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>824</x>
+      <y>208</y>
+      <w>144</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>EntityID
+--
+DEFAULT=0
+INFANTRY=1
+VEHICLE=2
+RESOURCE_GATHERER=3
+CITY_CENTRE=4
+DEPOT=5
+BARRACKS=6
+TURRET=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>984</x>
+      <y>208</y>
+      <w>144</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>UnitType
+--
+# Static
+BUILDING=0
+
+# Infantry
+INFANTRY=1
+INFANTRY_PARA=2
+
+# Vehicle
+VEHICLE=3
+VEHICLE_HELO=4
+VEHICLE_PARA=5
+
+# Aircraft
+HELICOPTER=6
+AEROPLANE=7
+AEROPLANE_NAVAL=8
+
+# Naval Craft
+SHIP=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>408</x>
+      <y>1088</y>
+      <w>176</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>EquipmentResource
+--
+weapon : WeaponResource
+quantity : int
+ammunition : int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>576</x>
+      <y>1136</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1080</x>
+      <y>592</y>
+      <w>104</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>EngagementMode
+--
+FULL (all weapons fired)
+OPTIMAL (only weapons with optimal damage are fired)
+NONE (hold fire)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1128</x>
+      <y>696</y>
+      <w>24</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>856</x>
+      <y>112</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>/Enum/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>712</x>
+      <y>120</y>
+      <w>160</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>928</x>
+      <y>120</y>
+      <w>144</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>160.0;110.0;160.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>888</x>
+      <y>128</y>
+      <w>24</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>256</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+</diagram>

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=2 format=3 uid="uid://b4jjojbtff8eb"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_ufmca"]
+
+[resource]
+script = ExtResource("1_ufmca")
+entity_statistics = Dictionary[int, Variant]({
+0: 120,
+1: 0,
+2: 0,
+6: 25,
+7: 4.0,
+8: 1.0,
+9: 0.0
+})
+unit_type = 2
+name = "Scout Snipers"
+metadata/_custom_type_script = "uid://cmh45u84mi2lo"

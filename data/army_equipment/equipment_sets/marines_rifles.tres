@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentResource" load_steps=3 format=3 uid="uid://cq6c4c81nghxo"]
+
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="1_lugte"]
+[ext_resource type="Resource" uid="uid://c3uee7jouvg3c" path="res://data/army_equipment/weapons/rifle.tres" id="2_atvgv"]
+
+[resource]
+script = ExtResource("1_lugte")
+weapon = ExtResource("2_atvgv")
+quantity = 36
+metadata/_custom_type_script = "uid://1wol61xwoiwx"

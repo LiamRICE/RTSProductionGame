@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ArmyEquipmentResource" load_steps=4 format=3 uid="uid://btvxayav32u7b"]
+
+[ext_resource type="Script" uid="uid://3i5rn4jk1yxu" path="res://scripts/data_resources/weapon_resources/army_equipment_resource.gd" id="1_1u6l0"]
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="2_s5jvp"]
+[ext_resource type="Resource" uid="uid://bkj5gltd51iwk" path="res://data/army_equipment/equipment_sets/drone_FPV_drones.tres" id="3_s5jvp"]
+
+[resource]
+script = ExtResource("1_1u6l0")
+loadout_name = "FPV Drones"
+description = "FPV description"
+ui_tooltip = "FPV description"
+unit_accuracy = 0.8
+experience_level = 1
+weapons = Array[ExtResource("2_s5jvp")]([ExtResource("3_s5jvp")])
+metadata/_custom_type_script = "uid://3i5rn4jk1yxu"

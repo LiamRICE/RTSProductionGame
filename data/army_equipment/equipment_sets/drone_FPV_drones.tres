@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentResource" load_steps=3 format=3 uid="uid://bkj5gltd51iwk"]
+
+[ext_resource type="Script" uid="uid://1wol61xwoiwx" path="res://scripts/data_resources/weapon_resources/equipment_resource.gd" id="1_2ijej"]
+[ext_resource type="Resource" uid="uid://fp535sqlmj3w" path="res://data/army_equipment/weapons/fpv_drones.tres" id="2_p7104"]
+
+[resource]
+script = ExtResource("1_2ijej")
+weapon = ExtResource("2_p7104")
+quantity = 8
+metadata/_custom_type_script = "uid://1wol61xwoiwx"

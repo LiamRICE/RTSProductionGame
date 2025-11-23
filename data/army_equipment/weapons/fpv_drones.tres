@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://fp535sqlmj3w"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_8r8vo"]
+
+[resource]
+script = ExtResource("1_8r8vo")
+weapon_name = "FPV Drones"
+description = "FPV description"
+ui_tooltip = "FPV tooltip"
+weapon_type = 1
+weapon_range = 30.0
+damage = 25.0
+damage_type = 2
+armour_penetration = 500.0
+ammunition = 30
+fire_rate_per_minute = 1.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

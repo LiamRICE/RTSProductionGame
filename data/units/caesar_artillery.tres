@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://brkyq1p6w8dk3"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_kalko"]
+[ext_resource type="Resource" uid="uid://iglxmv0h3tts" path="res://data/army_equipment/caesar_equipment.tres" id="2_qvf30"]
+
+[resource]
+script = ExtResource("1_kalko")
+entity_statistics = Dictionary[int, Variant]({
+0: 200,
+1: 0,
+2: 10,
+6: 6,
+7: 6,
+8: 0.2,
+9: 0.2
+})
+unit_type = 3
+unit_equipment_resource = ExtResource("2_qvf30")
+name = "Caesar 155mm Artillery"
+metadata/_custom_type_script = "uid://cmh45u84mi2lo"

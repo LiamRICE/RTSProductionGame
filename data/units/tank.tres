@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=3 format=3 uid="uid://bdw530jx7m43r"]
+
+[ext_resource type="Script" uid="uid://cmh45u84mi2lo" path="res://scripts/data_resources/entity_resource.gd" id="1_xul35"]
+[ext_resource type="Resource" uid="uid://b6m263l33awkf" path="res://data/army_equipment/tank_equipment.tres" id="2_tpn76"]
+
+[resource]
+script = ExtResource("1_xul35")
+entity_statistics = Dictionary[int, Variant]({
+0: 200,
+1: 0,
+2: 200,
+6: 10,
+7: 3,
+8: 1,
+9: 2
+})
+unit_type = 3
+unit_equipment_resource = ExtResource("2_tpn76")
+metadata/_custom_type_script = "uid://cmh45u84mi2lo"

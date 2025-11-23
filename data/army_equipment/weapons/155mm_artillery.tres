@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://bfajhvmwaaph5"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_sa8k6"]
+
+[resource]
+script = ExtResource("1_sa8k6")
+weapon_name = "155mm Artillery Gun"
+description = "155mm description"
+ui_tooltip = "155mm tooltip"
+weapon_type = 1
+weapon_range = 25.0
+damage = 15.0
+armour_penetration = 20.0
+ammunition = 32
+fire_rate_per_minute = 3.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

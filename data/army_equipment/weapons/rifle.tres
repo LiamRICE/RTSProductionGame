@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://c3uee7jouvg3c"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_gahvp"]
+
+[resource]
+script = ExtResource("1_gahvp")
+weapon_name = "Famas"
+description = "Famas description"
+ui_tooltip = "Famas tooltip"
+weapon_range = 5.0
+damage = 0.5
+damage_type = 1
+armour_penetration = 4.0
+ammunition = 200
+fire_rate_per_minute = 120.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

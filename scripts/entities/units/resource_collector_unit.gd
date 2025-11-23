@@ -1,7 +1,6 @@
 class_name ResourceCollectorUnit extends Unit
 
 ## Constants
-const InventoryModule:Script = preload("uid://boci3e8npvh1a")
 const Healthbar:Script = preload("uid://45nawhpn2sjv")
 
 ## Internal nodes
@@ -12,7 +11,7 @@ const Healthbar:Script = preload("uid://45nawhpn2sjv")
 func _ready():
 	## Execute parent _ready function
 	super._ready()
-	healthbar.initialise_healthbar(entity_statistics.get(0), entity_statistics.get(0), 50)
+	healthbar.initialise(self)
 
 func _get(property:StringName) -> Variant:
 	if property == "type":

@@ -1,0 +1,61 @@
+[gd_scene load_steps=11 format=3 uid="uid://cvfgms4r4h83l"]
+
+[ext_resource type="Script" uid="uid://bq72v5hueredl" path="res://scripts/entities/units/caesar_artillery.gd" id="1_spjo2"]
+[ext_resource type="Texture2D" uid="uid://dciu6e7sil6tc" path="res://assets/ui/interface/selection_circle.png" id="1_sqmv3"]
+[ext_resource type="ArrayMesh" uid="uid://bt48epn1ucxyg" path="res://assets/kenney_space/craft_cargoA.obj" id="2_spjo2"]
+[ext_resource type="ArrayMesh" uid="uid://b5c8jrwydkd76" path="res://assets/kenney_space/chimney.obj" id="3_owe1b"]
+[ext_resource type="PackedScene" uid="uid://bqgx8be6uxhou" path="res://scenes/entities/common/unit_card.tscn" id="4_a0j2t"]
+[ext_resource type="PackedScene" uid="uid://ch8ivgymt3ucp" path="res://scenes/entities/units/unit_functions/army_equipment.tscn" id="5_e3a1y"]
+[ext_resource type="PackedScene" uid="uid://crlue2t1rli5v" path="res://scenes/test/weapon_debug_view.tscn" id="6_lxpdj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3fgsh"]
+size = Vector3(0.80871964, 0.807037, 1.1841128)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_p2n4m"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_o477o"]
+viewport_path = NodePath("SubViewport")
+
+[node name="CaesarArtillery" type="Node3D" node_paths=PackedStringArray("body") groups=["units"]]
+script = ExtResource("1_spjo2")
+body = NodePath("StaticBody3D")
+entity_id = 11
+is_mobile = true
+is_military = true
+
+[node name="SelectionSprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.15, 0)
+visible = false
+texture = ExtResource("1_sqmv3")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = ExtResource("2_spjo2")
+
+[node name="Chimney" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = ExtResource("3_owe1b")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+input_capture_on_drag = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010763258, 0.399033, -0.006546706)
+shape = SubResource("BoxShape3D_3fgsh")
+
+[node name="UnitCard" parent="." instance=ExtResource("4_a0j2t")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1955605, 0)
+texture = SubResource("ViewportTexture_p2n4m")
+
+[node name="ArmyEquipment" parent="." node_paths=PackedStringArray("debug_view") instance=ExtResource("5_e3a1y")]
+unique_name_in_owner = true
+debug_view = NodePath("../WeaponDebugView")
+
+[node name="WeaponDebugView" parent="." instance=ExtResource("6_lxpdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6379988, 0)
+texture = SubResource("ViewportTexture_o477o")

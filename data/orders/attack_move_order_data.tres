@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OrderData" load_steps=4 format=3 uid="uid://b0dpilxkbtfou"]
+
+[ext_resource type="Script" uid="uid://ccbh7sb1q4o53" path="res://scripts/data_resources/orders/combat_orders/attack_move_order.gd" id="1_75cgi"]
+[ext_resource type="Texture2D" uid="uid://cyr1ypmn5eb2u" path="res://assets/ui/icons/orders/icon_target.png" id="2_6vcx8"]
+[ext_resource type="Script" uid="uid://dcirvncucn0yg" path="res://scripts/data_resources/orders/order_data.gd" id="3_br7pd"]
+
+[resource]
+script = ExtResource("3_br7pd")
+order = ExtResource("1_75cgi")
+order_icon = ExtResource("2_6vcx8")
+order_tooltip = "Order your units to move and attack a position."
+order_request = 2
+metadata/_custom_type_script = "uid://dcirvncucn0yg"

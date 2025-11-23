@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://crlue2t1rli5v"]
+
+[ext_resource type="Script" uid="uid://mw2q7lomrl1p" path="res://scripts/test/weapon_debug_view.gd" id="1_rf3gf"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_4kg2q"]
+viewport_path = NodePath("SubViewport")
+
+[node name="WeaponDebugView" type="Sprite3D"]
+billboard = 1
+texture = SubResource("ViewportTexture_4kg2q")
+script = ExtResource("1_rf3gf")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(256, 50)
+
+[node name="ShootingLabel" type="Label" parent="SubViewport"]
+offset_right = 69.0
+offset_bottom = 23.0
+text = "Shooting Autocannon
+Shooting Machine gun"
+
+[node name="ShotAtLabel" type="Label" parent="SubViewport"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -55.0
+offset_bottom = 23.0
+grow_horizontal = 0
+text = "Shot at"

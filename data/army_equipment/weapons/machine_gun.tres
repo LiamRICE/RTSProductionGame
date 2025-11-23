@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3 uid="uid://ulgyuq35f4y5"]
+
+[ext_resource type="Script" uid="uid://bfdgw6kh87d74" path="res://scripts/data_resources/weapon_resources/weapon_resource.gd" id="1_16fs8"]
+
+[resource]
+script = ExtResource("1_16fs8")
+weapon_name = "Machine Gun"
+description = "Machine Gun description"
+ui_tooltip = "Machine Gun tooltip"
+weapon_range = 6.0
+damage = 0.5
+damage_type = 1
+armour_penetration = 4.0
+ammunition = 1000
+fire_rate_per_minute = 200.0
+metadata/_custom_type_script = "uid://bfdgw6kh87d74"

@@ -5,10 +5,13 @@ signal received_damage(health:int)
 ## Constants
 const Vector3SecondOrderDynamics:Script = preload("uid://dk0dxwf2vi886")
 const QuaternionSecondOrderDynamics:Script = preload("uid://2qt0fxo8oqaa")
+const WeaponUtils:Script = preload("uid://coiglhf6wydkv")
+const DamageType := preload("uid://coiglhf6wydkv").DamageType
 const RESOURCE := preload("uid://c4mlh3p0sd0vd").RESOURCE
 const ENTITY_ID := preload("uid://dki6gr7rrru2p").ENTITY_ID
 const ORDER_REQUEST := preload("uid://dki6gr7rrru2p").ORDER_REQUEST
 const STATS := preload("uid://dki6gr7rrru2p").STATS
+const TYPE := preload("uid://dki6gr7rrru2p").TYPE
 
 ## Common Entity nodes
 @export_group("Nodes")
@@ -20,10 +23,13 @@ var fog_of_war_sprite:Sprite2D
 @export_group("Properties")
 @export var entity_id:ENTITY_ID
 var entity_position:Vector3
+var entity_type:TYPE
+var cover_damage_reduction:float = 0
+var cover_accuracy_reduction:float = 0
 
 ## Common Entity properties
 @export_group("Statistics")
-@export var entity_statistics:Dictionary[STATS, float]
+@export var entity_statistics:Dictionary[STATS, Variant]
 @export var current_health:float ## The current health the unit has
 @export var current_shield:float ## The current amount of shields the unit has
 @export var vision_texture:Texture2D = preload("uid://btgh61vpoq8b3") ## Texture used to represent the sight of the unit. Scaled by sight stat.
@@ -72,6 +78,9 @@ func _ready() -> void:
 	self.current_health = self.entity_statistics[STATS.HEALTH]
 	self.current_shield = self.entity_statistics[STATS.SHIELD]
 	
+	## Set unit properties
+	self.entity_type = EntityDatabase.get_entity_type(self.entity_id)
+	
 	## Initialise orders
 	self.active_order = self.default_order.new(self)
 
@@ -82,8 +91,19 @@ func _physics_process(delta) -> void:
 	self._snap_to_terrain_surface()
 
 ## Function called when entity takes damage
-func receive_damage(dmg:float) -> void:
-	current_health -= dmg
+func receive_damage(dmg:float, damage_type:DamageType=DamageType.NO_DAMAGE, penetration:float=0, accuracy:float=0) -> void:
+	# reduce accuracy by this unit's cover
+	accuracy = accuracy - self.cover_accuracy_reduction
+	# reduce damage by accuracy
+	if accuracy < 1:
+		dmg = dmg * accuracy
+	# calculate damage based on unit type, damage type, armour and penetration
+	var damage = WeaponUtils.calculate_damage(dmg, penetration, damage_type, self.entity_type, self.entity_statistics.get(STATS.ARMOUR), self.cover_damage_reduction)
+	# reduce damage by cover
+	damage -= damage * self.cover_damage_reduction
+	# apply damage
+	self.current_health -= damage
+	# check if destroyed
 	if current_health <= 0:
 		self._on_destroyed()
 	else:
@@ -165,7 +185,7 @@ func initialise_fog_of_war_propagation() -> Sprite2D:
 	
 	## Create the FoW sprite, assign it's texture and return it to the calling object
 	self.fog_of_war_sprite = Sprite2D.new()
-	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2
+	self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.VIEW_DISTANCE] * 2
 	self.fog_of_war_sprite.texture = self.vision_texture
 	return self.fog_of_war_sprite
 
@@ -181,9 +201,5 @@ func update_offline_stat(stat:STATS) -> void:
 	match stat:
 		STATS.SHIELD:
 			pass
-		STATS.ATTACK_SPEED:
-			pass
-		STATS.SIGHT:
-			self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.SIGHT] * 2 * GameSettings.fog_of_war_resolution
-		STATS.ATTACK_RANGE:
-			pass
+		STATS.VIEW_DISTANCE:
+			self.fog_of_war_sprite.scale = (Vector2.ONE / self.vision_texture.get_size()) * self.entity_statistics[STATS.VIEW_DISTANCE] * 2 * GameSettings.fog_of_war_resolution
